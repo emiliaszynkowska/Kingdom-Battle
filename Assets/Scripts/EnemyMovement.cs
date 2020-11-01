@@ -46,7 +46,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Weapon"))
+        if (other.gameObject.CompareTag("Weapon") && other.gameObject.GetComponentInParent<PlayerMovement>().IsAttacking())
         {
             int playerAttack = other.gameObject.GetComponentInParent<PlayerMovement>().GetAttack();
             health -= playerAttack;

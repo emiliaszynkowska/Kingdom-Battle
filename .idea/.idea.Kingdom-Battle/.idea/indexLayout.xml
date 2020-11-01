@@ -28,6 +28,7 @@
       <Path>Debug</Path>
       <Path>Library</Path>
       <Path>Logs</Path>
+      <Path>Temp</Path>
       <Path>UnityPlayerStub</Path>
       <Path>UserSettings</Path>
       <Path>build</Path>
