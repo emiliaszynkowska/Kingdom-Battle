@@ -6,16 +6,9 @@ public class StartScript2 : MonoBehaviour
 {
     public Image fadeImage;
 
-    // Start is called before the first frame update
     void Start()
     {
         StartCoroutine("Fade");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     IEnumerator Fade()

@@ -10,6 +10,8 @@ TagManager:
   - Character
   - Map
   - Start
+  - Weapon
+  - Spikes
   layers:
   - Default
   - TransparentFX
