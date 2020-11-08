@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Numerics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,53 +11,43 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerMovement : MonoBehaviour
 {
-    // Variables
+    // Movement
     private Vector2 movement;
     private float speed = 10;
-    //private int weaponType = 1;
-    private int health = 1;
+    // Combat
+    private int health = 3;
     private int attack = 1;
+    // Booleans
     private bool isAttacking = false;
     private bool isHurt = false;
-    private string playerName = null;
-    private int level = 0;
-    private int coins = 0;
-    private int inventorySlots = 3;
-    private int inventory = 0;
+    private bool isBouncing = false;
+    // Player Information
+    private string playerName = "Player";
+    private int playerLevel = 1;
+    private int playerMoney = 0;
+    // Lists
+    private List<string> inventory = new List<string>();
     // Objects
     private Rigidbody2D body;
     private Animator playerAnimator;
     private Animator weaponAnimator;
     private GameObject weapon;
-    private GameObject info;
-    private GameObject lives;
-    private GameObject inv;
-    // Assets
-    public Sprite fullLife;
-    public Sprite emptyLife;
+    private UIUpdater uiUpdater;
 
-    public int GetAttack()
-    {
-        return attack;
-    }
-    
     void Start()
     {
+        // Get object references
         body = GetComponent<Rigidbody2D>();
-        weapon = GameObject.FindWithTag("Weapon");
+        weapon = GameObject.Find("Weapon");
         playerAnimator = GetComponent<Animator>();
         weaponAnimator = weapon.GetComponent<Animator>();
-        info = GameObject.FindGameObjectsWithTag("UI")[1];
-        lives = GameObject.FindGameObjectsWithTag("UI")[2];
-        inv = GameObject.FindGameObjectsWithTag("UI")[3];
-        for (int i = 0; i < health; i++)
-        {
-            Transform child = lives.transform.GetChild(i);
-            child.gameObject.SetActive(true);
-            child.GetComponent<SpriteRenderer>().sprite = fullLife;
-        }
-
-        info.GetComponent<Text>().text = playerName + "\nLevel " + level + "\n" + coins;
+        // Initialise UI components
+        uiUpdater = GameObject.Find("UI").GetComponent<UIUpdater>();
+        uiUpdater.SetLivesActive(3);
+        uiUpdater.SetLives(3);
+        uiUpdater.SetInfo(playerName,playerLevel,playerMoney);
+        uiUpdater.ClearInventory();
+        uiUpdater.SetInteract(false);
     }
 
     void Update()
@@ -85,22 +77,149 @@ public class PlayerMovement : MonoBehaviour
                  (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("PlayerIdleLeft") ||
                   playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("PlayerRunLeft") ||
                   playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("DamageLeft")))
-        {
             StartCoroutine(AttackLeft());
         }
-    }
 
     private void FixedUpdate()
     {
-        transform.Translate(movement.x / speed, movement.y / speed, 0, Space.Self);
-        //body.MovePosition(body.position + movement * (speed * Time.fixedDeltaTime)); old movement method
+        if (!isBouncing)
+            transform.Translate(movement.x / speed, movement.y / speed, 0, Space.Self);
     }
 
-    private void UpdateText(string t)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        info.GetComponent<Text>().text = t;
+        if (collision.gameObject.CompareTag("Enemy") && collision.otherCollider is BoxCollider2D && !isHurt)
+        {
+            // Bounce off the enemy
+            body.AddForce(collision.contacts[0].normal * 75);
+            isBouncing = true;
+            Invoke("StopBounceHorizontal", 0.5f);
+            // Take Damage
+            if (health > 0)
+            {
+                int enemyAttack = collision.gameObject.GetComponent<EnemyMovement>().GetAttack();
+                health -= enemyAttack;
+                uiUpdater.SetLives(health);
+                StartCoroutine("TakeDamage");
+            }
+            else
+            {
+                // Game Over
+            }
+        }
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Item") && GetComponent<BoxCollider2D>().IsTouching(other))
+        {
+            other.gameObject.SetActive(false);
+
+            // Check what the item is
+            switch (other.gameObject.name)
+            {
+                // Coin
+                case "Coin":
+                    playerMoney++;
+                    uiUpdater.SetInfo(playerName, playerLevel, playerMoney);
+                    break;
+                // Key
+                case "Key":
+                    if (inventory.Count < 8)
+                    {
+                        other.gameObject.SetActive(false);
+                        uiUpdater.AddItem("key", inventory.Count);
+                        inventory.Add("key");
+                    }
+
+                    break;
+                // Scroll
+                case "Scroll":
+                    if (inventory.Count < 8)
+                    {
+                        other.gameObject.SetActive(false);
+                        uiUpdater.AddItem("scroll", inventory.Count);
+                        inventory.Add("scroll");
+                    }
+
+                    break;
+                // Potion
+                case "Potion Red":
+                    if (inventory.Count < 8)
+                    {
+                        other.gameObject.SetActive(false);
+                        uiUpdater.AddItem("potionRed", inventory.Count);
+                        inventory.Add("potionRed");
+                    }
+
+                    break;
+                case "Potion Yellow":
+                    if (inventory.Count < 8)
+                    {
+                        other.gameObject.SetActive(false);
+                        uiUpdater.AddItem("potionYellow", inventory.Count);
+                        inventory.Add("potionYellow");
+                    }
+
+                    break;
+                case "Potion Green":
+                    if (inventory.Count < 8)
+                    {
+                        other.gameObject.SetActive(false);
+                        uiUpdater.AddItem("potionGreen", inventory.Count);
+                        inventory.Add("potionGreen");
+                    }
+
+                    break;
+                case "Potion Blue":
+                    if (inventory.Count < 8)
+                    {
+                        other.gameObject.SetActive(false);
+                        uiUpdater.AddItem("potionBlue", inventory.Count);
+                        inventory.Add("potionBlue");
+                    }
+
+                    break;
+            }
+        }
+
+        if (other.gameObject.name.Equals("Spike") && GetComponent<BoxCollider2D>().IsTouching(other) && !isHurt)
+        {
+            // Bounce off the spikes
+            body.AddForce(Vector2.up * 100);
+            isBouncing = true;
+            Invoke("StopBounceVertical", 0.2f);
+            // Take Damage
+            if (health > 0)
+            {
+                health--;
+                uiUpdater.SetLives(health);
+                StartCoroutine("TakeDamage");
+            }
+            else
+            {
+                // Game Over
+            }
+        }
+    }
+
+    public int GetAttack()
+    {
+        return attack;
+    }
+    
+    void StopBounceHorizontal()
+    {
+        isBouncing = false;
+        body.velocity = new Vector2(0, body.velocity.y);
+    }
+    
+    void StopBounceVertical()
+    {
+        isBouncing = false;
+        body.velocity = new Vector2(body.velocity.x, 0);
+    }
+    
     IEnumerator TakeDamage()
     {
         isHurt = true;
@@ -113,9 +232,7 @@ public class PlayerMovement : MonoBehaviour
     {
         isAttacking = true;
         weaponAnimator.SetTrigger("AttackRight");
-        weapon.transform.localPosition = Vector3.Slerp(weapon.transform.localPosition, Vector2.down + Vector2.left, 0.1f);
-        yield return new WaitForSeconds(1);
-        weapon.transform.localPosition = new Vector2(0.9f, -0.2f);
+        yield return new WaitForSeconds(1.2f);
         isAttacking = false;
     }
 
@@ -123,68 +240,12 @@ public class PlayerMovement : MonoBehaviour
     {
         isAttacking = true;
         weaponAnimator.SetTrigger("AttackLeft");
-        weapon.transform.localPosition = Vector3.Slerp(weapon.transform.localPosition, Vector2.down + Vector2.right, 0.1f);
-        yield return new WaitForSeconds(1);
-        weapon.transform.localPosition = new Vector2(-0.9f, -0.2f);
+        yield return new WaitForSeconds(1.2f);
         isAttacking = false;
     }
 
     public bool IsAttacking()
     {
         return isAttacking;
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy") && collision.otherCollider is BoxCollider2D && !isHurt)
-        {
-            StartCoroutine(TakeDamage());
-            if (health > 0)
-            {
-                int enemyAttack = collision.gameObject.GetComponent<EnemyMovement>().GetAttack();
-                for (int i = 0; i < enemyAttack; i++)
-                {
-                    health--;
-                    lives.transform.GetChild(health).gameObject.GetComponent<SpriteRenderer>().sprite = emptyLife;
-                }
-            }
-            else
-            {
-                // Game Over
-            }
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Item") && other.gameObject.name.Contains("Coin") && GetComponent<BoxCollider2D>().IsTouching(other))
-        {
-            other.gameObject.SetActive(false);
-            coins++;
-            UpdateText(playerName + "\nLevel " + level + "\n" + coins);
-        }
-        else if (other.gameObject.CompareTag("Item") && other.gameObject.name.Contains("Key") && GetComponent<BoxCollider2D>().IsTouching(other))
-        {
-            if (inventory < inventorySlots)
-            {
-                other.gameObject.SetActive(false);
-                inv.transform.GetChild(inventory).gameObject.SetActive(true);
-                inventory++;
-            }
-        }
-            else if (other.gameObject.CompareTag("Spikes") && GetComponent<BoxCollider2D>().IsTouching(other) && !isHurt)
-        {
-            StartCoroutine(TakeDamage());
-            transform.Translate(0,0.4f,0,Space.Self);
-            if (health > 0)
-            {
-                health--;
-                lives.transform.GetChild(health).gameObject.GetComponent<SpriteRenderer>().sprite = emptyLife;
-            }
-            else
-            {
-                // Game Over
-            }
-        }
     }
 }

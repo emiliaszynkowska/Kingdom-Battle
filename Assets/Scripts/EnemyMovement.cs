@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,8 @@ public class EnemyMovement : MonoBehaviour
     public int health;
     public int attack;
     public int speed;
+    float SavedTime = 0;
+    float DelayTime = 0.5f;
     // Objects
     private Rigidbody2D body;
     private Text healthText;
@@ -21,7 +24,7 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
-        player = GameObject.FindWithTag("Player");
+        player = GameObject.Find("Player");
         health = 3;
         attack = 1;
         speed = 1;
@@ -44,16 +47,23 @@ public class EnemyMovement : MonoBehaviour
         healthText.text = health.ToString();
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Weapon") && other.gameObject.GetComponentInParent<PlayerMovement>().IsAttacking())
+        if ((Time.time - SavedTime) > DelayTime)
         {
-            int playerAttack = other.gameObject.GetComponentInParent<PlayerMovement>().GetAttack();
-            health -= playerAttack;
-            if (health <= 0)
+            SavedTime = Time.time;
+
+            if (other.gameObject.CompareTag("Weapon") &&
+                other.gameObject.GetComponentInParent<PlayerMovement>().IsAttacking())
             {
-                gameObject.SetActive(false);
+                int playerAttack = other.gameObject.GetComponentInParent<PlayerMovement>().GetAttack();
+                health -= playerAttack;
+                if (health <= 0)
+                {
+                    gameObject.SetActive(false);
+                }
             }
         }
     }
+
 }

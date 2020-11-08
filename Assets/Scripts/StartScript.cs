@@ -50,7 +50,7 @@ public class StartScript : MonoBehaviour
         }
         FadeToBlack();
         yield return new WaitForSeconds(2);
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene("Intro");
     }
 
     void FadeToBlack()
