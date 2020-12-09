@@ -23,8 +23,8 @@ public class PlayerMovement : MonoBehaviour
     private bool isBouncing = false;
     // Player Information
     private string playerName = "Player";
-    private int playerLevel = 1;
-    private int playerMoney = 0;
+    private string[] playerDisciplines = new string[0];
+    private int playerCoins = 0;
     // Lists
     private List<string> inventory = new List<string>();
     // Objects
@@ -45,7 +45,8 @@ public class PlayerMovement : MonoBehaviour
         uiUpdater = GameObject.Find("UI").GetComponent<UIUpdater>();
         uiUpdater.SetLivesActive(3);
         uiUpdater.SetLives(3);
-        uiUpdater.SetInfo(playerName,playerLevel,playerMoney);
+        playerDisciplines = new string [] {"Swordsman", "Wayfarer", "Hero"};
+        uiUpdater.SetInfo(playerName, playerDisciplines, playerCoins);
         uiUpdater.ClearInventory();
         uiUpdater.SetInteract(false);
     }
@@ -120,8 +121,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 // Coin
                 case "Coin":
-                    playerMoney++;
-                    uiUpdater.SetInfo(playerName, playerLevel, playerMoney);
+                    playerCoins++;
+                    uiUpdater.SetInfo(playerName, playerDisciplines, playerCoins);
                     break;
                 // Key
                 case "Key":

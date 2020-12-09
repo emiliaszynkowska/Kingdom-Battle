@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class StartScript : MonoBehaviour
 {
-    public Text StartText;
+    public Image startImage;
+    public Text startText;
     public Image fadeImage;
     private bool blink = true;
 
@@ -23,19 +24,16 @@ public class StartScript : MonoBehaviour
         }
     }
 
-    public void SetCountText()
-    {
-        StartText.text = "Press any button to continue";
-    }
-
     public IEnumerator FlashText()
     {
         while (blink)
         {
-            StartText.enabled = false;
-            yield return new WaitForSeconds(.5f);
-            StartText.enabled = true;
-            yield return new WaitForSeconds(.5f);
+            startImage.CrossFadeAlpha(0, 1, false);
+            startText.CrossFadeAlpha(0, 1, false);
+            yield return new WaitForSeconds(1);
+            startImage.CrossFadeAlpha(1, 1, false);
+            startText.CrossFadeAlpha(1, 1, false);
+            yield return new WaitForSeconds(1);
         }
     }
 
@@ -43,10 +41,10 @@ public class StartScript : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            StartText.enabled = false;
-            yield return new WaitForSeconds(.1f);
-            StartText.enabled = true;
-            yield return new WaitForSeconds(.1f);
+            startImage.gameObject.SetActive(false);
+            yield return new WaitForSeconds(0.1f);
+            startImage.gameObject.SetActive(true);
+            yield return new WaitForSeconds(0.1f);
         }
         FadeToBlack();
         yield return new WaitForSeconds(2);
@@ -56,8 +54,8 @@ public class StartScript : MonoBehaviour
     void FadeToBlack()
     {
         fadeImage.color = Color.black;
-        fadeImage.canvasRenderer.SetAlpha(0.0f);
-        fadeImage.CrossFadeAlpha(1.0f, 1, false);
+        fadeImage.canvasRenderer.SetAlpha(0);
+        fadeImage.CrossFadeAlpha(1, 1, false);
     }
 
 }

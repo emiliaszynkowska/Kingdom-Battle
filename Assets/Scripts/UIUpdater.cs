@@ -10,6 +10,7 @@ public class UIUpdater : MonoBehaviour
     public GameObject lives;
     public GameObject inventory;
     public GameObject controls;
+    public GameObject minimap;
     // Assets
     public Sprite fullLife;
     public Sprite emptyLife;
@@ -21,14 +22,34 @@ public class UIUpdater : MonoBehaviour
     public Sprite potionBlue;
 
     // Player Information 
-    public void SetInfo(string player, int level, int money)
+    public void SetInfo(string player, string[] disciplines, int coins)
     {
-        Text playerText = (Text) info.transform.GetChild(2).gameObject.GetComponent<Text>();
-        Text levelText = (Text) info.transform.GetChild(3).gameObject.GetComponent<Text>();
-        Text moneyText = (Text) info.transform.GetChild(4).gameObject.GetComponent<Text>();
+        Text playerText = (Text) info.transform.GetChild(0).gameObject.GetComponentInChildren<Text>();
+        Text disciplineText1 = (Text) info.transform.GetChild(1).gameObject.GetComponentInChildren<Text>();
+        Text disciplineText2 = (Text) info.transform.GetChild(2).gameObject.GetComponentInChildren<Text>();
+        Text disciplineText3 = (Text) info.transform.GetChild(3).gameObject.GetComponentInChildren<Text>();
+        Text moneyText = (Text) info.transform.GetChild(4).gameObject.GetComponentInChildren<Text>();
         playerText.text = player;
-        levelText.text = "Level " + level.ToString();
-        moneyText.text = money.ToString();
+        moneyText.text = coins.ToString();
+        disciplineText1.text = disciplines[0];
+        if (disciplines.Length > 1)
+        {
+            disciplineText2.gameObject.SetActive(true);
+            disciplineText2.text = disciplines[1];
+        }
+        else
+        {
+            disciplineText2.gameObject.SetActive(false);
+        }
+        if (disciplines.Length > 2)
+        {
+            disciplineText3.gameObject.SetActive(true);
+            disciplineText3.text = disciplines[2];
+        }
+        else
+        {
+            disciplineText3.gameObject.SetActive(false);
+        }
     }
 
     // Lives 
