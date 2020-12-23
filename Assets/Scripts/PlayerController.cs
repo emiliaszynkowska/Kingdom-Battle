@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
@@ -14,14 +13,14 @@ public class PlayerController : MonoBehaviour
     private int health = 3;
     private int livesActive = 3;
     // Booleans
-    private bool isAttacking = false;
-    private bool isHurt = false;
-    private bool isBouncing = false;
-    private bool ogreStrength = false;
+    private bool isAttacking;
+    private bool isHurt;
+    private bool isBouncing;
+    private bool ogreStrength;
     // Player Information
     private string playerName = "Player";
     private string[] playerDisciplines = new string[3];
-    private int playerCoins = 0;
+    private int playerCoins;
     // Variables
     private List<string> inventory = new List<string>();
     // Objects
@@ -34,6 +33,11 @@ public class PlayerController : MonoBehaviour
     private GameObject lifeup;
     private GameObject shadow;
     public ParticleSystem particles;
+    public GameObject timers;
+    private Collider2D attackCollider;
+    private Collider2D spinAttackCollider;
+    private Collider2D groundPoundCollider;
+    public ContactFilter2D contactFilter;
 
     void Start()
     {
@@ -43,14 +47,17 @@ public class PlayerController : MonoBehaviour
         playerRenderer = GetComponent<SpriteRenderer>();
         playerAnimator = GetComponent<Animator>();
         weaponAnimator = weapon.GetComponent<Animator>();
-        lifeup = transform.GetChild(3).gameObject;
-        shadow = transform.GetChild(1).gameObject;
+        shadow = transform.GetChild(3).gameObject;
+        lifeup = transform.GetChild(4).gameObject;
+        attackCollider = weapon.GetComponents<CircleCollider2D>()[0];
+        spinAttackCollider = weapon.GetComponents<CircleCollider2D>()[1];
+        groundPoundCollider = weapon.GetComponents<CircleCollider2D>()[2];
         // Initialise UI components
         uiManager = GameObject.Find("UI").GetComponent<UIManager>();
         livesActive = health;
         uiManager.SetLivesActive(health);
         uiManager.SetLives(health);
-        playerDisciplines = new string [] {"Fledgling", null, null};
+        playerDisciplines = new [] {"Fledgling", null, null};
         uiManager.SetInfo(playerName, playerDisciplines, playerCoins);
         uiManager.ClearInventory();
         uiManager.SetInteract(false);
@@ -87,13 +94,12 @@ public class PlayerController : MonoBehaviour
             weapon.GetComponent<SpriteRenderer>().flipX = true;
         }
         
-        // Play attack animations
         // Attack
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            Attack();
+            StartCoroutine("Attack");
         // Spin Attack
         else if (Input.GetKeyDown(KeyCode.Alpha2))
-            SpinAttack();
+            StartCoroutine("SpinAttack");
         // Ground Pound
         else if (Input.GetKeyDown(KeyCode.Alpha3))
             StartCoroutine("GroundPound");
@@ -121,6 +127,16 @@ public class PlayerController : MonoBehaviour
         return attack;
     }
     
+    public bool IsAttacking()
+    {
+        return isAttacking;
+    }
+    
+    public bool IsBouncing()
+    {
+        return isBouncing;
+    }
+    
     void StopBounceHorizontal()
     {
         isBouncing = false;
@@ -135,44 +151,133 @@ public class PlayerController : MonoBehaviour
     
     IEnumerator TakeDamage()
     {
-        Flip();
-        isHurt = true;
-        playerAnimator.SetTrigger("Damage");
-        yield return new WaitForSeconds(1);
-        isHurt = false;
+        if (!IsAttacking() && !IsBouncing())
+        {
+            Flip();
+            isHurt = true;
+            playerRenderer.color = new Color(0.8f, 0.3f, 0.4f, 1);
+            yield return new WaitForSeconds(1);
+            playerRenderer.color = Color.white;
+            isHurt = false;
+        }
     }
 
-    void Attack()
+    IEnumerator TakeKnockback(Vector3 source)
     {
-        Flip();
-        isAttacking = true;
-        weaponAnimator.SetTrigger("Attack");
-        isAttacking = false;
+        isBouncing = true;
+        Vector3 force = transform.position - source;
+        body.AddForce((force.normalized) * 3, ForceMode2D.Impulse);
+        yield return new WaitForSeconds(0.5f);
+        isBouncing = false;
+        StopBounceHorizontal();
+        StopBounceVertical();
+    }
+
+    IEnumerator Attack()
+    {
+        if (timers.transform.GetChild(0).gameObject.GetComponent<TimerController>().CanAttack())
+        {
+            // Start Attacking
+            Flip();
+            isAttacking = true;
+            // Animate Attack
+            weaponAnimator.SetTrigger("Attack");
+            // Damage Enemies
+            Collider2D[] results = new Collider2D[5];
+            attackCollider.OverlapCollider(contactFilter, results);
+            foreach (Collider2D col in results)
+            {
+                if (col != null)
+                {
+                    EnemyController enemy = col.gameObject.GetComponent<EnemyController>();
+                    if (enemy != null)
+                    {
+                        StartCoroutine("TakeKnockback", enemy.transform.position);
+                        enemy.StartCoroutine("TakeDamage", attack);
+                        if (IsOgreStrength())
+                            enemy.StartCoroutine("PoisonDamage");
+                    }
+                }
+            }
+            yield return new WaitForSeconds(0.5f);
+
+            // Stop Attacking
+            isAttacking = false;
+            timers.transform.GetChild(0).gameObject.GetComponent<TimerController>().Reset();
+        }
     }
     
-    void SpinAttack()
+    IEnumerator SpinAttack()
     {
-        Flip();
-        isAttacking = true;
-        weaponAnimator.SetTrigger("Spin");
-        isAttacking = false;
+        if (timers.transform.GetChild(1).gameObject.GetComponent<TimerController>().CanAttack())
+        {
+            // Start Attacking
+            Flip();
+            isAttacking = true;
+            // Animate Spin Attack
+            weaponAnimator.SetTrigger("Spin");
+            // Damage Enemies
+            Collider2D[] results = new Collider2D[5];
+            spinAttackCollider.OverlapCollider(contactFilter, results);
+            foreach (Collider2D col in results)
+            {
+                if (col != null)
+                {
+                    EnemyController enemy = col.gameObject.GetComponent<EnemyController>();
+                    if (enemy != null)
+                    {
+                        StartCoroutine("TakeKnockback", enemy.transform.position);
+                        enemy.StartCoroutine("TakeDamage", attack * 2);
+                        if (IsOgreStrength())
+                            enemy.StartCoroutine("PoisonDamage");
+                    }
+                }
+            }
+            yield return new WaitForSeconds(0.5f);
+
+            // Stop Attacking
+            isAttacking = false;
+            timers.transform.GetChild(1).gameObject.GetComponent<TimerController>().Reset();
+        }
     }
     
     IEnumerator GroundPound()
     {
-        isAttacking = true;
-        playerAnimator.SetTrigger("Jump");
-        yield return new WaitForSeconds(0.5f);
-        shadow.SetActive(true);
-        Instantiate(particles, transform);
-        yield return new WaitForSeconds(1);
-        shadow.SetActive(false);
-        isAttacking = false;
-    }
+        if (timers.transform.GetChild(2).gameObject.GetComponent<TimerController>().CanAttack())
+        {
+            // Start Attacking
+            isAttacking = true;
+            // Animate Jump
+            playerAnimator.SetTrigger("Jump");
+            yield return new WaitForSeconds(0.5f);
+            shadow.SetActive(true);
+            // Animate Ground Pound
+            Instantiate(particles, transform);
+            // Damage Enemies
+            Collider2D[] results = new Collider2D[8];
+            groundPoundCollider.gameObject.SetActive(true);
+            groundPoundCollider.OverlapCollider(contactFilter, results);
+            foreach (Collider2D col in results)
+            {
+                if (col != null)
+                {
+                    EnemyController enemy = col.gameObject.GetComponent<EnemyController>();
+                    if (enemy != null)
+                    {
+                        enemy.StartCoroutine("TakeDamage", attack * 3);
+                        if (IsOgreStrength())
+                            enemy.StartCoroutine("PoisonDamage");
+                    }
+                }
+            }
 
-    public bool IsAttacking()
-    {
-        return isAttacking;
+            // Stop Attacking
+            groundPoundCollider.gameObject.SetActive(false);
+            yield return new WaitForSeconds(1);
+            shadow.SetActive(false);
+            isAttacking = false;
+            timers.transform.GetChild(2).gameObject.GetComponent<TimerController>().Reset();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -180,20 +285,23 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy") && collision.otherCollider is BoxCollider2D && !isHurt)
         {
             // Bounce off the enemy
-            body.AddForce(collision.contacts[0].normal * 75);
-            isBouncing = true;
+            StartCoroutine("TakeKnockback", collision.transform.position);
             Invoke("StopBounceHorizontal", 0.5f);
-            // Take damage
-            if (health > 0)
+            EnemyController enemyController = collision.gameObject.GetComponent<EnemyController>();
+            if (enemyController != null && enemyController.health > 0)
             {
-                int enemyAttack = collision.gameObject.GetComponent<EnemyController>().GetAttack();
-                health -= enemyAttack;
-                uiManager.SetLives(health);
-                StartCoroutine("TakeDamage");
-            }
-            else
-            {
-                // Game over
+                // Take damage
+                if (health > 0)
+                {
+                    int enemyAttack = collision.gameObject.GetComponent<EnemyController>().GetAttack();
+                    health -= enemyAttack;
+                    uiManager.SetLives(health);
+                    StartCoroutine("TakeDamage");
+                }
+                else
+                {
+                    // Game over
+                }
             }
         }
     }
@@ -205,7 +313,7 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
 
             // Check item
-            switch (other.gameObject.name)
+            switch (other.name)
             {
                 // Coin
                 case "Coin":

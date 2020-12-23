@@ -8,13 +8,14 @@ public class EnemyController : MonoBehaviour
     public int health;
     public int attack;
     public int speed;
-    float SavedTime = 0;
+    float SavedTime;
     float DelayTime = 0.5f;
     // Objects
     private Text healthText;
     private Rigidbody2D body;
     private GameObject player;
     private Vector2 target;
+    private SpriteRenderer enemyRenderer;
 
     public int GetAttack()
     {
@@ -25,6 +26,7 @@ public class EnemyController : MonoBehaviour
     {
         body = GetComponent<Rigidbody2D>();
         player = GameObject.Find("Player");
+        enemyRenderer = GetComponent<SpriteRenderer>();
         healthText = GetComponentInChildren<Canvas>().GetComponentInChildren<Text>();
         healthText.text = health.ToString();
     }
@@ -39,40 +41,35 @@ public class EnemyController : MonoBehaviour
     {
         // Move the enemy
         body.MovePosition(Vector2.MoveTowards(body.position, target, speed * Time.fixedDeltaTime));
-        healthText.text = health.ToString();
+        if (health >= 0)
+            healthText.text = health.ToString();
+        else
+            healthText.text = "0";
     }
 
-    private void OnTriggerStay2D(Collider2D other)
+    public IEnumerator TakeDamage(int playerAttack)
     {
-        // Take Damage
         if ((Time.time - SavedTime) > DelayTime)
         {
             SavedTime = Time.time;
-
-            if (other.gameObject.CompareTag("Weapon") &&
-                other.gameObject.GetComponentInParent<PlayerController>().IsAttacking())
+            // Take Damage
+            health -= playerAttack;
+            enemyRenderer.color = Color.red;
+            yield return new WaitForSeconds(0.5f);
+            enemyRenderer.color = Color.white;
+            if (health <= 0)
             {
-                int playerAttack = other.gameObject.GetComponentInParent<PlayerController>().GetAttack();
-                health -= playerAttack;
-                if (health <= 0)
-                {
-                    Destroy(healthText);
-                    gameObject.SetActive(false);
-                }
-                // Take Poison Damage
-                if (other.gameObject.GetComponentInParent<PlayerController>().IsOgreStrength())
-                    StartCoroutine("PoisonDamage");
+                Destroy(healthText);
+                gameObject.SetActive(false);
             }
         }
     }
 
-    IEnumerator PoisonDamage()
+    public IEnumerator PoisonDamage()
     {
-        var color = GetComponent<SpriteRenderer>().color;
-        GetComponent<SpriteRenderer>().color = Color.green;
-        
+        enemyRenderer.color = Color.green;
         yield return new WaitForSeconds(3);
-        GetComponent<SpriteRenderer>().color = color;
+        enemyRenderer.color = Color.white;
     }
 
 }
