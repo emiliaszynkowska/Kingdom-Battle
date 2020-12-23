@@ -4,14 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - UI
-  - Enemy
   - Item
-  - Character
-  - Map
-  - Start
-  - Weapon
+  - UI
   - Spikes
+  - Map
+  - Weapon
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -21,8 +19,8 @@ TagManager:
   - UI
   - 
   - 
-  - Background
-  - Foreground
+  - Map
+  - Player
   - 
   - 
   - 
@@ -50,11 +48,14 @@ TagManager:
     uniqueID: 0
     locked: 0
   - name: Background
-    uniqueID: 1587401363
+    uniqueID: 3759395245
     locked: 0
   - name: Foreground
-    uniqueID: 1921863407
+    uniqueID: 1012739443
+    locked: 0
+  - name: Characters
+    uniqueID: 3415253589
     locked: 0
   - name: UI
-    uniqueID: 1492018103
+    uniqueID: 873416439
     locked: 0

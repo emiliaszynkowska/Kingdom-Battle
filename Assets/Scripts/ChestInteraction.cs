@@ -5,7 +5,7 @@ using UnityEngine;
 public class ChestInteraction : MonoBehaviour
 {
     private GameObject player;
-    private UIUpdater uiUpdater;
+    private UIManager uiManager;
     private Animator animator;
     private string item;
     private string[] items = new[] {"key", "scroll", "potionred", "potionyellow", "potiongreen", "potionblue", "coins"};
@@ -13,7 +13,7 @@ public class ChestInteraction : MonoBehaviour
     void Start()
     {
         player = GameObject.Find("Player");
-        uiUpdater = GameObject.Find("UI").GetComponent<UIUpdater>();
+        uiManager = GameObject.Find("UI").GetComponent<UIManager>();
         animator = GetComponent<Animator>();
     }
 
@@ -21,7 +21,7 @@ public class ChestInteraction : MonoBehaviour
     {
         if ((player.transform.position - transform.position).sqrMagnitude <= 1)
         {
-            uiUpdater.SetInteract(true);
+            uiManager.SetInteract(true);
         }
     }
 
