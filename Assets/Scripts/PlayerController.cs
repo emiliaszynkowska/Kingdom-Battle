@@ -61,15 +61,6 @@ public class PlayerController : MonoBehaviour
         uiManager.SetInfo(playerName, playerDisciplines, playerCoins);
         uiManager.ClearInventory();
         uiManager.SetInteract(false);
-        
-        inventory.Add("Wigg's Brew");
-        inventory.Add("Liquid Luck");
-        inventory.Add("Ogre's Strength");
-        inventory.Add("Elixir of Speed");
-        uiManager.AddItem("Wigg's Brew",0);
-        uiManager.AddItem("Liquid Luck",1);
-        uiManager.AddItem("Ogre's Strength",2);
-        uiManager.AddItem("Elixir of Speed",3);
     }
 
     void Update()
@@ -93,17 +84,6 @@ public class PlayerController : MonoBehaviour
             weapon.transform.localPosition = new Vector2(-0.9f,-0.2f);
             weapon.GetComponent<SpriteRenderer>().flipX = true;
         }
-        
-        // Attack
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            StartCoroutine("Attack");
-        // Spin Attack
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-            StartCoroutine("SpinAttack");
-        // Ground Pound
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-            StartCoroutine("GroundPound");
-
         // Check UI Inputs
         CheckUI();
     }
@@ -147,6 +127,21 @@ public class PlayerController : MonoBehaviour
     {
         isBouncing = false;
         body.velocity = new Vector2(body.velocity.x, 0);
+    }
+
+    public void StartAttack()
+    {
+        StartCoroutine(Attack());
+    }
+    
+    public void StartSpinAttack()
+    {
+        StartCoroutine(SpinAttack());
+    }
+    
+    public void StartGroundPound()
+    {
+        StartCoroutine(GroundPound());
     }
     
     IEnumerator TakeDamage()
@@ -200,7 +195,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
             yield return new WaitForSeconds(0.5f);
-
             // Stop Attacking
             isAttacking = false;
             timers.transform.GetChild(0).gameObject.GetComponent<TimerController>().Reset();
@@ -234,7 +228,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
             yield return new WaitForSeconds(0.5f);
-
             // Stop Attacking
             isAttacking = false;
             timers.transform.GetChild(1).gameObject.GetComponent<TimerController>().Reset();
@@ -255,7 +248,6 @@ public class PlayerController : MonoBehaviour
             Instantiate(particles, transform);
             // Damage Enemies
             Collider2D[] results = new Collider2D[8];
-            groundPoundCollider.gameObject.SetActive(true);
             groundPoundCollider.OverlapCollider(contactFilter, results);
             foreach (Collider2D col in results)
             {
@@ -270,9 +262,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-
             // Stop Attacking
-            groundPoundCollider.gameObject.SetActive(false);
             yield return new WaitForSeconds(1);
             shadow.SetActive(false);
             isAttacking = false;
@@ -396,6 +386,22 @@ public class PlayerController : MonoBehaviour
             else
             {
                 // Game over
+            }
+        }
+
+        if (other.gameObject.name.Equals("Projectile") && GetComponent<BoxCollider2D>().IsTouching(other) && !isHurt)
+        {
+            Destroy(other);
+            // Take damage
+            if (health > 0)
+            {
+                health--;
+                uiManager.SetLives(health);
+                StartCoroutine(TakeDamage());
+            }
+            else
+            {
+                // Game Over
             }
         }
     }

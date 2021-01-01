@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2491921259458668513}
   - component: {fileID: 6511238355194699734}
   - component: {fileID: 3742774643505119237}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 8131619134480364412}
   - component: {fileID: 8131619134480364413}
   - component: {fileID: 8131619134480364414}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Demon
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -266,6 +266,11 @@ MonoBehaviour:
   health: 3
   attack: 3
   speed: 1
+  groundPoundAttack: 0
+  magicAttack: 0
+  text: {fileID: 0}
+  projectile: {fileID: 0}
+  particles: {fileID: 0}
 --- !u!1 &8255744193619039217
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,7 +282,7 @@ GameObject:
   - component: {fileID: 5399614505097846776}
   - component: {fileID: 6073416863030655638}
   - component: {fileID: 6149269397652412962}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
