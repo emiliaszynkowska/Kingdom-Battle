@@ -15,6 +15,9 @@ public class UIManager : MonoBehaviour
     public GameObject options;
     public GameObject optionsInventory;
     public GameObject minimap;
+    public GameObject dialog;
+    public Text npcName;
+    public Text message;
     public GameObject menu;
     public Text powerup;
     public GameObject fade;
@@ -192,19 +195,11 @@ public class UIManager : MonoBehaviour
     }
 
     // Options
-    public void Interact()
+    public IEnumerator Interact()
     {
-        
-    }
-    
-    public void SetInteract(bool canInteract)
-    {
-        if (canInteract)
-            options.transform.GetChild(0).GetComponent<CanvasRenderer>().SetAlpha(0.0f);
-        else
-        {
-            options.transform.GetChild(0).GetComponent<CanvasRenderer>().SetAlpha(0.5f);
-        }
+        options.transform.GetChild(0).GetComponent<Image>().CrossFadeAlpha(0.25f, 0, true);
+        yield return new WaitForSeconds(0.2f);
+        options.transform.GetChild(0).GetComponent<Image>().CrossFadeAlpha(1, 0, true);
     }
 
     public void Quests()
@@ -261,6 +256,19 @@ public class UIManager : MonoBehaviour
     {
         fade.GetComponent<Image>().CrossFadeAlpha(0.0f, 1, false);
         yield return new WaitForSeconds(1);
+    }
+    
+    // Dialog
+    public void StartSpeak(string npc, string text)
+    {
+        npcName.text = npc;
+        message.text = text;
+        dialog.SetActive(true);
+    }
+
+    public void StopSpeak()
+    {
+        dialog.SetActive(false);
     }
     
 }

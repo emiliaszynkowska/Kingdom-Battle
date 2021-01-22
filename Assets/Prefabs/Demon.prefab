@@ -217,7 +217,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.031976223, y: -0.32258636}
+  m_Offset: {x: 0.044341087, y: -0.19584614}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -228,7 +228,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.6802416, y: 0.78506863}
+  m_Size: {x: 1.0140939, y: 1.4713207}
   m_EdgeRadius: 0
 --- !u!50 &8131619134480364413
 Rigidbody2D:
@@ -268,9 +268,19 @@ MonoBehaviour:
   speed: 1
   groundPoundAttack: 0
   magicAttack: 0
-  text: {fileID: 0}
-  projectile: {fileID: 0}
-  particles: {fileID: 0}
+  spawnEnemies: 0
+  groundPoundTime: 0
+  magicTime: 0
+  spawnTime: 0
+  text: {fileID: 6149269397652412962}
+  particles: {fileID: 1484304525313702822, guid: 740a6d4dab6fce94ebaf523c203cdf0f,
+    type: 3}
+  projectilePrefab: {fileID: 8442078517516998046, guid: 072313397c2624e4b955446c756f23ae,
+    type: 3}
+  knightPrefab: {fileID: 8052890031221065366, guid: 8007efd8ee797114a99afb59e65c1254,
+    type: 3}
+  goblinPrefab: {fileID: 8409285535565243240, guid: 8b895fe03dc93884bb3200cd4d40053d,
+    type: 3}
 --- !u!1 &8255744193619039217
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ChestInteraction : MonoBehaviour
@@ -15,14 +13,6 @@ public class ChestInteraction : MonoBehaviour
         player = GameObject.Find("Player");
         uiManager = GameObject.Find("UI").GetComponent<UIManager>();
         animator = GetComponent<Animator>();
-    }
-
-    void Update()
-    {
-        if ((player.transform.position - transform.position).sqrMagnitude <= 1)
-        {
-            uiManager.SetInteract(true);
-        }
     }
 
     void SetItem(string i)

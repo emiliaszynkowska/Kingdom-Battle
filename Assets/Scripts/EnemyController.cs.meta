@@ -3,7 +3,14 @@ guid: d004531610474254197d54a863c808ac
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - text: {instanceID: 0}
+  - particles: {instanceID: 0}
+  - projectilePrefab: {instanceID: 0}
+  - knightPrefab: {fileID: 8052890031221065366, guid: 8007efd8ee797114a99afb59e65c1254,
+      type: 3}
+  - goblinPrefab: {fileID: 8409285535565243240, guid: 8b895fe03dc93884bb3200cd4d40053d,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

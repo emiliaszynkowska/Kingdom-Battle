@@ -28,7 +28,7 @@ public class TimerController : MonoBehaviour {
 
     void Update ()
     {
-        if (totalTime == 0)
+        if (totalTime <= 0)
         {
             canAttack = true;
             fill.fillAmount = 1;

@@ -10,6 +10,8 @@ TagManager:
   - Map
   - Weapon
   - Enemy
+  - Projectile
+  - NPC
   layers:
   - Default
   - TransparentFX

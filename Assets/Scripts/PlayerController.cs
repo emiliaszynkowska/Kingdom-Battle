@@ -10,8 +10,10 @@ public class PlayerController : MonoBehaviour
     private float speed = 0.1f;
     // Combat
     private int attack = 1;
-    private int health = 3;
+    private int health = 5;
     private int livesActive = 3;
+    private float lastHurtTime = -10;
+    private float hurtTimeOut = 1;
     // Booleans
     private bool isAttacking;
     private bool isHurt;
@@ -47,8 +49,8 @@ public class PlayerController : MonoBehaviour
         playerRenderer = GetComponent<SpriteRenderer>();
         playerAnimator = GetComponent<Animator>();
         weaponAnimator = weapon.GetComponent<Animator>();
-        shadow = transform.GetChild(3).gameObject;
-        lifeup = transform.GetChild(4).gameObject;
+        shadow = transform.GetChild(4).gameObject;
+        lifeup = transform.GetChild(5).gameObject;
         attackCollider = weapon.GetComponents<CircleCollider2D>()[0];
         spinAttackCollider = weapon.GetComponents<CircleCollider2D>()[1];
         groundPoundCollider = weapon.GetComponents<CircleCollider2D>()[2];
@@ -60,11 +62,13 @@ public class PlayerController : MonoBehaviour
         playerDisciplines = new [] {"Fledgling", null, null};
         uiManager.SetInfo(playerName, playerDisciplines, playerCoins);
         uiManager.ClearInventory();
-        uiManager.SetInteract(false);
     }
 
     void Update()
     {
+        // Check UI Inputs
+        CheckUI();
+        
         // Calculate player movement
         movement = new Vector2(Input.GetAxis("Horizontal"),Input.GetAxis("Vertical"));
         Flip();
@@ -84,8 +88,6 @@ public class PlayerController : MonoBehaviour
             weapon.transform.localPosition = new Vector2(-0.9f,-0.2f);
             weapon.GetComponent<SpriteRenderer>().flipX = true;
         }
-        // Check UI Inputs
-        CheckUI();
     }
 
     private void FixedUpdate()
@@ -146,9 +148,10 @@ public class PlayerController : MonoBehaviour
     
     IEnumerator TakeDamage()
     {
-        if (!IsAttacking() && !IsBouncing())
+        if (!IsAttacking() && !IsBouncing() && Time.time < lastHurtTime + hurtTimeOut)
         {
             Flip();
+            lastHurtTime = Time.time;
             isHurt = true;
             playerRenderer.color = new Color(0.8f, 0.3f, 0.4f, 1);
             yield return new WaitForSeconds(1);
@@ -301,7 +304,6 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Item") && GetComponent<BoxCollider2D>().IsTouching(other))
         {
             other.gameObject.SetActive(false);
-
             // Check item
             switch (other.name)
             {
@@ -389,7 +391,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (other.gameObject.name.Equals("Projectile") && GetComponent<BoxCollider2D>().IsTouching(other) && !isHurt)
+        if (other.gameObject.CompareTag("Projectile") && GetComponent<BoxCollider2D>().IsTouching(other) && !isHurt)
         {
             Destroy(other);
             // Take damage
@@ -411,7 +413,16 @@ public class PlayerController : MonoBehaviour
         // Interact
         if (Input.GetKeyDown(KeyCode.E))
         {
-            
+            Collider2D[] results = new Collider2D[8];
+            groundPoundCollider.OverlapCollider(contactFilter, results);
+            foreach (Collider2D col in results)
+            {
+                if (col != null && col.CompareTag("NPC"))
+                {
+                    StartCoroutine(uiManager.Interact());
+                    StartCoroutine(col.GetComponent<QuestFetch>().Talk());
+                }
+            }
         }
         
         // Inventory
@@ -536,5 +547,10 @@ public class PlayerController : MonoBehaviour
     public bool IsOgreStrength()
     {
         return ogreStrength;
+    }
+
+    public List<string> GetInventory()
+    {
+        return inventory;
     }
 }
