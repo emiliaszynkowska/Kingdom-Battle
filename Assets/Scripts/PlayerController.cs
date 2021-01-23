@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
@@ -96,6 +97,16 @@ public class PlayerController : MonoBehaviour
             transform.Translate(movement.x * speed, movement.y * speed, 0, Space.Self);
     }
 
+    public int GetCoins()
+    {
+        return playerCoins;
+    }
+
+    public void Spend(int coins)
+    {
+        playerCoins -= coins;
+    }
+
     void Flip()
     {
         if (Input.GetAxis("Horizontal") > 0)
@@ -144,6 +155,16 @@ public class PlayerController : MonoBehaviour
     public void StartGroundPound()
     {
         StartCoroutine(GroundPound());
+    }
+    
+    public List<string> GetInventory()
+    {
+        return inventory;
+    }
+
+    public void AddItem(string item)
+    {
+        inventory.Add(item);
     }
     
     IEnumerator TakeDamage()
@@ -318,7 +339,7 @@ public class PlayerController : MonoBehaviour
                     {
                         other.gameObject.SetActive(false);
                         uiManager.AddItem("Key", inventory.Count);
-                        inventory.Add("Key");
+                        AddItem("Key");
                     }
 
                     break;
@@ -328,7 +349,7 @@ public class PlayerController : MonoBehaviour
                     {
                         other.gameObject.SetActive(false);
                         uiManager.AddItem("Scroll", inventory.Count);
-                        inventory.Add("Scroll");
+                        AddItem("Scroll");
                     }
 
                     break;
@@ -338,7 +359,7 @@ public class PlayerController : MonoBehaviour
                     {
                         other.gameObject.SetActive(false);
                         uiManager.AddItem("Wigg's Brew", inventory.Count);
-                        inventory.Add("Wigg's Brew");
+                        AddItem("Wigg's Brew");
                     }
 
                     break;
@@ -347,7 +368,7 @@ public class PlayerController : MonoBehaviour
                     {
                         other.gameObject.SetActive(false);
                         uiManager.AddItem("Liquid Luck", inventory.Count);
-                        inventory.Add("Liquid Luck");
+                        AddItem("Liquid Luck");
                     }
 
                     break;
@@ -356,7 +377,7 @@ public class PlayerController : MonoBehaviour
                     {
                         other.gameObject.SetActive(false);
                         uiManager.AddItem("Ogre's Strength", inventory.Count);
-                        inventory.Add("Ogre's Strength");
+                        AddItem("Ogre's Strength");
                     }
 
                     break;
@@ -365,7 +386,7 @@ public class PlayerController : MonoBehaviour
                     {
                         other.gameObject.SetActive(false);
                         uiManager.AddItem("Elixir of Speed", inventory.Count);
-                        inventory.Add("Elixir of Speed");
+                        AddItem("Elixir of Speed");
                     }
 
                     break;
@@ -420,13 +441,16 @@ public class PlayerController : MonoBehaviour
                 if (col != null && col.CompareTag("NPC"))
                 {
                     StartCoroutine(uiManager.Interact());
-                    StartCoroutine(col.GetComponent<QuestFetch>().Talk());
+                    if (col.name.Equals("Wizard"))
+                        StartCoroutine(col.GetComponent<Quest>().Talk());
+                    else if (col.name.Equals("Merchant"))
+                        col.GetComponent<MerchantController>().Talk();
                 }
             }
         }
         
         // Inventory
-        if (Input.GetKeyDown(KeyCode.I) && !uiManager.IsInventory())
+        if (Input.GetKeyDown(KeyCode.I) && !uiManager.IsInventory() && uiManager.options.activeSelf)
             uiManager.Inventory();
         else if (Input.GetKeyDown(KeyCode.A) && uiManager.IsInventory() && uiManager.activeItem > 0)
         {
@@ -447,7 +471,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.I) && uiManager.IsInventory())
             uiManager.ExitInventory();
-        
+
         // Quests
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -548,9 +572,5 @@ public class PlayerController : MonoBehaviour
     {
         return ogreStrength;
     }
-
-    public List<string> GetInventory()
-    {
-        return inventory;
-    }
+    
 }

@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     public GameObject active;
     public GameObject options;
     public GameObject optionsInventory;
+    public GameObject optionsShop;
     public GameObject minimap;
     public GameObject dialog;
     public Text npcName;
@@ -226,6 +227,19 @@ public class UIManager : MonoBehaviour
         return menu.activeSelf;
     }
 
+    public void Shop()
+    {
+        options.SetActive(false);
+        optionsShop.SetActive(true);
+    }
+
+    public IEnumerator ExitShop()
+    {
+        yield return new WaitForSeconds(0.1f);
+        options.SetActive(true);
+        optionsShop.SetActive(false);
+    }
+    
     public void Restart()
     {
         // To Do

@@ -5,7 +5,7 @@ public class QuestFetch : Quest
 {
     private string item;
     
-    void Start()
+    void Awake()
     {
         List<string> items = new List<string>() {"Key", "Wigg's Brew", "Liquid Luck", "Ogre's Strength", "Elixir of Speed"};
         List<string> messages = new List<string>()

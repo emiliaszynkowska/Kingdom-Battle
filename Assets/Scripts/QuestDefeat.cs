@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 using UnityEngine;
 
 public class QuestDefeat : Quest
@@ -6,7 +7,7 @@ public class QuestDefeat : Quest
     private string enemy;
     public GameObject obj;
     
-    void Start()
+    void Awake()
     {
         List<string> enemies = new List<string>() {"Imp", "Goblin", "Chort", "Orc", "Necromancer"};
         List<string> messages = new List<string>()
@@ -16,7 +17,7 @@ public class QuestDefeat : Quest
             "I saw this * earlier. I'll move if you can defeat it."
         };
         enemy = enemies[Random.Range(0, 5)];
-        message = messages[Random.Range(0, 4)];
+        message = messages[Random.Range(0, 3)];
         message = message.Replace("*", enemy);
     }
     
