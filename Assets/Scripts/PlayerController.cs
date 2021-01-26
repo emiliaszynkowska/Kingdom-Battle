@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 
@@ -12,8 +10,8 @@ public class PlayerController : MonoBehaviour
     private float speed = 0.1f;
     // Combat
     private int attack = 1;
-    private int health = 3;
-    private int livesActive = 3;
+    private int health = 5;
+    private int livesActive = 5;
     // Booleans
     private bool isAttacking;
     private bool isHurt;
@@ -34,6 +32,7 @@ public class PlayerController : MonoBehaviour
     private UIManager uiManager;
     private GameObject lifeup;
     private GameObject shadow;
+    private GameObject shine;
     public ParticleSystem particles;
     public GameObject timers;
     private Collider2D attackCollider;
@@ -51,6 +50,7 @@ public class PlayerController : MonoBehaviour
         weaponAnimator = weapon.GetComponent<Animator>();
         shadow = transform.GetChild(4).gameObject;
         lifeup = transform.GetChild(5).gameObject;
+        shine = transform.GetChild(6).gameObject;
         attackCollider = weapon.GetComponents<CircleCollider2D>()[0];
         spinAttackCollider = weapon.GetComponents<CircleCollider2D>()[1];
         groundPoundCollider = weapon.GetComponents<CircleCollider2D>()[2];
@@ -176,7 +176,7 @@ public class PlayerController : MonoBehaviour
     
     IEnumerator TakeDamage(int damage)
     {
-        if (health > 0 && !IsHurt() && !IsAttacking() && IsBouncing())
+        if (health > 0 && !IsHurt() && !IsAttacking())
         {
             isHurt = true;
             health -= damage;
@@ -186,6 +186,8 @@ public class PlayerController : MonoBehaviour
             playerRenderer.color = Color.white;
             isHurt = false;
         }
+        else if (health <= 0 && !uiManager.IsGameOver())
+            uiManager.GameOver();
     }
 
     IEnumerator TakeKnockback(Vector3 source)
@@ -449,7 +451,7 @@ public class PlayerController : MonoBehaviour
     {
         uiManager.Powerup("Wigg's Brew: +1 Health", Color.red);
         lifeup.SetActive(true);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(3);
         uiManager.Powerup("", Color.white);
         lifeup.SetActive(false);
     }
@@ -460,10 +462,12 @@ public class PlayerController : MonoBehaviour
         uiManager.Powerup("Liquid Luck: +1 Attack", new Color(1,0.9f,0,1));
         var color = GetComponent<SpriteRenderer>().color;
         GetComponent<SpriteRenderer>().color = new Color(1,0.9f,0,1);
+        shine.SetActive(true);
         attack++;
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(10);
         uiManager.Powerup("", Color.white);
         GetComponent<SpriteRenderer>().color = color;
+        shine.SetActive(false);
         attack--;
     }
 
@@ -474,7 +478,7 @@ public class PlayerController : MonoBehaviour
         var color = GetComponent<SpriteRenderer>().color;
         GetComponent<SpriteRenderer>().color = new Color(0, 0.75f, 0, 1);
         ogreStrength = true;
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(10);
         uiManager.Powerup("", Color.white);
         GetComponent<SpriteRenderer>().color = color;
         ogreStrength = false;
@@ -486,7 +490,7 @@ public class PlayerController : MonoBehaviour
         uiManager.Powerup("Elixir of Speed: +5 Speed", new Color(0,0.4f,1,1));
         GetComponent<SpriteRenderer>().color = new Color(0,0.4f,1,1);
         speed *= 1.5f;
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(15);
         uiManager.Powerup("", Color.white);
         GetComponent<SpriteRenderer>().color = Color.white;
         speed /= 1.5f;
@@ -511,15 +515,8 @@ public class PlayerController : MonoBehaviour
             if (enemyController != null && enemyController.health > 0)
             {
                 // Take damage
-                if (health > 0)
-                {
-                    int enemyAttack = collision.gameObject.GetComponent<EnemyController>().GetAttack();
-                    StartCoroutine(TakeDamage(enemyAttack));
-                }
-                else
-                {
-                    // Game over
-                }
+                int enemyAttack = collision.gameObject.GetComponent<EnemyController>().GetAttack();
+                StartCoroutine(TakeDamage(enemyAttack));
             }
         }
     }
@@ -597,33 +594,20 @@ public class PlayerController : MonoBehaviour
 
         if (other.gameObject.name.Equals("Spikes") && GetComponent<BoxCollider2D>().IsTouching(other))
         {
+            // Take damage
+            if (!IsBouncing())
+                StartCoroutine(TakeDamage(1));
             // Bounce off the spikes
             body.AddForce(Vector2.up * 100);
             isBouncing = true;
             Invoke("StopBounceVertical", 0.2f);
-            // Take damage
-            if (health > 0)
-            {
-                StartCoroutine(TakeDamage(1));
-            }
-            else
-            {
-                // Game over
-            }
         }
 
         if (other.gameObject.CompareTag("Projectile") && GetComponent<BoxCollider2D>().IsTouching(other))
         {
             Destroy(other);
             // Take damage
-            if (health > 0)
-            {
-                StartCoroutine(TakeDamage(1));
-            }
-            else
-            {
-                // Game Over
-            }
+            StartCoroutine(TakeDamage(1));
         }
     }
     

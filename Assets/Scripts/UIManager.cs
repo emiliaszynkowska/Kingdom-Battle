@@ -239,6 +239,18 @@ public class UIManager : MonoBehaviour
         options.SetActive(true);
         optionsShop.SetActive(false);
     }
+    
+    public void StartSpeak(string npc, string text)
+    {
+        npcName.text = npc;
+        message.text = text;
+        dialog.SetActive(true);
+    }
+
+    public void StopSpeak()
+    {
+        dialog.SetActive(false);
+    }
 
     public void GameOver()
     {
@@ -246,6 +258,11 @@ public class UIManager : MonoBehaviour
         PauseGame();
         gameOver.SetActive(true);
         StartCoroutine(HalfFadeOut());
+    }
+
+    public bool IsGameOver()
+    {
+        return gameOver.activeSelf;
     }
 
     public void PauseGame()
@@ -301,19 +318,6 @@ public class UIManager : MonoBehaviour
         fade.CrossFadeAlpha(0.0f, 1, false);
         yield return new WaitForSeconds(1);
         fade.gameObject.SetActive(false);
-    }
-    
-    // Dialog
-    public void StartSpeak(string npc, string text)
-    {
-        npcName.text = npc;
-        message.text = text;
-        dialog.SetActive(true);
-    }
-
-    public void StopSpeak()
-    {
-        dialog.SetActive(false);
     }
     
 }
