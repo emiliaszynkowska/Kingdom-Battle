@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -13,7 +14,9 @@ public class EnemyController : MonoBehaviour
     public int speed;
     private float SavedTime;
     private float DelayTime = 0.5f;
-    private bool IsMoving = true;
+    private bool isMoving = true;
+    private bool isHurt;
+    private bool isPoisoned;
     public bool groundPoundAttack;
     public bool magicAttack;
     public bool spawnEnemies;
@@ -29,14 +32,26 @@ public class EnemyController : MonoBehaviour
     public Text text;
     public ParticleSystem particles;
     private SpriteRenderer enemyRenderer;
+    public Dungeon dungeon;
     // Prefabs
     public GameObject projectilePrefab;
     public GameObject knightPrefab;
     public GameObject goblinPrefab;
 
+    private List<string> drops = new List<string>()
+    {
+        "Coin", "Coin", "Coin", "Coins", "Coins", "Coins", 
+        "Key", "Key", "Wigg's Brew", "Liquid Luck", "Ogre's Strength", "Elixir of Speed"
+    };
+
     public int GetAttack()
     {
         return attack;
+    }
+
+    public void SetDungeon(Dungeon d)
+    {
+        dungeon = d;
     }
     
     void Start()
@@ -59,13 +74,20 @@ public class EnemyController : MonoBehaviour
     {
         // Calculate enemy movement
         target = player.GetComponent<Rigidbody2D>().position;
+        // Set enemy colours
+        if (isPoisoned)
+            enemyRenderer.color = Color.green;
+        else if (isHurt)
+            enemyRenderer.color = Color.red;
+        else
+            enemyRenderer.color = Color.white;
     }
 
     private void FixedUpdate()
     {
         // Move Enemy
         Flip();
-        if (IsMoving)
+        if (isMoving && Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 5)
             body.MovePosition(Vector2.MoveTowards(body.position, target, speed * Time.fixedDeltaTime));
         if (health >= 0)
             healthText.text = health.ToString();
@@ -81,29 +103,54 @@ public class EnemyController : MonoBehaviour
             enemyRenderer.flipX = true;
     }
 
+    IEnumerator Die()
+    {
+        yield return new WaitForSeconds(0.5f);
+        name = "Respawn";
+        enemyRenderer.enabled = false;
+        magicAttack = false;
+        groundPoundAttack = false;
+        spawnEnemies = false;
+        healthText.enabled = false;
+        GetComponent<Collider2D>().enabled = false;
+        DungeonManager dungeonManager = GameObject.Find("Map").GetComponent<DungeonManager>();
+        dungeonManager.PlaceItem(drops[Random.Range(0, 12)], transform.position);
+        yield return new WaitForSeconds(10);
+        dungeonManager.PlaceEnemy(dungeon);
+        Destroy(gameObject);
+    }
+
     public IEnumerator TakeDamage(int playerAttack)
     {
-        if ((Time.time - SavedTime) > DelayTime)
+        if (!isPoisoned && (Time.time - SavedTime) > DelayTime)
         {
             SavedTime = Time.time;
             // Take Damage
+            isHurt = true;
             health -= playerAttack;
-            enemyRenderer.color = Color.red;
-            yield return new WaitForSeconds(0.5f);
-            enemyRenderer.color = Color.white;
             if (health <= 0)
-            {
-                Destroy(healthText);
-                gameObject.SetActive(false);
-            }
+                StartCoroutine(Die());
+            yield return new WaitForSeconds(0.5f);
+            isHurt = false;
         }
     }
 
     public IEnumerator PoisonDamage()
     {
-        enemyRenderer.color = Color.green;
-        yield return new WaitForSeconds(3);
-        enemyRenderer.color = Color.white;
+        isPoisoned = true;
+        yield return new WaitForSeconds(1);
+        health -= 1;
+        if (health <= 0)
+            StartCoroutine(Die());
+        yield return new WaitForSeconds(1);
+        health -= 1;
+        if (health <= 0)
+            StartCoroutine(Die());
+        yield return new WaitForSeconds(1);
+        health -= 1;
+        if (health <= 0)
+            StartCoroutine(Die());
+        isPoisoned = false;
     }
 
     IEnumerator MagicAttack()
@@ -113,7 +160,7 @@ public class EnemyController : MonoBehaviour
         while (true)
         {
             // Magic Attack
-            if (Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 3)
+            if (magicAttack && Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 3)
             {
                 GameObject p = Instantiate(projectilePrefab, transform.position, transform.rotation);
                 p.transform.SetParent(transform);
@@ -130,21 +177,21 @@ public class EnemyController : MonoBehaviour
         // Ground Pound
         while (true)
         {
-            if (Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 5)
+            if (groundPoundAttack && Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 5)
             {
                 // Wait
-                IsMoving = false;
+                isMoving = false;
                 yield return new WaitForSeconds(1);
                 // Jump
                 animator.SetTrigger("Jump");
-                IsMoving = true;
+                isMoving = true;
                 yield return new WaitForSeconds(1);
                 // Animate
-                IsMoving = false;
+                isMoving = false;
                 Instantiate(particles, transform);
                 yield return new WaitForSeconds(1);
                 // Reset
-                IsMoving = true;
+                isMoving = true;
             }
             yield return new WaitForSeconds(groundPoundTime);
         }
@@ -157,7 +204,7 @@ public class EnemyController : MonoBehaviour
         // Spawn Enemies 
         while (true)
         {
-            if (Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 3)
+            if (spawnEnemies && Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 3)
             {
                 if (name.Equals("Elite Knight") || name.Equals("Royal Guardian"))
                 {

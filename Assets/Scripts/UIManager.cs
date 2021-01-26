@@ -20,8 +20,9 @@ public class UIManager : MonoBehaviour
     public Text npcName;
     public Text message;
     public GameObject menu;
+    public GameObject gameOver;
     public Text powerup;
-    public GameObject fade;
+    public Image fade;
     // Variables
     public int activeItem;
     // Assets
@@ -29,23 +30,22 @@ public class UIManager : MonoBehaviour
     public Sprite emptyLife;
     public Sprite key;
     public Sprite scroll;
-    public Sprite potionRed;
-    public Sprite potionYellow;
-    public Sprite potionGreen;
-    public Sprite potionBlue;
+    public Sprite wiggsBrew;
+    public Sprite liquidLuck;
+    public Sprite ogresStrength;
+    public Sprite elixirofSpeed;
 
     // Player Information 
     public void SetInfo(string player, string[] disciplines, int coins)
     {
         // Get objects
-        Text playerText = (Text) info.transform.GetChild(0).gameObject.GetComponentInChildren<Text>();
-        GameObject discipline1 = info.transform.GetChild(1).gameObject;
+        Text playerText = info.transform.GetChild(0).gameObject.GetComponentInChildren<Text>();
         GameObject discipline2 = info.transform.GetChild(2).gameObject;
         GameObject discipline3 = info.transform.GetChild(3).gameObject;
-        Text disciplineText1 = (Text) info.transform.GetChild(1).gameObject.GetComponentInChildren<Text>();
-        Text disciplineText2 = (Text) info.transform.GetChild(2).gameObject.GetComponentInChildren<Text>();
-        Text disciplineText3 = (Text) info.transform.GetChild(3).gameObject.GetComponentInChildren<Text>();
-        Text moneyText = (Text) info.transform.GetChild(4).gameObject.GetComponentInChildren<Text>();
+        Text disciplineText1 = info.transform.GetChild(1).gameObject.GetComponentInChildren<Text>();
+        Text disciplineText2 = info.transform.GetChild(2).gameObject.GetComponentInChildren<Text>();
+        Text disciplineText3 = info.transform.GetChild(3).gameObject.GetComponentInChildren<Text>();
+        Text moneyText = info.transform.GetChild(4).gameObject.GetComponentInChildren<Text>();
         GameObject money = info.transform.GetChild(4).gameObject;
         
         // Name
@@ -57,30 +57,30 @@ public class UIManager : MonoBehaviour
         {
             discipline3.SetActive(true);
             disciplineText3.text = disciplines[2];
-            SetMoneyPosition(money, moneyText, -180);
+            SetMoneyPosition(money, -180);
         }
         else
         {
             discipline3.SetActive(false);
-            SetMoneyPosition(money, moneyText, -120);
+            SetMoneyPosition(money, -120);
         }
         // Discipline 2
         if (disciplines[1] != null)
         {
             discipline2.SetActive(true);
             disciplineText2.text = disciplines[1];
-            SetMoneyPosition(money, moneyText, -120);
+            SetMoneyPosition(money, -120);
         }
         else
         {
             discipline2.SetActive(false);
-            SetMoneyPosition(money, moneyText, -60);
+            SetMoneyPosition(money, -60);
         }
         // Discipline 1
         disciplineText1.text = disciplines[0];
     }
 
-    void SetMoneyPosition(GameObject money, Text text, int y)
+    void SetMoneyPosition(GameObject money, int y)
     {
         var pos = money.transform.localPosition;
         pos.y = y;
@@ -144,16 +144,16 @@ public class UIManager : MonoBehaviour
               items.transform.GetChild(index).gameObject.GetComponent<Image>().sprite = scroll;
               break;
           case "Wigg's Brew":
-              items.transform.GetChild(index).gameObject.GetComponent<Image>().sprite = potionRed;
+              items.transform.GetChild(index).gameObject.GetComponent<Image>().sprite = wiggsBrew;
               break;
           case "Liquid Luck":
-              items.transform.GetChild(index).gameObject.GetComponent<Image>().sprite = potionYellow;
+              items.transform.GetChild(index).gameObject.GetComponent<Image>().sprite = liquidLuck;
               break;
           case "Ogre's Strength":
-              items.transform.GetChild(index).gameObject.GetComponent<Image>().sprite = potionGreen;
+              items.transform.GetChild(index).gameObject.GetComponent<Image>().sprite = ogresStrength;
               break;
           case "Elixir of Speed":
-              items.transform.GetChild(index).gameObject.GetComponent<Image>().sprite = potionBlue;
+              items.transform.GetChild(index).gameObject.GetComponent<Image>().sprite = elixirofSpeed;
               break;
         }
         items.transform.GetChild(index).gameObject.SetActive(true);
@@ -212,14 +212,14 @@ public class UIManager : MonoBehaviour
     {
         PauseGame();
         menu.SetActive(true);
-        StartCoroutine("MenuFadeIn");
+        StartCoroutine(HalfFadeIn());
     }
 
     public void ExitMenu()
     {
         ResumeGame();
         menu.SetActive(false);
-        StartCoroutine("MenuFadeOut");
+        StartCoroutine(HalfFadeOut());
     }
 
     public bool IsMenu()
@@ -239,6 +239,24 @@ public class UIManager : MonoBehaviour
         options.SetActive(true);
         optionsShop.SetActive(false);
     }
+
+    public void GameOver()
+    {
+        StartCoroutine(HalfFadeIn());
+        PauseGame();
+        gameOver.SetActive(true);
+        StartCoroutine(HalfFadeOut());
+    }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0;
+    }
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1;
+    }
     
     public void Restart()
     {
@@ -247,29 +265,42 @@ public class UIManager : MonoBehaviour
 
     public void Exit()
     {
+        StartCoroutine(ExitFade());
+    }
+
+    public IEnumerator ExitFade()
+    {
+        StartCoroutine(FadeIn());
+        yield return new WaitForSeconds(1);
         SceneManager.LoadScene("Title");
     }
-
-    public void PauseGame ()
+    
+    public IEnumerator FadeIn()
     {
-        Time.timeScale = 0;
-    }
-
-    public void ResumeGame ()
-    {
-        Time.timeScale = 1;
+        fade.gameObject.SetActive(true);
+        fade.CrossFadeAlpha(1.0f, 1, false);
+        yield return new WaitForSeconds(2);
     }
     
-    IEnumerator MenuFadeIn()
+    public IEnumerator FadeOut()
     {
-        fade.GetComponent<Image>().CrossFadeAlpha(0.5f, 1, false);
+        fade.CrossFadeAlpha(0.0f, 1, false);
+        yield return new WaitForSeconds(2);
+        fade.gameObject.SetActive(false);
+    }
+    
+    IEnumerator HalfFadeIn()
+    {
+        fade.gameObject.SetActive(true);
+        fade.CrossFadeAlpha(0.5f, 1, false);
         yield return new WaitForSeconds(1);
     }
     
-    IEnumerator MenuFadeOut()
+    IEnumerator HalfFadeOut()
     {
-        fade.GetComponent<Image>().CrossFadeAlpha(0.0f, 1, false);
+        fade.CrossFadeAlpha(0.0f, 1, false);
         yield return new WaitForSeconds(1);
+        fade.gameObject.SetActive(false);
     }
     
     // Dialog

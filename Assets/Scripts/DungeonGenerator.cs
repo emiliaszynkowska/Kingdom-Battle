@@ -23,53 +23,31 @@ public class DungeonGenerator : MonoBehaviour
     public Tile rightPointTile;
     public Tile leftWallTile;
     public Tile rightWallTile;
-    public Tile doorClosedTile;
-    public Tile doorOpenTile;
-    public Tile doorEdgeTile;
-    public Tile doorLeftTile;
-    public Tile doorRightTile;
     // Tilemaps
     public Tilemap groundMap;
     public Tilemap innerWallMap;
     public Tilemap outerWallMap;
     public Tilemap edgeMap;
-    public Tilemap doorMap;
     // Variables
     public int width;
     public int height;
     public int minRoomSize;
     public int maxRoomSize;
     public int doorChance;
+    public int itemChance;
+    public int objectChance;
     public int enemyChance;
     private List<Dungeon> dungeons = new List<Dungeon>();
     // Game Objects
-    public Image fade;
-    public GameObject player;
-    public GameObject enemies;
-    public GameObject bosses;
-    // Prefabs
-    public GameObject impPrefab;
-    public GameObject goblinPrefab;
-    public GameObject chortPrefab;
-    public GameObject orcPrefab;
-    public GameObject knightPrefab;
-    public GameObject necromancerPrefab;
-    public GameObject demonPrefab;
-    public GameObject ogrePrefab;
-    public GameObject eliteKnightPrefab;
-    public GameObject royalGuardianPrefab;
-    public GameObject golemPrefab;
-    public GameObject trollPrefab;
+    public DungeonManager dungeonManager;
 
     public void AddDungeon(Dungeon dungeon)
     {
         dungeons.Add(dungeon);
     }
-    
+
     void Start()
     {
-        // Hide
-        fade.GetComponent<CanvasRenderer>().SetAlpha(1);
         // Generate 
         Dungeon root = new Dungeon(new Rect(0,0,width,height));
         Generate(root); 
@@ -78,23 +56,46 @@ public class DungeonGenerator : MonoBehaviour
         FillCorridors(root);
         FillTiles();
         // Show 
-        StartCoroutine("FadeIn");
+        StartCoroutine(dungeonManager.FadeOut());
         // Place Player
-        player.transform.position = dungeons[Random.Range(0, dungeons.Count)].room.center;
+        dungeonManager.PlacePlayer(dungeons[Random.Range(0, dungeons.Count)].room.center);
         // Place Doors
         FillDoors();
-        // Place Enemies
         foreach (Dungeon dungeon in dungeons)
         {
-            var chance = Random.Range(0, 100);
-            if (chance < enemyChance)
-                GenerateEnemy(dungeon);
-            if (chance < 20) 
-                GenerateEnemy(dungeon);
-            if (chance < 10)
-                GenerateEnemy(dungeon);
+            // Place Enemies
+            if (enemyChance >= 25)
+                dungeonManager.PlaceEnemy(dungeon);
+            if (enemyChance >= 50)
+                dungeonManager.PlaceEnemy(dungeon);
+            if (enemyChance >= 75) 
+                dungeonManager.PlaceEnemy(dungeon);
+            // Place Chests
+            var placed = false;
+            if (Random.Range(0, 2) == 0 && objectChance <= 25)
+            {
+                dungeonManager.PlaceChest(dungeon);
+                placed = true;
+            }
+            if (Random.Range(0, 3) == 0 && objectChance <= 50 && !placed)
+            {
+                dungeonManager.PlaceChest(dungeon);
+                placed = true;
+            }
+            if (Random.Range(0, 4) == 0 && objectChance <= 75 && !placed)
+            {
+                dungeonManager.PlaceChest(dungeon);
+                placed = true;
+            }
+            // Place Spikes
+            if (objectChance >= 25 && Random.Range(0, 3) == 0)
+                dungeonManager.PlaceSpikes(dungeon);
+            if (objectChance >= 50 && Random.Range(0, 2) == 0)
+                dungeonManager.PlaceSpikes(dungeon);
+            if (objectChance >= 75)
+                dungeonManager.PlaceSpikes(dungeon);
+            // Place Items
         }
-        // Place Items
     }
 
     void Generate(Dungeon dungeon)
@@ -323,66 +324,11 @@ public class DungeonGenerator : MonoBehaviour
                         && outerWallMap.GetTile(posLeftLeft) != null & outerWallMap.GetTile(posRightRight) != null)
                     {
                         // Place a door
-                        doorMap.SetTile(pos1, doorClosedTile);
-                        doorMap.SetTile(posUpperLeft, doorEdgeTile);
-                        doorMap.SetTile(posLeft, doorLeftTile);
-                        doorMap.SetTile(pos2, doorRightTile);
+                        dungeonManager.PlaceDoor(posUpperRight);
                     }
                 }
             }
         }
-    }
-
-    private Vector2 RandomPosition(Rect room)
-    {
-        return new Vector2(Random.Range(room.xMin + 1, room.xMax - 1), Random.Range(room.yMin + 1, room.yMax - 1));
-    }
-
-    private void GenerateEnemy(Dungeon dungeon)
-    {
-        var choice = Random.Range(0, 7);
-        GameObject prefab = null;
-        switch (choice)
-        {
-            case(0):
-                prefab = impPrefab;
-                break;
-            case(1):
-                prefab = goblinPrefab;
-                break;
-            case(2):
-                prefab = chortPrefab;
-                break;
-            case(3):
-                prefab = orcPrefab;
-                break;
-            case(4):
-                prefab = knightPrefab;
-                break;
-            case(5):
-                prefab = necromancerPrefab;
-                break;
-            case(6):
-                prefab = demonPrefab;
-                break;
-            case(7):
-                prefab = ogrePrefab;
-                break;
-        }
-        GameObject enemy = Instantiate(prefab, RandomPosition(dungeon.room), Quaternion.Euler(0, 0, 0));
-        enemy.transform.SetParent(enemies.transform);
-    }
-    
-    IEnumerator FadeIn()
-    {
-        fade.CrossFadeAlpha(0.0f, 1, false);
-        yield return new WaitForSeconds(2);
-    }
-    
-    IEnumerator FadeOut()
-    {
-        fade.CrossFadeAlpha(1.0f, 1, false);
-        yield return new WaitForSeconds(2);
     }
 
 }

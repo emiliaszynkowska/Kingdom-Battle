@@ -12,6 +12,8 @@ TagManager:
   - Enemy
   - Projectile
   - NPC
+  - Chest
+  - Door
   layers:
   - Default
   - TransparentFX

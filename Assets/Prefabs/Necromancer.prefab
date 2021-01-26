@@ -348,7 +348,7 @@ MonoBehaviour:
   magicAttack: 1
   spawnEnemies: 0
   groundPoundTime: 0
-  magicTime: 2
+  magicTime: 3
   spawnTime: 0
   text: {fileID: 8209499822660693557}
   particles: {fileID: 1484304525313702822, guid: 740a6d4dab6fce94ebaf523c203cdf0f,

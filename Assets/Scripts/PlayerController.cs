@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 
@@ -11,10 +12,8 @@ public class PlayerController : MonoBehaviour
     private float speed = 0.1f;
     // Combat
     private int attack = 1;
-    private int health = 5;
+    private int health = 3;
     private int livesActive = 3;
-    private float lastHurtTime = -10;
-    private float hurtTimeOut = 1;
     // Booleans
     private bool isAttacking;
     private bool isHurt;
@@ -129,6 +128,11 @@ public class PlayerController : MonoBehaviour
     {
         return isBouncing;
     }
+
+    public bool IsHurt()
+    {
+        return isHurt;
+    }
     
     void StopBounceHorizontal()
     {
@@ -167,14 +171,17 @@ public class PlayerController : MonoBehaviour
         inventory.Add(item);
     }
     
-    IEnumerator TakeDamage()
+// ---------------------------------------------------------------------------------------------------------------------
+// Combat
+    
+    IEnumerator TakeDamage(int damage)
     {
-        if (!IsAttacking() && !IsBouncing() && Time.time < lastHurtTime + hurtTimeOut)
+        if (health > 0 && !IsHurt() && !IsAttacking() && IsBouncing())
         {
-            Flip();
-            lastHurtTime = Time.time;
             isHurt = true;
-            playerRenderer.color = new Color(0.8f, 0.3f, 0.4f, 1);
+            health -= damage;
+            uiManager.SetLives(health);
+            playerRenderer.color = new Color(0.8f, 0.22f, 0.2f);
             yield return new WaitForSeconds(1);
             playerRenderer.color = Color.white;
             isHurt = false;
@@ -197,7 +204,6 @@ public class PlayerController : MonoBehaviour
         if (timers.transform.GetChild(0).gameObject.GetComponent<TimerController>().CanAttack())
         {
             // Start Attacking
-            Flip();
             isAttacking = true;
             // Animate Attack
             weaponAnimator.SetTrigger("Attack");
@@ -230,7 +236,6 @@ public class PlayerController : MonoBehaviour
         if (timers.transform.GetChild(1).gameObject.GetComponent<TimerController>().CanAttack())
         {
             // Start Attacking
-            Flip();
             isAttacking = true;
             // Animate Spin Attack
             weaponAnimator.SetTrigger("Spin");
@@ -293,146 +298,14 @@ public class PlayerController : MonoBehaviour
             timers.transform.GetChild(2).gameObject.GetComponent<TimerController>().Reset();
         }
     }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy") && collision.otherCollider is BoxCollider2D && !isHurt)
-        {
-            // Bounce off the enemy
-            StartCoroutine("TakeKnockback", collision.transform.position);
-            Invoke("StopBounceHorizontal", 0.5f);
-            EnemyController enemyController = collision.gameObject.GetComponent<EnemyController>();
-            if (enemyController != null && enemyController.health > 0)
-            {
-                // Take damage
-                if (health > 0)
-                {
-                    int enemyAttack = collision.gameObject.GetComponent<EnemyController>().GetAttack();
-                    health -= enemyAttack;
-                    uiManager.SetLives(health);
-                    StartCoroutine("TakeDamage");
-                }
-                else
-                {
-                    // Game over
-                }
-            }
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Item") && GetComponent<BoxCollider2D>().IsTouching(other))
-        {
-            other.gameObject.SetActive(false);
-            // Check item
-            switch (other.name)
-            {
-                // Coin
-                case "Coin":
-                    playerCoins++;
-                    uiManager.SetInfo(playerName, playerDisciplines, playerCoins);
-                    break;
-                // Key
-                case "Key":
-                    if (inventory.Count < 8)
-                    {
-                        other.gameObject.SetActive(false);
-                        uiManager.AddItem("Key", inventory.Count);
-                        AddItem("Key");
-                    }
-
-                    break;
-                // Scroll
-                case "Scroll":
-                    if (inventory.Count < 8)
-                    {
-                        other.gameObject.SetActive(false);
-                        uiManager.AddItem("Scroll", inventory.Count);
-                        AddItem("Scroll");
-                    }
-
-                    break;
-                // Potion
-                case "Wigg's Brew":
-                    if (inventory.Count < 8)
-                    {
-                        other.gameObject.SetActive(false);
-                        uiManager.AddItem("Wigg's Brew", inventory.Count);
-                        AddItem("Wigg's Brew");
-                    }
-
-                    break;
-                case "Liquid Luck":
-                    if (inventory.Count < 8)
-                    {
-                        other.gameObject.SetActive(false);
-                        uiManager.AddItem("Liquid Luck", inventory.Count);
-                        AddItem("Liquid Luck");
-                    }
-
-                    break;
-                case "Ogre's Strength":
-                    if (inventory.Count < 8)
-                    {
-                        other.gameObject.SetActive(false);
-                        uiManager.AddItem("Ogre's Strength", inventory.Count);
-                        AddItem("Ogre's Strength");
-                    }
-
-                    break;
-                case "Elixir of Speed":
-                    if (inventory.Count < 8)
-                    {
-                        other.gameObject.SetActive(false);
-                        uiManager.AddItem("Elixir of Speed", inventory.Count);
-                        AddItem("Elixir of Speed");
-                    }
-
-                    break;
-            }
-        }
-
-        if (other.gameObject.name.Equals("Spike") && GetComponent<BoxCollider2D>().IsTouching(other) && !isHurt)
-        {
-            // Bounce off the spikes
-            body.AddForce(Vector2.up * 100);
-            isBouncing = true;
-            Invoke("StopBounceVertical", 0.2f);
-            // Take damage
-            if (health > 0)
-            {
-                health--;
-                uiManager.SetLives(health);
-                StartCoroutine("TakeDamage");
-            }
-            else
-            {
-                // Game over
-            }
-        }
-
-        if (other.gameObject.CompareTag("Projectile") && GetComponent<BoxCollider2D>().IsTouching(other) && !isHurt)
-        {
-            Destroy(other);
-            // Take damage
-            if (health > 0)
-            {
-                health--;
-                uiManager.SetLives(health);
-                StartCoroutine(TakeDamage());
-            }
-            else
-            {
-                // Game Over
-            }
-        }
-    }
+    
+// ---------------------------------------------------------------------------------------------------------------------
+// UI Checking
 
     void CheckUI()
     {
         // Interact
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && !uiManager.IsInventory())
         {
             Collider2D[] results = new Collider2D[8];
             groundPoundCollider.OverlapCollider(contactFilter, results);
@@ -445,6 +318,26 @@ public class PlayerController : MonoBehaviour
                         StartCoroutine(col.GetComponent<Quest>().Talk());
                     else if (col.name.Equals("Merchant"))
                         col.GetComponent<MerchantController>().Talk();
+                }
+                else if (col != null && col.CompareTag("Chest") && inventory.Contains("Key"))
+                {
+                    var index = inventory.IndexOf("Key");
+                    if (UseItem(index))
+                    {
+                        uiManager.activeItem = index;
+                        uiManager.UseItem();
+                        uiManager.DisableItem(inventory.Count);
+                    }
+                }
+                else if (col != null && col.CompareTag("Door") && inventory.Contains("Key"))
+                {
+                    var index = inventory.IndexOf("Key");
+                    if (UseItem(index))
+                    {
+                        uiManager.activeItem = index;
+                        uiManager.UseItem();
+                        uiManager.DisableItem(inventory.Count);
+                    }
                 }
             }
         }
@@ -464,10 +357,11 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.E) && uiManager.IsInventory())
         {
-            UseItem(inventory[uiManager.activeItem]);
-            inventory.RemoveAt(uiManager.activeItem);
-            uiManager.UseItem();
-            uiManager.DisableItem(inventory.Count);
+            if (UseItem(uiManager.activeItem))
+            {
+                uiManager.UseItem();
+                uiManager.DisableItem(inventory.Count);
+            }
         }
         else if (Input.GetKeyDown(KeyCode.I) && uiManager.IsInventory())
             uiManager.ExitInventory();
@@ -484,40 +378,70 @@ public class PlayerController : MonoBehaviour
             uiManager.Menu();
         }
     }
+    
+// ---------------------------------------------------------------------------------------------------------------------
+// Items
 
-    void UseItem(string item)
+    public bool UseItem(int index)
     {
-        switch (item)
+        switch (inventory[index])
         {
             // Key
-                case "Key":
-                    break;
-                // Scroll
-                case "Scroll":
-                    break;
-                // Potion
-                case "Wigg's Brew":
-                    StartCoroutine("WiggsBrew");
-                    if (health < livesActive)
+            case "Key":
+                Collider2D[] results = new Collider2D[8];
+                groundPoundCollider.OverlapCollider(contactFilter, results);
+                foreach (Collider2D col in results)
+                {
+                    if (col != null && col.CompareTag("Chest") && inventory.Contains("Key"))
                     {
-                        health++;
-                        uiManager.SetLives(health);
+                        if (col.GetComponent<ChestController>().Open())
+                        {
+                            inventory.RemoveAt(index);
+                            return true;
+                        }
                     }
-                    uiManager.ExitInventory();
-                    break;
-                case "Liquid Luck":
-                    StartCoroutine("LiquidLuck");
-                    uiManager.ExitInventory();
-                    break;
-                case "Ogre's Strength":
-                    StartCoroutine("OgreStrength");
-                    uiManager.ExitInventory();
-                    break;
-                case "Elixir of Speed":
-                    StartCoroutine("ElixirOfSpeed");
-                    uiManager.ExitInventory();
-                    break;
+                    else if (col != null && col.CompareTag("Door") && inventory.Contains("Key"))
+                    {
+                        if (col.GetComponent<DoorController>().Open())
+                        {
+                            inventory.RemoveAt(index);
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            // Scroll
+            case "Scroll":
+                inventory.RemoveAt(index);
+                return true;
+            // Potion
+            case "Wigg's Brew":
+                StartCoroutine(WiggsBrew());
+                if (health < livesActive)
+                {
+                    health++;
+                    uiManager.SetLives(health);
+                }
+                inventory.RemoveAt(index);
+                uiManager.ExitInventory();
+                return true;
+            case "Liquid Luck":
+                StartCoroutine(LiquidLuck());
+                inventory.RemoveAt(index);
+                uiManager.ExitInventory();
+                return true;
+            case "Ogre's Strength":
+                StartCoroutine(OgreStrength());
+                inventory.RemoveAt(index);
+                uiManager.ExitInventory();
+                return true;
+            case "Elixir of Speed":
+                StartCoroutine(ElixirOfSpeed());
+                inventory.RemoveAt(index);
+                uiManager.ExitInventory();
+                return true;
         }
+        return false;
     }
     
     // Wigg's Brew - increase health by 1 and glow red 
@@ -571,6 +495,136 @@ public class PlayerController : MonoBehaviour
     public bool IsOgreStrength()
     {
         return ogreStrength;
+    }
+    
+// ---------------------------------------------------------------------------------------------------------------------
+// Triggers and Collisions
+    
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy") && collision.otherCollider is BoxCollider2D)
+        {
+            // Bounce off the enemy
+            StartCoroutine("TakeKnockback", collision.transform.position);
+            Invoke("StopBounceHorizontal", 0.5f);
+            EnemyController enemyController = collision.gameObject.GetComponent<EnemyController>();
+            if (enemyController != null && enemyController.health > 0)
+            {
+                // Take damage
+                if (health > 0)
+                {
+                    int enemyAttack = collision.gameObject.GetComponent<EnemyController>().GetAttack();
+                    StartCoroutine(TakeDamage(enemyAttack));
+                }
+                else
+                {
+                    // Game over
+                }
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Item") && GetComponent<BoxCollider2D>().IsTouching(other))
+        {
+            // Check item
+            switch (other.name)
+            {
+                // Coin
+                case "Coin":
+                    playerCoins++;
+                    uiManager.SetInfo(playerName, playerDisciplines, playerCoins);
+                    break;
+                // Key
+                case "Key":
+                    if (inventory.Count < 8)
+                    {
+                        other.gameObject.SetActive(false);
+                        uiManager.AddItem("Key", inventory.Count);
+                        AddItem("Key");
+                    }
+                    break;
+                // Scroll
+                case "Scroll":
+                    if (inventory.Count < 8)
+                    {
+                        other.gameObject.SetActive(false);
+                        uiManager.AddItem("Scroll", inventory.Count);
+                        AddItem("Scroll");
+                    }
+
+                    break;
+                // Potion
+                case "Wigg's Brew":
+                    if (inventory.Count < 8)
+                    {
+                        other.gameObject.SetActive(false);
+                        uiManager.AddItem("Wigg's Brew", inventory.Count);
+                        AddItem("Wigg's Brew");
+                    }
+
+                    break;
+                case "Liquid Luck":
+                    if (inventory.Count < 8)
+                    {
+                        other.gameObject.SetActive(false);
+                        uiManager.AddItem("Liquid Luck", inventory.Count);
+                        AddItem("Liquid Luck");
+                    }
+
+                    break;
+                case "Ogre's Strength":
+                    if (inventory.Count < 8)
+                    {
+                        other.gameObject.SetActive(false);
+                        uiManager.AddItem("Ogre's Strength", inventory.Count);
+                        AddItem("Ogre's Strength");
+                    }
+
+                    break;
+                case "Elixir of Speed":
+                    if (inventory.Count < 8)
+                    {
+                        other.gameObject.SetActive(false);
+                        uiManager.AddItem("Elixir of Speed", inventory.Count);
+                        AddItem("Elixir of Speed");
+                    }
+                    break;
+            }
+            Destroy(other.gameObject);
+        }
+
+        if (other.gameObject.name.Equals("Spikes") && GetComponent<BoxCollider2D>().IsTouching(other))
+        {
+            // Bounce off the spikes
+            body.AddForce(Vector2.up * 100);
+            isBouncing = true;
+            Invoke("StopBounceVertical", 0.2f);
+            // Take damage
+            if (health > 0)
+            {
+                StartCoroutine(TakeDamage(1));
+            }
+            else
+            {
+                // Game over
+            }
+        }
+
+        if (other.gameObject.CompareTag("Projectile") && GetComponent<BoxCollider2D>().IsTouching(other))
+        {
+            Destroy(other);
+            // Take damage
+            if (health > 0)
+            {
+                StartCoroutine(TakeDamage(1));
+            }
+            else
+            {
+                // Game Over
+            }
+        }
     }
     
 }
