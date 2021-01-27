@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     private GameObject lifeup;
     private GameObject shadow;
     private GameObject shine;
+    public GameObject death;
     public ParticleSystem particles;
     public GameObject timers;
     private Collider2D attackCollider;
@@ -176,7 +177,7 @@ public class PlayerController : MonoBehaviour
     
     IEnumerator TakeDamage(int damage)
     {
-        if (health > 0 && !IsHurt() && !IsAttacking())
+        if (health > 1 && !IsHurt() && !IsAttacking())
         {
             isHurt = true;
             health -= damage;
@@ -186,8 +187,20 @@ public class PlayerController : MonoBehaviour
             playerRenderer.color = Color.white;
             isHurt = false;
         }
-        else if (health <= 0 && !uiManager.IsGameOver())
-            uiManager.GameOver();
+        else if (health <= 1 && !uiManager.IsGameOver())
+        {
+            uiManager.PauseGame();
+            health -= damage;
+            uiManager.SetLives(health);
+            death.GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.22f, 0.2f);
+            death.GetComponent<SpriteRenderer>().flipY = playerRenderer.flipX;
+            death.transform.position = new Vector2(transform.position.x + 0.5f, transform.position.y - 0.5f);
+            death.SetActive(true);
+            playerRenderer.enabled = false;
+            weapon.SetActive(false);
+            yield return new WaitForSeconds(1);
+            StartCoroutine(uiManager.GameOver());
+        }
     }
 
     IEnumerator TakeKnockback(Vector3 source)

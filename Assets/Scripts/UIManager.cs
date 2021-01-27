@@ -1,11 +1,14 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Timeline;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     // Objects
+    public PlayerController playerController;
     public GameObject map;
     public GameObject info;
     public GameObject lives;
@@ -20,6 +23,7 @@ public class UIManager : MonoBehaviour
     public Text npcName;
     public Text message;
     public GameObject menu;
+    public GameObject level;
     public GameObject gameOver;
     public Text powerup;
     public Image fade;
@@ -35,7 +39,7 @@ public class UIManager : MonoBehaviour
     public Sprite ogresStrength;
     public Sprite elixirofSpeed;
 
-    // Player Information 
+    // Player Information
     public void SetInfo(string player, string[] disciplines, int coins)
     {
         // Get objects
@@ -86,7 +90,7 @@ public class UIManager : MonoBehaviour
         pos.y = y;
         money.transform.localPosition = pos;
     }
-
+    
     // Lives 
     public void SetLivesActive(int n)
     {
@@ -208,18 +212,16 @@ public class UIManager : MonoBehaviour
         
     }
 
-    public void Menu() 
+    public void Menu()
     {
         PauseGame();
         menu.SetActive(true);
-        StartCoroutine(HalfFadeIn());
     }
 
     public void ExitMenu()
     {
         ResumeGame();
         menu.SetActive(false);
-        StartCoroutine(HalfFadeOut());
     }
 
     public bool IsMenu()
@@ -252,12 +254,13 @@ public class UIManager : MonoBehaviour
         dialog.SetActive(false);
     }
 
-    public void GameOver()
+    public IEnumerator GameOver()
     {
-        StartCoroutine(HalfFadeIn());
-        PauseGame();
+        StartCoroutine(FadeIn());
+        yield return new WaitForSeconds(0.5f);
         gameOver.SetActive(true);
-        StartCoroutine(HalfFadeOut());
+        StartCoroutine(FadeOut());
+        yield return new WaitForSeconds(0.5f);
     }
 
     public bool IsGameOver()
@@ -265,6 +268,29 @@ public class UIManager : MonoBehaviour
         return gameOver.activeSelf;
     }
 
+    public void Level(int n)
+    {
+        PauseGame();
+        level.transform.GetChild(1).GetComponent<Text>().text = "Level " + n.ToString();
+        menu.SetActive(false);
+        gameOver.SetActive(false);
+        inventory.SetActive(false);
+        level.SetActive(true);
+    }
+
+    public void LevelStart()
+    {
+        level.SetActive(false);
+        ResumeGame();
+        fade.CrossFadeAlpha(0.8f, 0, true);
+        StartCoroutine(FadeOut());
+    }
+
+    public bool IsLevel()
+    {
+        return level.activeSelf;
+    }
+    
     public void PauseGame()
     {
         Time.timeScale = 0;
@@ -277,7 +303,7 @@ public class UIManager : MonoBehaviour
     
     public void Restart()
     {
-        // To Do
+        
     }
 
     public void Exit()
@@ -288,36 +314,20 @@ public class UIManager : MonoBehaviour
     public IEnumerator ExitFade()
     {
         StartCoroutine(FadeIn());
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.5f);
         SceneManager.LoadScene("Title");
     }
-    
+
     public IEnumerator FadeIn()
     {
-        fade.gameObject.SetActive(true);
-        fade.CrossFadeAlpha(1.0f, 1, false);
-        yield return new WaitForSeconds(2);
+        fade.CrossFadeAlpha(1.0f, 0.5f, true);
+        yield return new WaitForSeconds(0.5f);
     }
     
     public IEnumerator FadeOut()
     {
-        fade.CrossFadeAlpha(0.0f, 1, false);
-        yield return new WaitForSeconds(2);
-        fade.gameObject.SetActive(false);
+        fade.CrossFadeAlpha(0.0f, 0.5f, true);
+        yield return new WaitForSeconds(0.5f);
     }
-    
-    IEnumerator HalfFadeIn()
-    {
-        fade.gameObject.SetActive(true);
-        fade.CrossFadeAlpha(0.5f, 1, false);
-        yield return new WaitForSeconds(1);
-    }
-    
-    IEnumerator HalfFadeOut()
-    {
-        fade.CrossFadeAlpha(0.0f, 1, false);
-        yield return new WaitForSeconds(1);
-        fade.gameObject.SetActive(false);
-    }
-    
+
 }

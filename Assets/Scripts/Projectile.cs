@@ -15,7 +15,7 @@ public class Projectile : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector2 target = player.transform.position - start; 
+        Vector2 target = player.transform.position - start;
         body.AddForce(target / 50, ForceMode2D.Impulse);
     }
 

@@ -1,13 +1,6 @@
-using System.CodeDom.Compiler;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Schema;
-using Unity.Collections;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;
 
 public class DungeonGenerator : MonoBehaviour
 {
@@ -38,7 +31,6 @@ public class DungeonGenerator : MonoBehaviour
     public int objectChance;
     public int enemyChance;
     private List<Dungeon> dungeons = new List<Dungeon>();
-    // Game Objects
     public DungeonManager dungeonManager;
 
     public void AddDungeon(Dungeon dungeon)
@@ -55,8 +47,6 @@ public class DungeonGenerator : MonoBehaviour
         FillRooms(root);
         FillCorridors(root);
         FillTiles();
-        // Show 
-        StartCoroutine(dungeonManager.FadeOut());
         // Place Player
         dungeonManager.PlacePlayer(dungeons[Random.Range(0, dungeons.Count)].room.center);
         // Place Doors
@@ -273,7 +263,7 @@ public class DungeonGenerator : MonoBehaviour
             for (int yMap = bounds.yMin - 10; yMap <= bounds.yMax + 10; yMap++)
             {
                 // Calculate probability
-                if (Random.Range(0, 100) < doorChance)
+                if (Random.Range(0, 4) < doorChance)
                 {
                     Vector3Int pos1 = new Vector3Int(xMap, yMap, 0);
                     Vector3Int pos2 = new Vector3Int(xMap + 1, yMap, 0);
@@ -306,20 +296,39 @@ public class DungeonGenerator : MonoBehaviour
             if (enemyChance >= 1)
                 dungeonManager.PlaceEnemy(dungeon);
             if (enemyChance >= 2 && Random.Range(0, 5) == 0)
+            {
                 dungeonManager.PlaceEnemy(dungeon);
-            if (enemyChance >= 3 && Random.Range(0, 6) == 0) 
+            }
+            if (enemyChance >= 3 && Random.Range(0, 6) == 0)
+            {
                 dungeonManager.PlaceEnemy(dungeon);
+            }
             // Place Chests
             var chest = false;
+            var den = false;
             if (objectChance <= 1 && Random.Range(0, 2) == 0)
             {
+                if (Random.Range(0, 3) == 0)
+                {
+                    // Place Den
+                    dungeonManager.PlaceDen(dungeon);
+                    den = true;
+                }
                 dungeonManager.PlaceChest(dungeon);
                 chest = true;
             }
             if (objectChance <= 2 && Random.Range(0, 3) == 0 && !chest)
             {
-                dungeonManager.PlaceChest(dungeon);
-                chest = true;
+                if (Random.Range(0, 3) == 0 && !den)
+                {
+                    // Place Den
+                    dungeonManager.PlaceDen(dungeon);
+                }
+                else
+                {
+                    dungeonManager.PlaceChest(dungeon);
+                    chest = true;
+                }
             }
             if (objectChance <= 3 && Random.Range(0, 4) == 0 && !chest)
             {
@@ -327,11 +336,20 @@ public class DungeonGenerator : MonoBehaviour
             }
             // Place Spikes
             if (objectChance >= 1 && Random.Range(0, 3) == 0)
+            {
                 dungeonManager.PlaceSpikes(dungeon);
+                dungeonManager.PlaceSpikes(dungeon);
+            }
             if (objectChance >= 2 && Random.Range(0, 2) == 0)
+            {
                 dungeonManager.PlaceSpikes(dungeon);
+                dungeonManager.PlaceSpikes(dungeon);
+            }
             if (objectChance >= 3)
+            {
                 dungeonManager.PlaceSpikes(dungeon);
+                dungeonManager.PlaceSpikes(dungeon);
+            }
             // Place Items
             var key = false;
             if (itemChance >= 1)

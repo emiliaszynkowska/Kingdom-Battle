@@ -44,16 +44,6 @@ public class EnemyController : MonoBehaviour
         "Key", "Key", "Wigg's Brew", "Liquid Luck", "Ogre's Strength", "Elixir of Speed"
     };
 
-    public int GetAttack()
-    {
-        return attack;
-    }
-
-    public void SetDungeon(Dungeon d)
-    {
-        dungeon = d;
-    }
-    
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
@@ -87,12 +77,27 @@ public class EnemyController : MonoBehaviour
     {
         // Move Enemy
         Flip();
-        if (isMoving && Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 5)
+        if (Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 5)
+        {
+            isMoving = true;
             body.MovePosition(Vector2.MoveTowards(body.position, target, speed * Time.fixedDeltaTime));
+        }
+        else
+            isMoving = false;
         if (health >= 0)
             healthText.text = health.ToString();
         else
             healthText.text = "0";
+    }
+
+    public int GetAttack()
+    {
+        return attack;
+    }
+
+    public void SetDungeon(Dungeon d)
+    {
+        dungeon = d;
     }
 
     void Flip()
@@ -160,7 +165,7 @@ public class EnemyController : MonoBehaviour
         while (true)
         {
             // Magic Attack
-            if (magicAttack && Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 3)
+            if (magicAttack && isMoving && Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 3)
             {
                 GameObject p = Instantiate(projectilePrefab, transform.position, transform.rotation);
                 p.transform.SetParent(transform);
