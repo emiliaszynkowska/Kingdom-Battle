@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class DenController : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class DenController : MonoBehaviour
         {
             complete = true;
             spikes.SetActive(false);
+            ScoreManager.AddPuzzleSolving(3);
         }
     }
     

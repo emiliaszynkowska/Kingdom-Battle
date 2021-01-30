@@ -265,7 +265,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 3
   attack: 3
-  speed: 1
+  speed: 10
+  boss: 0
   groundPoundAttack: 0
   magicAttack: 0
   spawnEnemies: 0
@@ -275,6 +276,7 @@ MonoBehaviour:
   text: {fileID: 6149269397652412962}
   particles: {fileID: 1484304525313702822, guid: 740a6d4dab6fce94ebaf523c203cdf0f,
     type: 3}
+  groundPoundCollider: {fileID: 0}
   projectilePrefab: {fileID: 8442078517516998046, guid: 072313397c2624e4b955446c756f23ae,
     type: 3}
   knightPrefab: {fileID: 8052890031221065366, guid: 8007efd8ee797114a99afb59e65c1254,

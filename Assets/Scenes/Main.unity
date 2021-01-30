@@ -4188,9 +4188,9 @@ RectTransform:
   m_Father: {fileID: 1305182809}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -300, y: 50}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -350, y: 50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1005552554
@@ -4426,7 +4426,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1084752107
 GameObject:
@@ -4594,7 +4594,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -175}
-  m_SizeDelta: {x: 500, y: 150}
+  m_SizeDelta: {x: 1900, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1098638748
 MonoBehaviour:
@@ -4875,9 +4875,9 @@ GameObject:
   - component: {fileID: 1175849080}
   - component: {fileID: 1175849079}
   - component: {fileID: 1175849078}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Event System
-  m_TagString: Untagged
+  m_TagString: EditorOnly
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4928,7 +4928,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1183404686
 GameObject:
@@ -6178,6 +6178,7 @@ MonoBehaviour:
   map: {fileID: 1677713258}
   info: {fileID: 292796971}
   lives: {fileID: 1511286055}
+  timers: {fileID: 1305182808}
   inventory: {fileID: 1858140615}
   items: {fileID: 2000361618}
   active: {fileID: 1724228002}
@@ -6192,6 +6193,7 @@ MonoBehaviour:
   level: {fileID: 1821580149}
   gameOver: {fileID: 1500732320}
   powerup: {fileID: 1817730244}
+  background: {fileID: 1993492637}
   fade: {fileID: 1802461083}
   activeItem: 0
   fullLife: {fileID: 7069302953715104483, guid: 4ed51b82cf164104bbd48e94f6825e45,
@@ -6199,6 +6201,7 @@ MonoBehaviour:
   emptyLife: {fileID: 7666241981046835322, guid: 4ed51b82cf164104bbd48e94f6825e45,
     type: 3}
   key: {fileID: 21300000, guid: 439f03f2238001c4eb025eb015703759, type: 3}
+  bossKey: {fileID: 21300000, guid: f8d98ca8b882da048b96f8374dbcfb96, type: 3}
   scroll: {fileID: 21300000, guid: 5ac40264fafe34f4b99efe831ef18473, type: 3}
   wiggsBrew: {fileID: 21300000, guid: 6fceb5024bb3a894db0b4684f7cca202, type: 3}
   liquidLuck: {fileID: 21300000, guid: d752336d6ce522e48845c5537b1700f5, type: 3}
@@ -7558,7 +7561,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1622525438
 GameObject:
@@ -7853,8 +7856,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1677713261}
   - component: {fileID: 1677713260}
-  - component: {fileID: 1677713262}
   - component: {fileID: 1677713259}
+  - component: {fileID: 1677713262}
   m_Layer: 8
   m_Name: Map
   m_TagString: Untagged
@@ -7891,13 +7894,13 @@ MonoBehaviour:
   edgeMap: {fileID: 1800488964}
   width: 100
   height: 100
-  minRoomSize: 10
-  maxRoomSize: 15
-  doorChance: 2
-  itemChance: 2
-  objectChance: 2
-  enemyChance: 2
+  avgRoomSize: 10
+  difficulty: 2
+  level: 0
   dungeonManager: {fileID: 1677713262}
+  dungeonColliders: {fileID: 1690180665}
+  dungeonCollider: {fileID: 805043618572453964, guid: 489044136387337458063faabbcf7c59,
+    type: 3}
 --- !u!156049354 &1677713260
 Grid:
   m_ObjectHideFlags: 0
@@ -7925,6 +7928,7 @@ Transform:
   - {fileID: 1917004896}
   - {fileID: 1622525441}
   - {fileID: 1800488966}
+  - {fileID: 1690180666}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7942,10 +7946,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiManager: {fileID: 1397936188}
   player: {fileID: 2019506417}
+  NPCs: {fileID: 911494246}
   enemies: {fileID: 1730760585}
-  bosses: {fileID: 1749583243}
   items: {fileID: 1056155232}
   objects: {fileID: 1594002689}
+  colliders: {fileID: 1690180665}
   impPrefab: {fileID: 9106236515464821025, guid: 14e97d423aa0d6540a9cc934e0e70ae0,
     type: 3}
   goblinPrefab: {fileID: 8409285535565243240, guid: 8b895fe03dc93884bb3200cd4d40053d,
@@ -7970,9 +7975,19 @@ MonoBehaviour:
     type: 3}
   trollPrefab: {fileID: 1521752918231582455, guid: 090bce405ac2adb4994e27f837c2c2c2,
     type: 3}
+  merchantPrefab: {fileID: 2257543521791972745, guid: d3848c67614856748ae2c0054cc5804f,
+    type: 3}
+  wizardFetchPrefab: {fileID: 3555191241852310228, guid: 2b84a70db5da38d4083af622a853c0c8,
+    type: 3}
+  wizardDefeatPrefab: {fileID: 7619831007066861602, guid: 0bbffb7282fa5a649b03bbfe920c7fb6,
+    type: 3}
+  wizardRescuePrefab: {fileID: 6285813881318282400, guid: 861f76d53834ec84a9ad90e115879e40,
+    type: 3}
   coinPrefab: {fileID: 3672588454446898205, guid: deb63ad428a4df84d966acd1d8ab68b5,
     type: 3}
   keyPrefab: {fileID: 7872419241617727367, guid: 47fa99f1dafe4424ba023567bc90d750,
+    type: 3}
+  bossKeyPrefab: {fileID: 1135288387500597823, guid: a4f16504078036b41bbbb0dccc803c37,
     type: 3}
   scrollPrefab: {fileID: 5130735559696409309, guid: 9ae73fdc4d4f6c647befd25e2d78b4c9,
     type: 3}
@@ -7984,6 +7999,8 @@ MonoBehaviour:
     type: 3}
   elixirofSpeedPrefab: {fileID: 7510317494632057600, guid: ccc78bdb0d1f07e429267c7062e1e453,
     type: 3}
+  denPrefab: {fileID: 6040434119456030231, guid: 04b14e0cf312c164cb7cd8f42acc1594,
+    type: 3}
   doorPrefab: {fileID: 7721991683291026118, guid: 1900ec2396e570c4594da3ee9bd3c00d,
     type: 3}
   chestPrefab: {fileID: 4866393346175797116, guid: b3189bfa884c2bc45bc56acecef416f7,
@@ -7991,8 +8008,6 @@ MonoBehaviour:
   spikesPrefab: {fileID: 3869514152725024156, guid: 93ee9b7daca6acc409de995da79cdca5,
     type: 3}
   shinePrefab: {fileID: 8577702577121378104, guid: ec6fab71f786b1a499cad12d96ad33fd,
-    type: 3}
-  denPrefab: {fileID: 6040434119456030231, guid: 04b14e0cf312c164cb7cd8f42acc1594,
     type: 3}
   campfirePrefab: {fileID: 5862317721963052724, guid: f86960a3b55469e41a6aad2d5d72ac0f,
     type: 3}
@@ -8071,6 +8086,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1681857371}
   m_CullTransparentMesh: 1
+--- !u!1 &1690180665
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1690180666}
+  m_Layer: 8
+  m_Name: Colliders
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1690180666
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1690180665}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1677713261}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1721090340
 GameObject:
   m_ObjectHideFlags: 0
@@ -8461,36 +8506,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1741408957}
   m_CullTransparentMesh: 1
---- !u!1 &1749583243
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1749583244}
-  m_Layer: 9
-  m_Name: Bosses
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1749583244
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1749583243}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 67.56641}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1800488963
 GameObject:
   m_ObjectHideFlags: 0
@@ -8645,7 +8660,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1802461082
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9446,9 +9461,9 @@ RectTransform:
   m_Father: {fileID: 1305182809}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 300, y: 50}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 350, y: 50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1918417828
@@ -10096,6 +10111,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4520e0bc7b4d4d44bf384a29908de82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0.1
+  attack: 1
+  health: 8
+  attacksActive: 3
   death: {fileID: 1277844860}
   particles: {fileID: 1484304525313702822, guid: c39f9ac9624f20f4394179b14a856fce,
     type: 3}

@@ -12,9 +12,9 @@ public class Quest : MonoBehaviour
     public string npcName;
     public string message;
     public string reward;
-    public bool active = false;
-    public bool complete = false;
-    public bool talking = false;
+    public bool active;
+    public bool complete;
+    public bool talking;
     
     public void Start()
     {
@@ -41,6 +41,7 @@ public class Quest : MonoBehaviour
         {
             if (active && complete)
             {
+                ScoreManager.AddPuzzleSolving(3);
                 talking = true;
                 message = "Thank you for helping me! Here, take this *.";
                 message = message.Replace("*", reward);

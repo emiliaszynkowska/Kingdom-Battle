@@ -1,17 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Vector2 = UnityEngine.Vector2;
 
 public class PlayerController : MonoBehaviour
 {
     // Movement
     private Vector2 movement;
-    private float speed = 0.1f;
+    public float speed = 0.1f;
     // Combat
-    private int attack = 1;
-    private int health = 5;
-    private int livesActive = 5;
+    public int attack;
+    public int health;
+    private int livesActive;
+    public int attacksActive;
     // Booleans
     private bool isAttacking;
     private bool isHurt;
@@ -63,6 +65,7 @@ public class PlayerController : MonoBehaviour
         playerDisciplines = new [] {"Fledgling", null, null};
         uiManager.SetInfo(playerName, playerDisciplines, playerCoins);
         uiManager.ClearInventory();
+        uiManager.SetAttacks(attacksActive);
     }
 
     void Update()
@@ -186,6 +189,7 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(1);
             playerRenderer.color = Color.white;
             isHurt = false;
+            ScoreManager.AddDefensive(1);
         }
         else if (health <= 1 && !uiManager.IsGameOver())
         {
@@ -354,6 +358,16 @@ public class PlayerController : MonoBehaviour
                         uiManager.DisableItem(inventory.Count);
                     }
                 }
+                else if (col != null && col.CompareTag("Door") && inventory.Contains("Boss Key"))
+                {
+                    var index = inventory.IndexOf("Boss Key");
+                    if (UseItem(index))
+                    {
+                        uiManager.activeItem = index;
+                        uiManager.UseItem();
+                        uiManager.DisableItem(inventory.Count);
+                    }
+                }
             }
         }
         
@@ -403,9 +417,9 @@ public class PlayerController : MonoBehaviour
         {
             // Key
             case "Key":
-                Collider2D[] results = new Collider2D[8];
-                groundPoundCollider.OverlapCollider(contactFilter, results);
-                foreach (Collider2D col in results)
+                Collider2D[] results1 = new Collider2D[8];
+                groundPoundCollider.OverlapCollider(contactFilter, results1);
+                foreach (Collider2D col in results1)
                 {
                     if (col != null && col.CompareTag("Chest") && inventory.Contains("Key"))
                     {
@@ -417,7 +431,23 @@ public class PlayerController : MonoBehaviour
                     }
                     else if (col != null && col.CompareTag("Door") && inventory.Contains("Key"))
                     {
-                        if (col.GetComponent<DoorController>().Open())
+                        if (!col.GetComponent<DoorController>().boss && col.GetComponent<DoorController>().Open())
+                        {
+                            inventory.RemoveAt(index);
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            // Boss Key
+            case "Boss Key":
+                Collider2D[] results2 = new Collider2D[8];
+                groundPoundCollider.OverlapCollider(contactFilter, results2);
+                foreach (Collider2D col in results2)
+                {
+                    if (col != null && col.CompareTag("Door") && inventory.Contains("Boss Key"))
+                    {
+                        if (col.GetComponent<DoorController>().boss && col.GetComponent<DoorController>().Open())
                         {
                             inventory.RemoveAt(index);
                             return true;
@@ -462,6 +492,7 @@ public class PlayerController : MonoBehaviour
     // Wigg's Brew - increase health by 1 and glow red 
     IEnumerator WiggsBrew()
     {
+        ScoreManager.AddDefensive(5);
         uiManager.Powerup("Wigg's Brew: +1 Health", Color.red);
         lifeup.SetActive(true);
         yield return new WaitForSeconds(3);
@@ -472,6 +503,7 @@ public class PlayerController : MonoBehaviour
     // Liquid Luck - increase attack by 1 and glow yellow for 5 seconds
     IEnumerator LiquidLuck()
     {
+        ScoreManager.AddAggressive(1);
         uiManager.Powerup("Liquid Luck: +1 Attack", new Color(1,0.9f,0,1));
         var color = GetComponent<SpriteRenderer>().color;
         GetComponent<SpriteRenderer>().color = new Color(1,0.9f,0,1);
@@ -487,6 +519,7 @@ public class PlayerController : MonoBehaviour
     // Ogre's Strength - apply poison damage to damaged enemies for 5 seconds
     IEnumerator OgreStrength()
     {
+        ScoreManager.AddAggressive(1);
         uiManager.Powerup("Ogre's Strength: +Poison Damage", new Color(0, 0.75f, 0, 1));
         var color = GetComponent<SpriteRenderer>().color;
         GetComponent<SpriteRenderer>().color = new Color(0, 0.75f, 0, 1);
@@ -500,6 +533,7 @@ public class PlayerController : MonoBehaviour
     // Elixir of Speed - increase speed for 10 seconds
     IEnumerator ElixirOfSpeed()
     {
+        ScoreManager.AddExploration(5);
         uiManager.Powerup("Elixir of Speed: +5 Speed", new Color(0,0.4f,1,1));
         GetComponent<SpriteRenderer>().color = new Color(0,0.4f,1,1);
         speed *= 1.5f;
@@ -538,11 +572,15 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Item") && GetComponent<BoxCollider2D>().IsTouching(other))
         {
+            ScoreManager.AddCollection(1);
+            if (inventory.Count >= 8)
+                ScoreManager.AddCollection(1);
             // Check item
             switch (other.name)
             {
                 // Coin
                 case "Coin":
+                    Destroy(other.gameObject);
                     playerCoins++;
                     uiManager.SetInfo(playerName, playerDisciplines, playerCoins);
                     break;
@@ -550,16 +588,25 @@ public class PlayerController : MonoBehaviour
                 case "Key":
                     if (inventory.Count < 8)
                     {
-                        other.gameObject.SetActive(false);
+                        Destroy(other.gameObject);
                         uiManager.AddItem("Key", inventory.Count);
                         AddItem("Key");
+                    }
+                    break;
+                // Boss Key
+                case "Boss Key":
+                    if (inventory.Count < 8)
+                    {
+                        Destroy(other.gameObject);
+                        uiManager.AddItem("Boss Key", inventory.Count);
+                        AddItem("Boss Key");
                     }
                     break;
                 // Scroll
                 case "Scroll":
                     if (inventory.Count < 8)
                     {
-                        other.gameObject.SetActive(false);
+                        Destroy(other.gameObject);
                         uiManager.AddItem("Scroll", inventory.Count);
                         AddItem("Scroll");
                     }
@@ -569,7 +616,7 @@ public class PlayerController : MonoBehaviour
                 case "Wigg's Brew":
                     if (inventory.Count < 8)
                     {
-                        other.gameObject.SetActive(false);
+                        Destroy(other.gameObject);
                         uiManager.AddItem("Wigg's Brew", inventory.Count);
                         AddItem("Wigg's Brew");
                     }
@@ -578,7 +625,7 @@ public class PlayerController : MonoBehaviour
                 case "Liquid Luck":
                     if (inventory.Count < 8)
                     {
-                        other.gameObject.SetActive(false);
+                        Destroy(other.gameObject);
                         uiManager.AddItem("Liquid Luck", inventory.Count);
                         AddItem("Liquid Luck");
                     }
@@ -587,7 +634,7 @@ public class PlayerController : MonoBehaviour
                 case "Ogre's Strength":
                     if (inventory.Count < 8)
                     {
-                        other.gameObject.SetActive(false);
+                        Destroy(other.gameObject);
                         uiManager.AddItem("Ogre's Strength", inventory.Count);
                         AddItem("Ogre's Strength");
                     }
@@ -596,16 +643,26 @@ public class PlayerController : MonoBehaviour
                 case "Elixir of Speed":
                     if (inventory.Count < 8)
                     {
-                        other.gameObject.SetActive(false);
+                        Destroy(other.gameObject);
                         uiManager.AddItem("Elixir of Speed", inventory.Count);
                         AddItem("Elixir of Speed");
                     }
                     break;
             }
-            Destroy(other.gameObject);
+        }
+        
+        if (other.gameObject.CompareTag("Enemy") && other is CircleCollider2D)
+        {
+            // Take damage
+            EnemyController enemyController = other.gameObject.GetComponent<EnemyController>();
+            if (enemyController != null && enemyController.health > 0)
+            {
+                int enemyAttack = other.gameObject.GetComponent<EnemyController>().GetAttack();
+                StartCoroutine(TakeDamage(enemyAttack));
+            }
         }
 
-        if (other.gameObject.name.Equals("Spikes") && GetComponent<BoxCollider2D>().IsTouching(other))
+        else if (other.gameObject.name.Equals("Spikes") && GetComponent<BoxCollider2D>().IsTouching(other))
         {
             // Take damage
             if (!IsBouncing())
@@ -616,11 +673,17 @@ public class PlayerController : MonoBehaviour
             Invoke("StopBounceVertical", 0.2f);
         }
 
-        if (other.gameObject.CompareTag("Projectile") && GetComponent<BoxCollider2D>().IsTouching(other))
+        else if (other.gameObject.CompareTag("Projectile") && GetComponent<BoxCollider2D>().IsTouching(other))
         {
             Destroy(other);
             // Take damage
             StartCoroutine(TakeDamage(1));
+        }
+        
+        else if (other.gameObject.CompareTag("Collider") && GetComponent<BoxCollider2D>().IsTouching(other))
+        {
+            ScoreManager.AddExploration(1);
+            Destroy(other.gameObject);
         }
     }
     

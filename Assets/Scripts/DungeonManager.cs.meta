@@ -1,3 +1,76 @@
-﻿fileFormatVersion: 2
+fileFormatVersion: 2
 guid: f126db981db4426b94aec9709f3baeb7
-timeCreated: 1611501547
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - uiManager: {instanceID: 0}
+  - player: {instanceID: 0}
+  - NPCs: {instanceID: 0}
+  - enemies: {instanceID: 0}
+  - items: {instanceID: 0}
+  - objects: {instanceID: 0}
+  - colliders: {instanceID: 0}
+  - impPrefab: {fileID: 9106236515464821025, guid: 14e97d423aa0d6540a9cc934e0e70ae0,
+      type: 3}
+  - goblinPrefab: {fileID: 8409285535565243240, guid: 8b895fe03dc93884bb3200cd4d40053d,
+      type: 3}
+  - chortPrefab: {fileID: 3576534964257503098, guid: 7da3757479ad84748815abf013508c01,
+      type: 3}
+  - orcPrefab: {fileID: 2959775378609421900, guid: 09cb8a3b561682b4799cf12c0555a727,
+      type: 3}
+  - knightPrefab: {fileID: 8052890031221065366, guid: 8007efd8ee797114a99afb59e65c1254,
+      type: 3}
+  - necromancerPrefab: {fileID: 5097651916448893121, guid: a030c15f494e4014482e3ff7fffde97b,
+      type: 3}
+  - demonPrefab: {fileID: 8131619134480364400, guid: 9167c83b6ac0e734fbd13cc255cc0039,
+      type: 3}
+  - ogrePrefab: {fileID: 1050837899210172423, guid: 247667a0374aed648b502962f041e423,
+      type: 3}
+  - eliteKnightPrefab: {fileID: 2918342467825559285, guid: 75e0427014a54d147869ad50bd9dd119,
+      type: 3}
+  - royalGuardianPrefab: {fileID: 8059929757679764139, guid: c19ac151f8b6e5741bbc933c8ac2e41b,
+      type: 3}
+  - golemPrefab: {fileID: 7320705704700570165, guid: d3f24a7901983314ca9aaa00e44feb45,
+      type: 3}
+  - trollPrefab: {fileID: 1521752918231582455, guid: 090bce405ac2adb4994e27f837c2c2c2,
+      type: 3}
+  - coinPrefab: {fileID: 3672588454446898205, guid: deb63ad428a4df84d966acd1d8ab68b5,
+      type: 3}
+  - keyPrefab: {fileID: 7872419241617727367, guid: 47fa99f1dafe4424ba023567bc90d750,
+      type: 3}
+  - bossKeyPrefab: {fileID: 1135288387500597823, guid: a4f16504078036b41bbbb0dccc803c37,
+      type: 3}
+  - scrollPrefab: {fileID: 5130735559696409309, guid: 9ae73fdc4d4f6c647befd25e2d78b4c9,
+      type: 3}
+  - wiggsBrewPrefab: {fileID: 8780831869483617116, guid: b04ed8b81a3333a4595d3baef1ad976a,
+      type: 3}
+  - liquidLuckPrefab: {fileID: 7086070493193733109, guid: 340fe374e6b05844e98e786734578217,
+      type: 3}
+  - ogresStrengthPrefab: {fileID: 4695487196607029529, guid: 596d9b2cb619e6948a9b4b2342af80c5,
+      type: 3}
+  - elixirofSpeedPrefab: {fileID: 7510317494632057600, guid: ccc78bdb0d1f07e429267c7062e1e453,
+      type: 3}
+  - doorPrefab: {fileID: 7721991683291026118, guid: 1900ec2396e570c4594da3ee9bd3c00d,
+      type: 3}
+  - chestPrefab: {fileID: 4866393346175797116, guid: b3189bfa884c2bc45bc56acecef416f7,
+      type: 3}
+  - spikesPrefab: {fileID: 3869514152725024156, guid: 93ee9b7daca6acc409de995da79cdca5,
+      type: 3}
+  - shinePrefab: {fileID: 8577702577121378104, guid: ec6fab71f786b1a499cad12d96ad33fd,
+      type: 3}
+  - denPrefab: {fileID: 6040434119456030231, guid: 04b14e0cf312c164cb7cd8f42acc1594,
+      type: 3}
+  - campfirePrefab: {fileID: 5862317721963052724, guid: f86960a3b55469e41a6aad2d5d72ac0f,
+      type: 3}
+  - wizardFetchPrefab: {fileID: 3555191241852310228, guid: 2b84a70db5da38d4083af622a853c0c8,
+      type: 3}
+  - wizardDefeatPrefab: {fileID: 7619831007066861602, guid: 0bbffb7282fa5a649b03bbfe920c7fb6,
+      type: 3}
+  - wizardRescuePrefab: {fileID: 6285813881318282400, guid: 861f76d53834ec84a9ad90e115879e40,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

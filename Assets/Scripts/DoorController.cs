@@ -10,6 +10,7 @@ public class DoorController : MonoBehaviour
     public Sprite closedDoor;
     public Sprite openDoor;
     public bool opened;
+    public bool boss;
 
     void Start()
     {
@@ -28,6 +29,7 @@ public class DoorController : MonoBehaviour
             doorRenderer.sprite = openDoor;
             boxCollider.enabled = false;
             capsuleCollider.enabled = false;
+            ScoreManager.AddPuzzleSolving(1);
             return true;
         }
         return false;

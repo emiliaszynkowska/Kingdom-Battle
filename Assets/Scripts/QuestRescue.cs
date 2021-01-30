@@ -22,11 +22,11 @@ public class QuestRescue : Quest
     
     void Update()
     {
-        if (!obj1.activeSelf && !obj2.activeSelf && !obj3.activeSelf)
+        if (active && !complete && (obj1 == null || obj1.name.Equals("Respawn")) && (obj2 == null || obj2.name.Equals("Respawn")) && (obj3 == null || obj3.name.Equals("Respawn")))
         {
             alert.SetActive(false);
-            active = true;
             complete = true;
+            ScoreManager.AddDefensive(3);
         }
     }
     

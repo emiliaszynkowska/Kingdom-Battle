@@ -3,7 +3,25 @@ guid: 79490d58d9ad43d45bfed5b6bc01a297
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - groundTile: {fileID: 11400000, guid: 849b163c060af804cab6237d8588ba63, type: 2}
+  - wallTile: {fileID: 11400000, guid: ad37a92a04574574aa421f6e6ab4615e, type: 2}
+  - edgeTile: {fileID: 11400000, guid: c8fc78f05ad1da54aaf28465f6498730, type: 2}
+  - leftEdgeTile: {fileID: 11400000, guid: de1390a54c943a441ae0cb7cdb87c16e, type: 2}
+  - rightEdgeTile: {fileID: 11400000, guid: be0da2e0898a14a43a2706af050d77c7, type: 2}
+  - leftCornerTile: {fileID: 11400000, guid: 62fa29315ca4d8d46b835e04d78a59a9, type: 2}
+  - rightCornerTile: {fileID: 11400000, guid: 024b28424c8add24ebc935fd3a6ef1d5, type: 2}
+  - leftPointTile: {fileID: 11400000, guid: b27cc0fede01bfe4a912be2c5a9ca14e, type: 2}
+  - rightPointTile: {fileID: 11400000, guid: 61d4fc4ebf865164caac1cf769be534c, type: 2}
+  - leftWallTile: {fileID: 11400000, guid: 7cd22c8148197054d9d1b1e80897066a, type: 2}
+  - rightWallTile: {fileID: 11400000, guid: f37b9b079b04dc548804ac8eb6d7578c, type: 2}
+  - groundMap: {instanceID: 0}
+  - innerWallMap: {instanceID: 0}
+  - outerWallMap: {instanceID: 0}
+  - edgeMap: {instanceID: 0}
+  - dungeonManager: {instanceID: 0}
+  - dungeonColliders: {instanceID: 0}
+  - dungeonCollider: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

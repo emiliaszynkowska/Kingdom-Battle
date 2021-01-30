@@ -17,6 +17,7 @@ public class EnemyController : MonoBehaviour
     private bool isMoving = true;
     private bool isHurt;
     private bool isPoisoned;
+    public bool boss;
     public bool groundPoundAttack;
     public bool magicAttack;
     public bool spawnEnemies;
@@ -31,6 +32,7 @@ public class EnemyController : MonoBehaviour
     private Vector2 target;
     public Text text;
     public ParticleSystem particles;
+    public Collider2D groundPoundCollider;
     private SpriteRenderer enemyRenderer;
     public Dungeon dungeon;
     // Prefabs
@@ -77,10 +79,15 @@ public class EnemyController : MonoBehaviour
     {
         // Move Enemy
         Flip();
-        if (Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 5)
+        if (boss)
         {
             isMoving = true;
-            body.MovePosition(Vector2.MoveTowards(body.position, target, speed * Time.fixedDeltaTime));
+            body.MovePosition(Vector2.MoveTowards(body.position, target, speed / 10 * Time.fixedDeltaTime));
+        }
+        else if (Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 5)
+        {
+            isMoving = true;
+            body.MovePosition(Vector2.MoveTowards(body.position, target, speed / 10 * Time.fixedDeltaTime));
         }
         else
             isMoving = false;
@@ -118,10 +125,15 @@ public class EnemyController : MonoBehaviour
         spawnEnemies = false;
         healthText.enabled = false;
         GetComponent<Collider2D>().enabled = false;
-        DungeonManager dungeonManager = GameObject.Find("Map").GetComponent<DungeonManager>();
-        dungeonManager.PlaceItem(drops[Random.Range(0, 12)], transform.position);
+        ScoreManager.AddAggressive(1);
+        DungeonGenerator dungeonGenerator = GameObject.Find("Map").GetComponent<DungeonGenerator>();
+        DungeonManager dungeonManager = dungeonGenerator.dungeonManager;
+        if (boss)
+            dungeonManager.PlaceItem("Boss Key", transform.position);
+        else
+            dungeonManager.PlaceItem(drops[Random.Range(0, 12)], transform.position); 
         yield return new WaitForSeconds(10);
-        dungeonManager.PlaceEnemy(dungeon);
+        dungeonManager.PlaceEnemy(dungeon, dungeonGenerator.difficulty);
         Destroy(gameObject);
     }
 
@@ -165,7 +177,13 @@ public class EnemyController : MonoBehaviour
         while (true)
         {
             // Magic Attack
-            if (magicAttack && isMoving && Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 3)
+            if (magicAttack && boss)
+            {
+                GameObject p = Instantiate(projectilePrefab, transform.position, transform.rotation);
+                p.transform.SetParent(transform);
+                p.tag = "Projectile";
+            }
+            else if (magicAttack && Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 3)
             {
                 GameObject p = Instantiate(projectilePrefab, transform.position, transform.rotation);
                 p.transform.SetParent(transform);
@@ -182,7 +200,7 @@ public class EnemyController : MonoBehaviour
         // Ground Pound
         while (true)
         {
-            if (groundPoundAttack && Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 5)
+            if (groundPoundAttack && isMoving)
             {
                 // Wait
                 isMoving = false;
@@ -194,6 +212,9 @@ public class EnemyController : MonoBehaviour
                 // Animate
                 isMoving = false;
                 Instantiate(particles, transform);
+                groundPoundCollider.enabled = true;
+                yield return new WaitForSeconds(0.1f);
+                groundPoundCollider.enabled = false;
                 yield return new WaitForSeconds(1);
                 // Reset
                 isMoving = true;
@@ -209,7 +230,7 @@ public class EnemyController : MonoBehaviour
         // Spawn Enemies 
         while (true)
         {
-            if (spawnEnemies && Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 3)
+            if (spawnEnemies && isMoving)
             {
                 if (name.Equals("Elite Knight") || name.Equals("Royal Guardian"))
                 {

@@ -24,14 +24,13 @@ public class DungeonGenerator : MonoBehaviour
     // Variables
     public int width;
     public int height;
-    public int minRoomSize;
-    public int maxRoomSize;
-    public int doorChance;
-    public int itemChance;
-    public int objectChance;
-    public int enemyChance;
+    public int avgRoomSize;
+    public int difficulty;
+    public int level;
     private List<Dungeon> dungeons = new List<Dungeon>();
     public DungeonManager dungeonManager;
+    public GameObject dungeonColliders;
+    public GameObject dungeonCollider;
 
     public void AddDungeon(Dungeon dungeon)
     {
@@ -41,27 +40,37 @@ public class DungeonGenerator : MonoBehaviour
     void Start()
     {
         // Generate 
-        Dungeon root = new Dungeon(new Rect(0,0,width,height));
-        Generate(root); 
-        root.CreateRoom();
-        FillRooms(root);
-        FillCorridors(root);
-        FillTiles();
-        // Place Player
-        dungeonManager.PlacePlayer(dungeons[Random.Range(0, dungeons.Count)].room.center);
-        // Place Doors
-        FillDoors();
-        // Place Entities
-        PlaceEntities();
+        if (difficulty == 4)
+            GenerateBossRoom();
+        else
+        {
+            width = difficulty * 75;
+            height = difficulty * 75;
+            Dungeon root = new Dungeon(new Rect(0, 0, width, height));
+            Generate(root);
+            root.CreateRoom();
+            FillRooms(root);
+            FillCorridors(root);
+            FillTiles();
+            PlaceColliders();
+            // Place Player
+            dungeonManager.PlacePlayer(dungeons[Random.Range(0, dungeons.Count)].room.center, true);
+            // Place Doors
+            FillDoors();
+            // Place Entities
+            PlaceEntities();
+            // Start Level
+            dungeonManager.uiManager.Level(level);
+        }
     }
 
     void Generate(Dungeon dungeon)
     {
         if (dungeon.IsLeaf())
         {
-            if (dungeon.rect.width > maxRoomSize || dungeon.rect.height > maxRoomSize || Random.Range(0, 1) > 0.25)
+            if (dungeon.rect.width > avgRoomSize || dungeon.rect.height > avgRoomSize || Random.Range(0, 1) > 0.25)
             {
-                if (dungeon.Split(minRoomSize, maxRoomSize))
+                if (dungeon.Split(avgRoomSize))
                 {
                     Generate(dungeon.left);
                     Generate(dungeon.right);
@@ -263,7 +272,7 @@ public class DungeonGenerator : MonoBehaviour
             for (int yMap = bounds.yMin - 10; yMap <= bounds.yMax + 10; yMap++)
             {
                 // Calculate probability
-                if (Random.Range(0, 4) < doorChance)
+                if (Random.Range(0, 4) < difficulty)
                 {
                     Vector3Int pos1 = new Vector3Int(xMap, yMap, 0);
                     Vector3Int pos2 = new Vector3Int(xMap + 1, yMap, 0);
@@ -288,41 +297,69 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
+    private void PlaceColliders()
+    {
+        foreach (Dungeon dungeon in dungeons)
+        {
+            GameObject col = Instantiate(dungeonCollider, dungeon.room.center, Quaternion.Euler(0,0,0), dungeonColliders.transform);
+            col.GetComponent<BoxCollider2D>().size = new Vector2(dungeon.room.width, dungeon.room.height);
+            col.name = "Collider";
+        }
+    }
+
     private void PlaceEntities()
     {
         foreach (Dungeon dungeon in dungeons)
         {
+            // Place NPCs
+            bool wizard = false;
+            if (difficulty >= 1 && Random.Range(0, 4) == 0)
+            {
+                dungeonManager.PlaceWizard(dungeon, difficulty);
+                wizard = true;
+            }
+            if (difficulty >= 2 && Random.Range(0, 5) == 0 && !wizard)
+            {
+                dungeonManager.PlaceWizard(dungeon, difficulty);
+                wizard = true; 
+            }
+            if (difficulty >= 3 && Random.Range(0, 6) == 0 && !wizard)
+            {
+                dungeonManager.PlaceWizard(dungeon, difficulty);
+                wizard = true; 
+            }
+            bool merchant = false;
+            if (difficulty >= 3 && Random.Range(0, 10) == 0 && !wizard)
+            {
+                dungeonManager.PlaceMerchant(dungeon);
+                merchant = true;
+            }
+            if (difficulty >= 2 && Random.Range(0, 9) == 0 && !wizard && !merchant)
+            {
+                dungeonManager.PlaceMerchant(dungeon);
+                merchant = true;
+            }
+            if (difficulty >= 1 && Random.Range(0, 8) == 0 && !wizard && !merchant)
+            {
+                dungeonManager.PlaceMerchant(dungeon);
+                merchant = true;
+            }
             // Place Enemies
-            if (enemyChance >= 1)
-                dungeonManager.PlaceEnemy(dungeon);
-            if (enemyChance >= 2 && Random.Range(0, 5) == 0)
-            {
-                dungeonManager.PlaceEnemy(dungeon);
-            }
-            if (enemyChance >= 3 && Random.Range(0, 6) == 0)
-            {
-                dungeonManager.PlaceEnemy(dungeon);
-            }
+            if (difficulty >= 1 && !wizard && !merchant)
+                dungeonManager.PlaceEnemy(dungeon, difficulty);
+            if (difficulty >= 2 && Random.Range(0, 2) == 0 && !wizard && !merchant)
+                dungeonManager.PlaceEnemy(dungeon, difficulty);
+            if (difficulty >= 3 && Random.Range(0, 2) == 0 && !wizard && !merchant)
+                dungeonManager.PlaceEnemy(dungeon, difficulty);
             // Place Chests
             var chest = false;
-            var den = false;
-            if (objectChance <= 1 && Random.Range(0, 2) == 0)
+            if (difficulty >= 3 && Random.Range(0, 2) == 0)
             {
-                if (Random.Range(0, 3) == 0)
+                if (Random.Range(0, 3) == 0 && !wizard && !merchant)
                 {
                     // Place Den
-                    dungeonManager.PlaceDen(dungeon);
-                    den = true;
-                }
-                dungeonManager.PlaceChest(dungeon);
-                chest = true;
-            }
-            if (objectChance <= 2 && Random.Range(0, 3) == 0 && !chest)
-            {
-                if (Random.Range(0, 3) == 0 && !den)
-                {
-                    // Place Den
-                    dungeonManager.PlaceDen(dungeon);
+                    dungeonManager.PlaceDen(dungeon, difficulty);
+                    chest = true;
                 }
                 else
                 {
@@ -330,64 +367,101 @@ public class DungeonGenerator : MonoBehaviour
                     chest = true;
                 }
             }
-            if (objectChance <= 3 && Random.Range(0, 4) == 0 && !chest)
+            if (difficulty >= 2 && Random.Range(0, 3) == 0 && !chest)
+            {
+                if (Random.Range(0, 3) == 0 && !wizard && !merchant)
+                {
+                    // Place Den
+                    dungeonManager.PlaceDen(dungeon, difficulty);
+                    chest = true;
+                }
+                else
+                {
+                    dungeonManager.PlaceChest(dungeon);
+                    chest = true;
+                }
+            }
+            if (difficulty >= 1 && Random.Range(0, 4) == 0 && !chest)
             {
                 dungeonManager.PlaceChest(dungeon);
             }
             // Place Spikes
-            if (objectChance >= 1 && Random.Range(0, 3) == 0)
+            if (difficulty >= 1)
             {
                 dungeonManager.PlaceSpikes(dungeon);
                 dungeonManager.PlaceSpikes(dungeon);
             }
-            if (objectChance >= 2 && Random.Range(0, 2) == 0)
+            if (difficulty >= 2)
             {
+                dungeonManager.PlaceSpikes(dungeon);
                 dungeonManager.PlaceSpikes(dungeon);
                 dungeonManager.PlaceSpikes(dungeon);
             }
-            if (objectChance >= 3)
+            if (difficulty >= 3)
             {
+                dungeonManager.PlaceSpikes(dungeon);
+                dungeonManager.PlaceSpikes(dungeon);
                 dungeonManager.PlaceSpikes(dungeon);
                 dungeonManager.PlaceSpikes(dungeon);
             }
             // Place Items
             var key = false;
-            if (itemChance >= 1)
+            if (difficulty <= 1)
             {
-                if (Random.Range(0, 6) == 0)
+                dungeonManager.PlaceItem("Coin", dungeonManager.RandomPosition(dungeon.room));
+                dungeonManager.PlaceItem("Coin", dungeonManager.RandomPosition(dungeon.room));
+                if (Random.Range(0, 3) == 0)
                     dungeonManager.PlaceItem("Coin", dungeonManager.RandomPosition(dungeon.room));
-                if (Random.Range(0, 6) == 0)
+                if (Random.Range(0, 3) == 0)
                     dungeonManager.PlaceItem("Coin", dungeonManager.RandomPosition(dungeon.room));
-                if (Random.Range(0, 6) == 0)
+                if (Random.Range(0, 3) == 0)
                 {
                     dungeonManager.PlaceItem("Key", dungeonManager.RandomPosition(dungeon.room));
                     key = true;
                 }
             }
-            if (itemChance >= 2)
+            if (difficulty <= 2)
             {
-                if (Random.Range(0, 4) == 0)
+                dungeonManager.PlaceItem("Coin", dungeonManager.RandomPosition(dungeon.room));
+                if (Random.Range(0, 3) == 0)
                     dungeonManager.PlaceItem("Coin", dungeonManager.RandomPosition(dungeon.room));
-                if (Random.Range(0, 5) == 0)
+                if (Random.Range(0, 3) == 0)
                     dungeonManager.PlaceItem("Coin", dungeonManager.RandomPosition(dungeon.room));
-                if (Random.Range(0, 7) == 0 && !key)
+                if (Random.Range(0, 3) == 0 && !key)
                 {
                     dungeonManager.PlaceItem("Key", dungeonManager.RandomPosition(dungeon.room));
                     key = true;
                 }
             }
-            if (itemChance >= 3)
+            if (difficulty <= 3)
             {
                 if (Random.Range(0, 3) == 0)
                     dungeonManager.PlaceItem("Coin", dungeonManager.RandomPosition(dungeon.room));
                 if (Random.Range(0, 3) == 0)
                     dungeonManager.PlaceItem("Coin", dungeonManager.RandomPosition(dungeon.room));
-                if (Random.Range(0, 8) == 0 && !key)
+                if (Random.Range(0, 3) == 0 && !key)
                 {
                     dungeonManager.PlaceItem("Key", dungeonManager.RandomPosition(dungeon.room));
                 }
             }
         }
+    }
+
+    private void GenerateBossRoom()
+    {
+        // Generate room
+        for (int x = 0; x < 16; x++) {
+            for (int y = 0; y < 16; y++) {
+                groundMap.SetTile(new Vector3Int(x,y,0), groundTile);
+            }
+        }
+        FillTiles();
+        // Place Player
+        dungeonManager.PlacePlayer(new Vector3(8, 3, 0), false);
+        // Place Boss
+        dungeonManager.PlaceBoss(new Vector3(8, 8, 0), 1);
+        // Place Door
+        dungeonManager.PlaceBossDoor(new Vector3(8, 17, 0));
     }
 
 }

@@ -24,7 +24,7 @@ public class Dungeon
             return left == null && right == null; 
         }
 
-        public bool Split(int minRoomSize, int maxRoomSize)
+        public bool Split(int avgRoomSize)
         {
             if (!IsLeaf())
                 return false;
@@ -37,18 +37,18 @@ public class Dungeon
             else
                 splitH = Random.Range(0, 1) > 0.5;
 
-            if (Math.Min(rect.height, rect.width) / 2 < minRoomSize)
+            if (Math.Min(rect.height, rect.width) / 2 < avgRoomSize)
                 return false;
 
             if (splitH)
             {
-                int split = Random.Range(minRoomSize, (int) (rect.width - minRoomSize));
+                int split = Random.Range(avgRoomSize, (int) (rect.width - avgRoomSize));
                 left = new Dungeon(new Rect(rect.x, rect.y, rect.width, split));
                 right = new Dungeon(new Rect(rect.x, rect.y + split, rect.width, rect.height - split));
             }
             else
             {
-                int split = Random.Range(minRoomSize, (int) (rect.height - minRoomSize));
+                int split = Random.Range(avgRoomSize, (int) (rect.height - avgRoomSize));
                 left = new Dungeon(new Rect (rect.x, rect.y, split, rect.height));
                 right = new Dungeon(new Rect (rect.x + split, rect.y, rect.width - split, rect.height));
             }

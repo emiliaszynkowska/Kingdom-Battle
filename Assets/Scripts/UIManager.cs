@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Timeline;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
     public GameObject map;
     public GameObject info;
     public GameObject lives;
+    public GameObject timers;
     public GameObject inventory;
     public GameObject items;
     public GameObject active;
@@ -26,6 +27,7 @@ public class UIManager : MonoBehaviour
     public GameObject level;
     public GameObject gameOver;
     public Text powerup;
+    public Image background;
     public Image fade;
     // Variables
     public int activeItem;
@@ -33,6 +35,7 @@ public class UIManager : MonoBehaviour
     public Sprite fullLife;
     public Sprite emptyLife;
     public Sprite key;
+    public Sprite bossKey;
     public Sprite scroll;
     public Sprite wiggsBrew;
     public Sprite liquidLuck;
@@ -114,6 +117,33 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void SetAttacks(int n)
+    {
+        switch (n)
+        {
+            case 1:
+                timers.transform.GetChild(0).gameObject.SetActive(true);
+                timers.transform.GetChild(1).gameObject.SetActive(false);
+                timers.transform.GetChild(2).gameObject.SetActive(false);
+                timers.transform.GetChild(0).localPosition = new Vector3(0, 50, 0);
+                break;
+            case 2: 
+                timers.transform.GetChild(0).gameObject.SetActive(true);
+                timers.transform.GetChild(1).gameObject.SetActive(true);
+                timers.transform.GetChild(2).gameObject.SetActive(false);
+                timers.transform.GetChild(0).localPosition = new Vector3(-175, 50, 0);
+                timers.transform.GetChild(1).localPosition = new Vector3(175, 50, 0);
+                break;
+            case 3: 
+                timers.transform.GetChild(0).gameObject.SetActive(true);
+                timers.transform.GetChild(1).gameObject.SetActive(true);
+                timers.transform.GetChild(2).gameObject.SetActive(true);
+                timers.transform.GetChild(0).localPosition = new Vector3(-350, 50, 0);
+                timers.transform.GetChild(1).localPosition = new Vector3(0, 50, 0);
+                break;
+        }
+    }
+
     // Inventory
     public void Inventory()
     {
@@ -143,6 +173,9 @@ public class UIManager : MonoBehaviour
         {
           case "Key":
               items.transform.GetChild(index).gameObject.GetComponent<Image>().sprite = key;
+              break;
+          case "Boss Key":
+              items.transform.GetChild(index).gameObject.GetComponent<Image>().sprite = bossKey;
               break;
           case "Scroll":
               items.transform.GetChild(index).gameObject.GetComponent<Image>().sprite = scroll;
@@ -277,6 +310,32 @@ public class UIManager : MonoBehaviour
         inventory.SetActive(false);
         level.SetActive(true);
     }
+    
+    public void Level(string s)
+    {
+        PauseGame();
+        Text text = level.transform.GetChild(1).GetComponent<Text>();
+        text.text = String.Format("Boss: {0}", s);
+        switch (s)
+        {
+            case "Elite Knight":
+                text.color = new Color(0.9f, 0, 0, 1);
+                break;
+            case "Royal Guardian":
+                text.color = Color.yellow;
+                break;
+            case "Troll":
+                text.color = new Color(0, 0.8f, 0, 1);
+                break;
+            case "Golem":
+                text.color = new Color(0.85f, 0.45f, 0.25f, 1);
+                break;
+        }
+        menu.SetActive(false);
+        gameOver.SetActive(false);
+        inventory.SetActive(false);
+        level.SetActive(true);
+    }
 
     public void LevelStart()
     {
@@ -314,20 +373,20 @@ public class UIManager : MonoBehaviour
     public IEnumerator ExitFade()
     {
         StartCoroutine(FadeIn());
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
         SceneManager.LoadScene("Title");
     }
 
     public IEnumerator FadeIn()
     {
         fade.CrossFadeAlpha(1.0f, 0.5f, true);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
     }
     
     public IEnumerator FadeOut()
     {
         fade.CrossFadeAlpha(0.0f, 0.5f, true);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
     }
 
 }

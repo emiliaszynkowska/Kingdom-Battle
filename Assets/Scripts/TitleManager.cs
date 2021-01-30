@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -6,56 +7,53 @@ using UnityEngine.UI;
 public class TitleManager : MonoBehaviour
 {
     public Image startImage;
-    public Text startText;
-    public Image fadeImage;
-    private bool blink = true;
+    public Image fade;
 
-    void Start()
+    private void Start()
     {
-        StartCoroutine("FlashText");
+        StartCoroutine(FadeOut());
     }
 
-    void Update()
+    public void StartGame()
     {
-        if(Input.anyKeyDown)
-        {
-            StopCoroutine("FlashText");
-            StartCoroutine("FasterFlashText");
-        }
+        StartCoroutine(FadeIn());
+        SceneManager.LoadScene("Main");
     }
 
-    public IEnumerator FlashText()
+    public void Easy()
     {
-        while (blink)
-        {
-            startImage.CrossFadeAlpha(0, 1, false);
-            startText.CrossFadeAlpha(0, 1, false);
-            yield return new WaitForSeconds(1);
-            startImage.CrossFadeAlpha(1, 1, false);
-            startText.CrossFadeAlpha(1, 1, false);
-            yield return new WaitForSeconds(1);
-        }
+        StartCoroutine(FadeIn());
+        SceneManager.LoadScene("Easy");
+    }
+    
+    public void Medium()
+    {
+        StartCoroutine(FadeIn());
+        SceneManager.LoadScene("Medium");
+    }
+    
+    public void Hard()
+    {
+        StartCoroutine(FadeIn());
+        SceneManager.LoadScene("Hard");
     }
 
-    public IEnumerator FasterFlashText()
+    public void Boss()
     {
-        for (int i = 0; i < 5; i++)
-        {
-            startImage.gameObject.SetActive(false);
-            yield return new WaitForSeconds(0.1f);
-            startImage.gameObject.SetActive(true);
-            yield return new WaitForSeconds(0.1f);
-        }
-        FadeToBlack();
-        yield return new WaitForSeconds(2);
-        SceneManager.LoadScene("Intro");
+        StartCoroutine(FadeIn());
+        SceneManager.LoadScene("Boss");
     }
-
-    void FadeToBlack()
+    
+    public IEnumerator FadeIn()
     {
-        fadeImage.color = Color.black;
-        fadeImage.canvasRenderer.SetAlpha(0);
-        fadeImage.CrossFadeAlpha(1, 1, false);
+        fade.CrossFadeAlpha(1.0f, 1, true);
+        yield return new WaitForSecondsRealtime(1);
+    }
+    
+    public IEnumerator FadeOut()
+    {
+        fade.CrossFadeAlpha(0.0f, 1, true);
+        yield return new WaitForSecondsRealtime(1);
     }
 
 }

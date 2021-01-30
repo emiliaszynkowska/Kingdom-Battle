@@ -6,68 +6,68 @@ using Random = UnityEngine.Random;
 public class ScoreManager : MonoBehaviour
 {
     // Game Objects
-    public UIManager uiManager;
+    public static UIManager uiManager;
     // Variables
-    public int aggressive;
-    public int defensive;
-    public int exploration;
-    public int collection;
-    public int puzzlesolving;
+    public static int aggressive;
+    public static int defensive;
+    public static int exploration;
+    public static int collection;
+    public static int puzzlesolving;
     // Titles
-    List<string> titlesInitial = new List<string>() {"Beginner", "Fledgling", "Amateur", "Initiate", "Rookie", "Novice"};
-    List<string> titlesAggressive1 = new List<string>() {"Fighter", "Dueller", "Aggressor", "Swordsman"};
-    List<string> titlesAggressive2 = new List<string>() {"Mercenary", "Assassin", "Slayer", "Weaponmaster"};
-    List<string> titlesAggressive3 = new List<string>() {"Warrior", "Gladiator", "Destroyer", "Conqueror", "Barbarian", "Savage"};
-    List<string> titlesDefensive1 = new List<string>() {"Pacifist", "Defender", "Protector", "Mediator", "Shieldbearer"};
-    List<string> titlesDefensive2 = new List<string>() {"Purehearted", "Peacekeeper", "Shieldmaster", "Guardian", "Sentinel"};
-    List<string> titlesDefensive3 = new List<string>() {"Unbreakable", "Indestructible", "Eternal", "Immortal"};
-    List<string> titlesExploration1 = new List<string>() {"Wanderer", "Traveller", "Wayfarer"};
-    List<string> titlesExploration2 = new List<string>() {"Explorer", "Voyager", "Journeyman", "Discoverer"};
-    List<string> titlesExploration3 = new List<string>() {"Pioneer", "Harbinger", "Mapmaster", "Cartographer"};
-    List<string> titlesCollection1 = new List<string>() {"Finder", "Forager", "Gatherer"};
-    List<string> titlesCollection2 = new List<string>() {"Curator", "Acquirer", "Collector"};
-    List<string> titlesCollection3 = new List<string>() {"Conservator", "Connoisseur"};
-    List<string> titlesPuzzleSolving1 = new List<string>() {"Puzzle Solver", "Investigator", "Brainiac"};
-    List<string> titlesPuzzleSolving2 = new List<string>() {"Intellectual", "Academic", "Logician", "Analyst", "Detective"};
-    List<string> titlesPuzzleSolving3 = new List<string>() {"Sage", "Genius", "Savant", "Expert", "Mastermind", "Puzzlemaster"};
-    List<string> titlesExtreme = new List<string>() {"Hero", "Master", "Champion", "Legendary"};
+    static List<string> titlesInitial = new List<string>() {"Beginner", "Fledgling", "Amateur", "Initiate", "Rookie", "Novice"};
+    static List<string> titlesAggressive1 = new List<string>() {"Fighter", "Dueller", "Aggressor", "Swordsman"};
+    static List<string> titlesAggressive2 = new List<string>() {"Mercenary", "Assassin", "Slayer", "Weaponmaster"};
+    static List<string> titlesAggressive3 = new List<string>() {"Warrior", "Gladiator", "Destroyer", "Conqueror", "Barbarian", "Savage"};
+    static List<string> titlesDefensive1 = new List<string>() {"Pacifist", "Defender", "Protector", "Mediator", "Shieldbearer"};
+    static List<string> titlesDefensive2 = new List<string>() {"Purehearted", "Peacekeeper", "Shieldmaster", "Guardian", "Sentinel"};
+    static List<string> titlesDefensive3 = new List<string>() {"Unbreakable", "Indestructible", "Eternal", "Immortal"};
+    static List<string> titlesExploration1 = new List<string>() {"Wanderer", "Traveller", "Wayfarer"};
+    static List<string> titlesExploration2 = new List<string>() {"Explorer", "Voyager", "Journeyman", "Discoverer"};
+    static List<string> titlesExploration3 = new List<string>() {"Pioneer", "Harbinger", "Mapmaster", "Cartographer"};
+    static List<string> titlesCollection1 = new List<string>() {"Finder", "Forager", "Gatherer"};
+    static List<string> titlesCollection2 = new List<string>() {"Curator", "Acquirer", "Collector"};
+    static List<string> titlesCollection3 = new List<string>() {"Conservator", "Connoisseur"};
+    static List<string> titlesPuzzleSolving1 = new List<string>() {"Puzzle Solver", "Investigator", "Brainiac"};
+    static List<string> titlesPuzzleSolving2 = new List<string>() {"Intellectual", "Academic", "Logician", "Analyst", "Detective"};
+    static List<string> titlesPuzzleSolving3 = new List<string>() {"Sage", "Genius", "Savant", "Expert", "Mastermind", "Puzzlemaster"};
+    static List<string> titlesExtreme = new List<string>() {"Hero", "Master", "Champion", "Legendary"};
 
-    public void AddAggressive(int score)
+    public static void AddAggressive(int score)
     {
         aggressive += score;
     }
     
-    public void AddDefensive(int score)
+    public static void AddDefensive(int score)
     {
         defensive += score;
     }
     
-    public void AddExploration(int score)
+    public static void AddExploration(int score)
     {
         exploration += score;
     }
     
-    public void AddPuzzleSolving(int score)
+    public static void AddPuzzleSolving(int score)
     {
         puzzlesolving += score;
     }
     
-    public void AddCollection(int score)
+    public static void AddCollection(int score)
     {
         collection += score;
     }
 
-    public string DisciplinePrimary()
+    public static string DisciplinePrimary()
     {
         return aggressive > defensive ? "Aggressive" : "Defensive";
     }
 
-    public int ScorePrimary()
+    public static int ScorePrimary()
     {
         return Math.Max(aggressive, defensive);
     }
 
-    public string DisciplineSecondary()
+    public static string DisciplineSecondary()
     {
         if (exploration >= collection && exploration >= puzzlesolving)
             return "Exploration";
@@ -79,7 +79,7 @@ public class ScoreManager : MonoBehaviour
             return null;
     }
 
-    public int ScoreSecondary()
+    public static int ScoreSecondary()
     {
         if (exploration >= collection && exploration >= puzzlesolving)
             return exploration;
@@ -91,12 +91,12 @@ public class ScoreManager : MonoBehaviour
             return 0;
     }
 
-    public string TitleInitial()
+    public static string TitleInitial()
     {
         return titlesInitial[Random.Range(0, 6)];
     }
 
-    public string TitleAggressive(int level)
+    public static string TitleAggressive(int level)
     {
         switch (level)
         {
@@ -110,7 +110,7 @@ public class ScoreManager : MonoBehaviour
         return null;
     }
 
-    public string TitleDefensive(int level)
+    public static string TitleDefensive(int level)
     {
         switch (level)
         {
@@ -124,7 +124,7 @@ public class ScoreManager : MonoBehaviour
         return null;
     }
     
-    public string TitleExploration(int level)
+    public static string TitleExploration(int level)
     {
         switch (level)
         {
@@ -138,7 +138,7 @@ public class ScoreManager : MonoBehaviour
         return null;
     }
     
-    public string TitleCollection(int level)
+    public static string TitleCollection(int level)
     {
         switch (level)
         {
@@ -152,7 +152,7 @@ public class ScoreManager : MonoBehaviour
         return null; 
     }
     
-    public string TitlePuzzleSolving(int level)
+    public static string TitlePuzzleSolving(int level)
     {
         switch (level)
         {
@@ -166,7 +166,7 @@ public class ScoreManager : MonoBehaviour
         return null;
     }
 
-    public string TitleTertiary()
+    public static string TitleTertiary()
     {
         return titlesExtreme[Random.Range(0, 4)];
     }

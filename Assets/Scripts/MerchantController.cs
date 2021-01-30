@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -18,7 +17,12 @@ public class MerchantController : MonoBehaviour
     public string message;
     public bool talking;
     public bool shopping;
-    
+    public Sprite key;
+    public Sprite wiggsBrew;
+    public Sprite liquidLuck;
+    public Sprite ogresStrength;
+    public Sprite elixirofSpeed;
+
     List<string> messages = new List<string>()
     {
         "Welcome to my shop.", 
@@ -42,6 +46,7 @@ public class MerchantController : MonoBehaviour
         player = GameObject.Find("Player");
         playerController = player.GetComponent<PlayerController>();
         uiManager = GameObject.Find("UI").GetComponent<UIManager>();
+        SetItems();
     }
 
     public void Update()
@@ -70,13 +75,24 @@ public class MerchantController : MonoBehaviour
 
     public void Talk()
     {
-        if (!talking)
+        if (!talking && !shopping)
+        {
+            StartCoroutine(DoTalk());
+        }
+        else if (!talking)
         {
             talking = true;
-            message = messages[Random.Range(0, 5)];
-            uiManager.StartSpeak(npcName, message);
             Shop();
         }
+    }
+
+    IEnumerator DoTalk()
+    {
+        talking = true;
+        message = messages[Random.Range(0, 5)];
+        uiManager.StartSpeak(npcName, message);
+        yield return new WaitForSeconds(1);
+        Shop();
     }
     
     // Shop 
@@ -127,6 +143,38 @@ public class MerchantController : MonoBehaviour
             uiManager.StartSpeak(npcName, "You don't have enough coins.");
         }
         shopping = false;
+    }
+
+    public void SetItems()
+    {
+        for (int i=0; i<items.transform.childCount; i++)
+        {
+            GameObject item = items.transform.GetChild(i).gameObject;
+            var choice = Random.Range(0, 5);
+            switch (choice)
+            {
+                case 0:
+                    item.name = "Key";
+                    item.GetComponent<Image>().sprite = key;
+                    break;
+                case 1:
+                    item.name = "Wigg's Brew";
+                    item.GetComponent<Image>().sprite = wiggsBrew;
+                    break;
+                case 2:
+                    item.name = "Liquid Luck";
+                    item.GetComponent<Image>().sprite = liquidLuck;
+                    break;
+                case 3:
+                    item.name = "Ogre's Strength";
+                    item.GetComponent<Image>().sprite = ogresStrength;
+                    break;
+                case 4:
+                    item.name = "Elixir of Speed";
+                    item.GetComponent<Image>().sprite = elixirofSpeed;
+                    break;
+            }
+        }
     }
 
 }

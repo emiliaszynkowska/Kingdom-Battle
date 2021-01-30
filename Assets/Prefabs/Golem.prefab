@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7320705704700570169}
   - component: {fileID: 7320705704700570168}
   - component: {fileID: 7320705704700570171}
+  - component: {fileID: 3488466584897381146}
   - component: {fileID: 7320705704700570167}
   - component: {fileID: 7320705704700570166}
   m_Layer: 9
@@ -133,6 +134,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.7996588, y: 2.1}
   m_EdgeRadius: 0
+--- !u!58 &3488466584897381146
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7320705704700570165}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 1}
+  serializedVersion: 2
+  m_Radius: 1
 --- !u!114 &7320705704700570167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,16 +164,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 0
   attack: 0
-  speed: 0
+  speed: 1
+  boss: 1
   groundPoundAttack: 1
   magicAttack: 1
   spawnEnemies: 0
   groundPoundTime: 3
-  magicTime: 2
+  magicTime: 1
   spawnTime: 0
   text: {fileID: 7320705705425522103}
   particles: {fileID: 1484304525313702822, guid: 740a6d4dab6fce94ebaf523c203cdf0f,
     type: 3}
+  groundPoundCollider: {fileID: 3488466584897381146}
   projectilePrefab: {fileID: 8442078517516998046, guid: 7c6ee33e62ca90b43a129f6abca54325,
     type: 3}
   knightPrefab: {fileID: 8052890031221065366, guid: 8007efd8ee797114a99afb59e65c1254,

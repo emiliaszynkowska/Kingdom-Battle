@@ -30,6 +30,7 @@
       <Path>Logs</Path>
       <Path>UnityPlayerStub</Path>
       <Path>UserSettings</Path>
+      <Path>Web</Path>
       <Path>obj</Path>
     </explicitExcludes>
   </component>
