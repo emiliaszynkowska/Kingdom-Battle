@@ -131,9 +131,11 @@ public class EnemyController : MonoBehaviour
         if (boss)
             dungeonManager.PlaceItem("Boss Key", transform.position);
         else
-            dungeonManager.PlaceItem(drops[Random.Range(0, 12)], transform.position); 
-        yield return new WaitForSeconds(10);
-        dungeonManager.PlaceEnemy(dungeon, dungeonGenerator.difficulty);
+        {
+            dungeonManager.PlaceItem(drops[Random.Range(0, 12)], transform.position);
+            yield return new WaitForSeconds(10);
+            dungeonManager.PlaceEnemy(dungeon, dungeonGenerator.difficulty);
+        }
         Destroy(gameObject);
     }
 

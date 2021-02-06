@@ -46,25 +46,25 @@ public class ScoreManager : MonoBehaviour
     {
         exploration += score;
     }
+
+    public static void AddCollection(int score)
+    {
+        collection += score;
+    }
     
     public static void AddPuzzleSolving(int score)
     {
         puzzlesolving += score;
     }
     
-    public static void AddCollection(int score)
+    public static int[] GetScores()
     {
-        collection += score;
+        return new [] {aggressive, defensive, exploration, collection, puzzlesolving};
     }
 
     public static string DisciplinePrimary()
     {
         return aggressive > defensive ? "Aggressive" : "Defensive";
-    }
-
-    public static int ScorePrimary()
-    {
-        return Math.Max(aggressive, defensive);
     }
 
     public static string DisciplineSecondary()
@@ -77,18 +77,6 @@ public class ScoreManager : MonoBehaviour
             return "Puzzle Solving";
         else
             return null;
-    }
-
-    public static int ScoreSecondary()
-    {
-        if (exploration >= collection && exploration >= puzzlesolving)
-            return exploration;
-        else if (collection >= exploration && collection >= puzzlesolving)
-            return collection;
-        else if (puzzlesolving >= collection && puzzlesolving >= exploration)
-            return puzzlesolving;
-        else
-            return 0;
     }
 
     public static string TitleInitial()

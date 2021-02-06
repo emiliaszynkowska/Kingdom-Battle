@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelUserStore">
-    <attachedFolders>
-      <Path>../../../../AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.2d.common@2.1.0</Path>
-      <Path>../../../../AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.2d.path@2.1.0</Path>
-    </attachedFolders>
+    <attachedFolders />
     <explicitIncludes>
       <Path>Library/PackageCache/com.unity.2d.animation@3.2.5</Path>
       <Path>Library/PackageCache/com.unity.2d.common@2.1.0</Path>
@@ -25,10 +22,8 @@
     <explicitExcludes>
       <Path>.git</Path>
       <Path>.idea</Path>
-      <Path>Debug</Path>
       <Path>Library</Path>
-      <Path>Logs</Path>
-      <Path>UnityPlayerStub</Path>
+      <Path>Temp</Path>
       <Path>UserSettings</Path>
       <Path>Web</Path>
       <Path>obj</Path>

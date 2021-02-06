@@ -60,7 +60,7 @@ public class DungeonGenerator : MonoBehaviour
             // Place Entities
             PlaceEntities();
             // Start Level
-            dungeonManager.uiManager.Level(level);
+            dungeonManager.uiManager.Level(level, difficulty);
         }
     }
 

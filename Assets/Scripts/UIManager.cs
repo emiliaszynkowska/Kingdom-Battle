@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
-using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -24,12 +26,18 @@ public class UIManager : MonoBehaviour
     public Text npcName;
     public Text message;
     public GameObject menu;
+    public GameObject scores;
+    public GameObject disciplines;
     public GameObject level;
     public GameObject gameOver;
     public Text powerup;
     public Image background;
     public Image fade;
     // Variables
+    public int time;
+    public bool isPowerup;
+    public int levelNum;
+    public int difficulty;
     public int activeItem;
     // Assets
     public Sprite fullLife;
@@ -41,6 +49,16 @@ public class UIManager : MonoBehaviour
     public Sprite liquidLuck;
     public Sprite ogresStrength;
     public Sprite elixirofSpeed;
+    public Sprite spriteAggressive;
+    public Sprite spriteDefensive;
+    public Sprite spriteExploration;
+    public Sprite spriteCollection;
+    public Sprite spritePuzzleSolving;
+
+    private void Start()
+    {
+        StartCoroutine(Timer());
+    }
 
     // Player Information
     public void SetInfo(string player, string[] disciplines, int coins)
@@ -221,6 +239,7 @@ public class UIManager : MonoBehaviour
     {
         powerup.text = text;
         powerup.color = color;
+        powerup.fontSize = 50;
     }
 
     public void ClearInventory()
@@ -301,8 +320,9 @@ public class UIManager : MonoBehaviour
         return gameOver.activeSelf;
     }
 
-    public void Level(int n)
+    public void Level(int n, int d)
     {
+        difficulty = d;
         PauseGame();
         level.transform.GetChild(1).GetComponent<Text>().text = "Level " + n.ToString();
         menu.SetActive(false);
@@ -348,6 +368,106 @@ public class UIManager : MonoBehaviour
     public bool IsLevel()
     {
         return level.activeSelf;
+    }
+
+    public IEnumerator Scores(int[] s)
+    { 
+        PauseGame(); 
+        scores.SetActive(true);
+        GameObject aggressive = scores.transform.GetChild(4).gameObject;
+        GameObject defensive = scores.transform.GetChild(5).gameObject;
+        GameObject exploration = scores.transform.GetChild(6).gameObject;
+        GameObject collection = scores.transform.GetChild(7).gameObject;
+        GameObject puzzlesolving = scores.transform.GetChild(8).gameObject;
+        yield return new WaitForSecondsRealtime(1);
+        aggressive.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(s[0].ToString());
+        yield return new WaitForSecondsRealtime(1);
+        defensive.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(s[1].ToString());
+        yield return new WaitForSecondsRealtime(1);
+        exploration.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(s[2].ToString());
+        yield return new WaitForSecondsRealtime(1);
+        collection.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(s[3].ToString());
+        yield return new WaitForSecondsRealtime(1);
+        puzzlesolving.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(s[4].ToString());
+        scores.transform.GetChild(3).gameObject.SetActive(true);
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
+        scores.SetActive(false);
+        StartCoroutine(Disciplines());
+    }
+
+    public IEnumerator Disciplines()
+    {
+        disciplines.SetActive(true);
+        GameObject primary = disciplines.transform.GetChild(3).gameObject;
+        GameObject secondary = disciplines.transform.GetChild(4).gameObject;
+        GameObject tertiary = disciplines.transform.GetChild(5).gameObject;
+        var strPrimary = ScoreManager.DisciplinePrimary();
+        var strSecondary = ScoreManager.DisciplineSecondary();
+        switch (strPrimary)
+        {
+            case "Aggressive":
+                primary.GetComponent<Image>().sprite = spriteAggressive;
+                primary.GetComponentInChildren<TextMeshProUGUI>().color = Color.red;
+                primary.GetComponentInChildren<TextMeshProUGUI>().SetText(ScoreManager.TitleAggressive(difficulty));
+                break;
+            case "Defensive":
+                primary.GetComponent<Image>().sprite = spriteDefensive;
+                primary.GetComponentInChildren<TextMeshProUGUI>().color = new Color(0, 0.7f, 1);
+                primary.GetComponentInChildren<TextMeshProUGUI>().SetText(ScoreManager.TitleDefensive(difficulty));
+                break;
+        }
+        switch (strSecondary)
+        {
+            case "Exploration":
+                secondary.GetComponent<Image>().sprite = spriteExploration;
+                secondary.GetComponentInChildren<TextMeshProUGUI>().color = new Color(0.1f, 0.8f, 0);
+                secondary.GetComponentInChildren<TextMeshProUGUI>().SetText(ScoreManager.TitleExploration(difficulty));
+                break;
+            case "Collection":
+                secondary.GetComponent<Image>().sprite = spriteDefensive;
+                secondary.GetComponentInChildren<TextMeshProUGUI>().color = new Color(1, 0.75f, 0);
+                secondary.GetComponentInChildren<TextMeshProUGUI>().SetText(ScoreManager.TitleCollection(difficulty));
+                break;
+            case "PuzzleSolving":
+                secondary.GetComponent<Image>().sprite = spritePuzzleSolving;
+                secondary.GetComponentInChildren<TextMeshProUGUI>().color = new Color(0.7f, 0.2f, 1);
+                secondary.GetComponentInChildren<TextMeshProUGUI>().SetText(ScoreManager.TitlePuzzleSolving(difficulty));
+                break;
+        }
+        tertiary.GetComponent<TextMeshProUGUI>().color = new Color(1, 0.55f, 0); 
+        tertiary.GetComponent<TextMeshProUGUI>().SetText(ScoreManager.TitleTertiary());
+        yield return new WaitForSecondsRealtime(1);
+        primary.SetActive(true);
+        yield return new WaitForSecondsRealtime(1);
+        secondary.SetActive(true);
+        if (levelNum > 7)
+        {
+            yield return new WaitForSecondsRealtime(1);
+            tertiary.SetActive(true);
+        }
+        disciplines.transform.GetChild(3).gameObject.SetActive(true);
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
+        disciplines.SetActive(false);
+    }
+
+    IEnumerator Timer()
+    {
+        while (time > 0)
+        {
+            yield return new WaitForSeconds(1);
+            time--;
+            if (powerup.color == Color.white && time >= 10)
+            {
+                powerup.text = "0:" + time;
+                powerup.fontSize = 150;
+            }
+            else if (powerup.color == Color.white && time < 10)
+            {
+                powerup.text = "0:0" + time;
+                powerup.fontSize = 150;
+            }
+        }
+        StartCoroutine(Scores(ScoreManager.GetScores()));
     }
     
     public void PauseGame()

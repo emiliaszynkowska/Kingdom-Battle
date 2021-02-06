@@ -504,9 +504,9 @@ public class PlayerController : MonoBehaviour
     IEnumerator LiquidLuck()
     {
         ScoreManager.AddAggressive(1);
-        uiManager.Powerup("Liquid Luck: +1 Attack", new Color(1,0.9f,0,1));
+        uiManager.Powerup("Liquid Luck: +1 Attack", new Color(1,0.9f,0));
         var color = GetComponent<SpriteRenderer>().color;
-        GetComponent<SpriteRenderer>().color = new Color(1,0.9f,0,1);
+        GetComponent<SpriteRenderer>().color = new Color(1,0.9f,0);
         shine.SetActive(true);
         attack++;
         yield return new WaitForSeconds(10);
@@ -520,9 +520,9 @@ public class PlayerController : MonoBehaviour
     IEnumerator OgreStrength()
     {
         ScoreManager.AddAggressive(1);
-        uiManager.Powerup("Ogre's Strength: +Poison Damage", new Color(0, 0.75f, 0, 1));
+        uiManager.Powerup("Ogre's Strength: +Poison Damage", new Color(0, 0.75f, 0));
         var color = GetComponent<SpriteRenderer>().color;
-        GetComponent<SpriteRenderer>().color = new Color(0, 0.75f, 0, 1);
+        GetComponent<SpriteRenderer>().color = new Color(0, 0.75f, 0);
         ogreStrength = true;
         yield return new WaitForSeconds(10);
         uiManager.Powerup("", Color.white);
@@ -533,9 +533,9 @@ public class PlayerController : MonoBehaviour
     // Elixir of Speed - increase speed for 10 seconds
     IEnumerator ElixirOfSpeed()
     {
-        ScoreManager.AddExploration(5);
-        uiManager.Powerup("Elixir of Speed: +5 Speed", new Color(0,0.4f,1,1));
-        GetComponent<SpriteRenderer>().color = new Color(0,0.4f,1,1);
+        ScoreManager.AddExploration(1);
+        uiManager.Powerup("Elixir of Speed: +5 Speed", new Color(0,0.4f,1));
+        GetComponent<SpriteRenderer>().color = new Color(0,0.4f,1);
         speed *= 1.5f;
         yield return new WaitForSeconds(15);
         uiManager.Powerup("", Color.white);
@@ -572,7 +572,8 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Item") && GetComponent<BoxCollider2D>().IsTouching(other))
         {
-            ScoreManager.AddCollection(1);
+            if (!other.gameObject.name.Equals("Coin"))
+                ScoreManager.AddCollection(1);
             if (inventory.Count >= 8)
                 ScoreManager.AddCollection(1);
             // Check item

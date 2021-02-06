@@ -26,7 +26,7 @@ public class TimerController : MonoBehaviour {
         StartCoroutine(Second());
     }
 
-    void Update ()
+    void Update()
     {
         if (totalTime <= 0)
         {
