@@ -18,6 +18,7 @@ public class EnemyController : MonoBehaviour
     private bool isHurt;
     private bool isPoisoned;
     public bool boss;
+    public string upgrade;
     public bool groundPoundAttack;
     public bool magicAttack;
     public bool spawnEnemies;
@@ -25,6 +26,7 @@ public class EnemyController : MonoBehaviour
     public int magicTime;
     public int spawnTime;
     // Objects
+    public UIManager uiManager;
     private Text healthText;
     private Rigidbody2D body;
     private Animator animator;
@@ -39,7 +41,7 @@ public class EnemyController : MonoBehaviour
     public GameObject projectilePrefab;
     public GameObject knightPrefab;
     public GameObject goblinPrefab;
-
+    
     private List<string> drops = new List<string>()
     {
         "Coin", "Coin", "Coin", "Coins", "Coins", "Coins", 
@@ -65,7 +67,7 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         // Calculate enemy movement
-        target = player.GetComponent<Rigidbody2D>().position;
+        target = player.transform.position;
         // Set enemy colours
         if (isPoisoned)
             enemyRenderer.color = Color.green;
@@ -129,7 +131,11 @@ public class EnemyController : MonoBehaviour
         DungeonGenerator dungeonGenerator = GameObject.Find("Map").GetComponent<DungeonGenerator>();
         DungeonManager dungeonManager = dungeonGenerator.dungeonManager;
         if (boss)
+        {
             dungeonManager.PlaceItem("Boss Key", transform.position);
+            if (upgrade != null)
+                StartCoroutine(uiManager.Upgrade(upgrade));
+        }
         else
         {
             dungeonManager.PlaceItem(drops[Random.Range(0, 12)], transform.position);
@@ -185,7 +191,7 @@ public class EnemyController : MonoBehaviour
                 p.transform.SetParent(transform);
                 p.tag = "Projectile";
             }
-            else if (magicAttack && Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 3)
+            else if (magicAttack && Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 2)
             {
                 GameObject p = Instantiate(projectilePrefab, transform.position, transform.rotation);
                 p.transform.SetParent(transform);

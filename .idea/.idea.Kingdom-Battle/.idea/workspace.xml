@@ -20,187 +20,119 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb908a5d-7f25-43bd-83e6-6bbe1bb1358f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/.idea.Kingdom-Battle.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/contentModel.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/SoundManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom Battle/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom Battle/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom Battle/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom Battle/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom Battle/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom Battle/riderModule.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle-main/.idea/contentModel.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle-main/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle-main/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle-main/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle-main/.idea/projectSettingsUpdater.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle-main/.idea/riderModule.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle-main/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/indexLayout.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/riderModule.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/riderModule.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/.idea/.idea.Assets.dir/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/.idea/.idea.Assets.dir/.idea/contentModel.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/.idea/.idea.Assets.dir/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/.idea/.idea.Assets.dir/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/.idea/.idea.Assets.dir/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/.idea/.idea.Assets.dir/.idea/projectSettingsUpdater.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/.idea/.idea.Assets.dir/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/.idea/.idea.Assets.dir/riderModule.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/Player.controller" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/Player.controller.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/PlayerIdle.anim" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/PlayerIdle.anim.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/PlayerJump.anim" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/PlayerJump.anim.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/PlayerRun.anim" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/PlayerRun.anim.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/death.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/death.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f0 l.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f0 l.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f0 r - Copy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f0 r - Copy.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f0 r.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f0 r.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f1 l.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f1 l.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f1 r.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f1 r.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f2 l.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f2 l.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f2 r.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f2 r.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f3 l.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f3 l.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f3 r.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_idle_anim_f3 r.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_jump_anim_f1 r.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_jump_anim_f1 r.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_jump_anim_f2 r.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_jump_anim_f2 r.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_jump_anim_f3 r.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_jump_anim_f3 r.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f0 l.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f0 l.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f0 r.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f0 r.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f1 l.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f1 l.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f1 r.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f1 r.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f2 l.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f2 l.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f2 r.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f2 r.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f3 l.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f3 l.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f3 r.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Characters/Elf/elf_f_run_anim_f3 r.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Jagged Saw.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Jagged Saw/jagged_saw.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Jagged Saw/jagged_saw.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Kingsbane/golden_sword.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Kingsbane/golden_sword.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Knight's Blade.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Knight's Blade/knight's_sword.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Knight's Blade/knight's_sword.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/Attack.anim" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/Attack.anim.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/AttackLeft.anim" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/AttackLeft.anim.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/AttackRight.anim" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/AttackRight.anim.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/Idle.anim" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/Idle.anim.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/IdleLeft.anim" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/IdleLeft.anim.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/IdleRight.anim" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/IdleRight.anim.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/Spin.anim" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/Spin.anim.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/Weapon.controller" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/Weapon.controller.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/basic_sword_slash_l.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/basic_sword_slash_l.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/basic_sword_slash_r.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Rusty Sword/basic_sword_slash_r.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Warped Edge/warped_blade.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Dungeon/Weapons/Warped Edge/warped_blade.png.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Fonts/DungeonFont SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Fonts/DungeonFont SDF.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Boss.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Boss.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Easy.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Easy.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Hard.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Hard.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Main.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Main.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Medium.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Medium.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Title.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Title.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Chort.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Chort.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Demon.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Demon.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Goblin.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Goblin.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Knight.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Knight.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Necromancer.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Necromancer.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Ogre.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Ogre.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Orc.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Orc.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Boss.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Boss.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Easy.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Easy.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Hard.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Hard.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Medium.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Medium.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ChestController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ChestController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/DenController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DenController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/DungeonGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DungeonGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/DungeonManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DungeonManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/EnemyController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/EnemyController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/MerchantController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/MerchantController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PlayerData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Projectile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Projectile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Quest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Quest.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/ScoreManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ScoreManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TimerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TimerController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/UIManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UIManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/UI/inventory.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UI/inventory.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/Assembly-CSharp.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/Mono.Security.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.ComponentModel.Composition.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.Configuration.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.Core.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.Data.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.Diagnostics.StackTrace.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.Drawing.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.EnterpriseServices.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.Globalization.Extensions.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.IO.Compression.FileSystem.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.IO.Compression.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.Net.Http.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.Numerics.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.Runtime.Serialization.Xml.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.Runtime.Serialization.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.ServiceModel.Internals.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.Transactions.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.Xml.Linq.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.Xml.XPath.XDocument.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.Xml.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/System.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/Unity.2D.Animation.Runtime.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/Unity.2D.Animation.Triangle.Runtime.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/Unity.2D.Common.Runtime.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/Unity.2D.PixelPerfect.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/Unity.2D.SpriteShape.Runtime.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/Unity.InternalAPIEngineBridge.001.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/Unity.Mathematics.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/Unity.TextMeshPro.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/Unity.Timeline.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.AIModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.ARModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.AccessibilityModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.AndroidJNIModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.AnimationModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.AssetBundleModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.AudioModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.ClothModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.ClusterInputModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.ClusterRendererModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.CoreModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.CrashReportingModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.DSPGraphModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.DirectorModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.GameCenterModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.GridModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.HotReloadModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.IMGUIModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.ImageConversionModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.InputLegacyModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.InputModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.JSONSerializeModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.LocalizationModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.ParticleSystemModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.PerformanceReportingModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.Physics2DModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.PhysicsModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.ProfilerModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.ScreenCaptureModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.SharedInternalsModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.SpriteMaskModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.SpriteShapeModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.StreamingModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.SubstanceModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.SubsystemsModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.TLSModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.TerrainModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.TerrainPhysicsModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.TextCoreModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.TextRenderingModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.TilemapModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.UI.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.UIElementsModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.UIElementsNativeModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.UIModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.UNETModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.UmbraModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.UnityAnalyticsModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.UnityConnectModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.UnityTestProtocolModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.UnityWebRequestAssetBundleModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.UnityWebRequestAudioModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.UnityWebRequestModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.UnityWebRequestTextureModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.UnityWebRequestWWWModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.VFXModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.VRModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.VehiclesModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.VideoModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.VirtualTexturingModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.WindModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.XRModule.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/UnityEngine.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/mscorlib.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Managed/netstandard.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Resources/unity default resources" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/Resources/unity_builtin_extra" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/app.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/boot.config" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/globalgamemanagers" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/globalgamemanagers.assets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/level0" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/level1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/sharedassets0.assets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/sharedassets0.assets.resS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/sharedassets1.assets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/Kingdom Battle_Data/sharedassets1.assets.resS" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/EmbedRuntime/MonoPosixHelper.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/EmbedRuntime/mono-2.0-bdwgc.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/2.0/Browsers/Compat.browser" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/2.0/DefaultWsdlHelpGenerator.aspx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/2.0/machine.config" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/2.0/settings.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/2.0/web.config" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/4.0/Browsers/Compat.browser" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/4.0/DefaultWsdlHelpGenerator.aspx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/4.0/machine.config" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/4.0/settings.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/4.0/web.config" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/4.5/Browsers/Compat.browser" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/4.5/DefaultWsdlHelpGenerator.aspx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/4.5/machine.config" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/4.5/settings.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/4.5/web.config" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/browscap.ini" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/config" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/MonoBleedingEdge/etc/mono/mconfig/config.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/UnityCrashHandler32.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Debug/UnityPlayer.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/WiggController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/WiggController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnityPlayerStub/Exports.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnityPlayerStub/Exports.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnityPlayerStub/UnityPlayerStub.vcxproj" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -211,23 +143,36 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/MerchantController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Projectile.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/EnemyController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/ScoreManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/PlayerData.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/DungeonGenerator.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/SoundManager.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/UIManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/DungeonManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/UIManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/SoundManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/DoorController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Quest.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/ChestController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/DenController.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Assets/Scripts/EnemyController.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/ScoreManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/DungeonManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Quest.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/DoorController.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/ChestController.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/DenController.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Projectile.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/DungeonGenerator.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/ScoreManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/DungeonManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/EnemyController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UIManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/PlayerData.cs" />
       </list>
     </option>
   </component>
@@ -243,7 +188,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
   </component>
-  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
+  <component name="RunManager">
     <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
@@ -269,6 +214,11 @@
       <updated>1612387609964</updated>
       <workItem from="1612387618211" duration="1228000" />
       <workItem from="1612623088342" duration="7611000" />
+      <workItem from="1612795296182" duration="6649000" />
+      <workItem from="1612872590816" duration="3736000" />
+      <workItem from="1612882122113" duration="14497000" />
+      <workItem from="1612966906887" duration="5565000" />
+      <workItem from="1612973335843" duration="5812000" />
     </task>
     <servers />
   </component>

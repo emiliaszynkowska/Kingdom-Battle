@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
-using System.Linq;
-using System.Threading;
+using System.Collections.Generic;
+using Assets.Scripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,6 +18,8 @@ public class UIManager : MonoBehaviour
     public GameObject inventory;
     public GameObject items;
     public GameObject active;
+    public GameObject inactive1;
+    public GameObject inactive2;
     public GameObject options;
     public GameObject optionsInventory;
     public GameObject optionsShop;
@@ -29,8 +31,12 @@ public class UIManager : MonoBehaviour
     public GameObject scores;
     public GameObject disciplines;
     public GameObject level;
+    public GameObject next;
     public GameObject gameOver;
     public Text powerup;
+    public GameObject upgrade;
+    public Text upgradeText;
+    public Image equipment;
     public Image background;
     public Image fade;
     // Variables
@@ -42,6 +48,7 @@ public class UIManager : MonoBehaviour
     // Assets
     public Sprite fullLife;
     public Sprite emptyLife;
+    public Sprite blueLife;
     public Sprite key;
     public Sprite bossKey;
     public Sprite scroll;
@@ -49,60 +56,69 @@ public class UIManager : MonoBehaviour
     public Sprite liquidLuck;
     public Sprite ogresStrength;
     public Sprite elixirofSpeed;
+    public Sprite rustySword;
+    public Sprite jaggedBlade;
+    public Sprite warpedEdge;
+    public Sprite knightsSword;
+    public Sprite kingsbane;
+    public Sprite blueRobe;
+    public Sprite redRobe;
     public Sprite spriteAggressive;
     public Sprite spriteDefensive;
     public Sprite spriteExploration;
     public Sprite spriteCollection;
     public Sprite spritePuzzleSolving;
 
-    private void Start()
+    public void Start()
     {
+        ScoreManager.Reset();
         StartCoroutine(Timer());
     }
 
     // Player Information
-    public void SetInfo(string player, string[] disciplines, int coins)
+    public void SetInfo(string player, List<string> playerTitles, int coins)
     {
         // Get objects
         Text playerText = info.transform.GetChild(0).gameObject.GetComponentInChildren<Text>();
-        GameObject discipline2 = info.transform.GetChild(2).gameObject;
-        GameObject discipline3 = info.transform.GetChild(3).gameObject;
-        Text disciplineText1 = info.transform.GetChild(1).gameObject.GetComponentInChildren<Text>();
-        Text disciplineText2 = info.transform.GetChild(2).gameObject.GetComponentInChildren<Text>();
-        Text disciplineText3 = info.transform.GetChild(3).gameObject.GetComponentInChildren<Text>();
-        Text moneyText = info.transform.GetChild(4).gameObject.GetComponentInChildren<Text>();
+        GameObject title1 = info.transform.GetChild(1).gameObject;
+        GameObject title2 = info.transform.GetChild(2).gameObject;
+        GameObject title3 = info.transform.GetChild(3).gameObject;
         GameObject money = info.transform.GetChild(4).gameObject;
         
         // Name
         playerText.text = player;
         // Coins
-        moneyText.text = coins.ToString();
-        // Discipline 3
-        if (disciplines[2] != null)
-        {
-            discipline3.SetActive(true);
-            disciplineText3.text = disciplines[2];
-            SetMoneyPosition(money, -180);
-        }
-        else
-        {
-            discipline3.SetActive(false);
-            SetMoneyPosition(money, -120);
-        }
+        money.GetComponentInChildren<Text>().text = coins.ToString();
+        // Discipline 1
+        title1.GetComponentInChildren<Text>().text = playerTitles[0];
         // Discipline 2
-        if (disciplines[1] != null)
+        if (playerTitles[1] != null)
         {
-            discipline2.SetActive(true);
-            disciplineText2.text = disciplines[1];
+            title2.SetActive(true);
+            title2.GetComponentInChildren<Text>().text = playerTitles[1];
             SetMoneyPosition(money, -120);
         }
         else
         {
-            discipline2.SetActive(false);
+            title2.SetActive(false);
             SetMoneyPosition(money, -60);
         }
-        // Discipline 1
-        disciplineText1.text = disciplines[0];
+        // Discipline 3
+        if (playerTitles[2] != null)
+        {
+            title3.SetActive(true);
+            title3.GetComponentInChildren<Text>().text = playerTitles[2];
+            SetMoneyPosition(money, -180);
+        }
+        else 
+        {
+            title3.SetActive(false);
+        }
+    }
+
+    public void SetCoins(int coins)
+    {
+        info.transform.GetChild(4).GetComponentInChildren<Text>().text = coins.ToString();
     }
 
     void SetMoneyPosition(GameObject money, int y)
@@ -111,11 +127,18 @@ public class UIManager : MonoBehaviour
         pos.y = y;
         money.transform.localPosition = pos;
     }
-    
+
+    public void SetEffect(int i, float size, Sprite sprite)
+    {
+        info.transform.GetChild(i).GetChild(1).GetComponent<RectTransform>().sizeDelta = new Vector2(size, size);
+        info.transform.GetChild(i).GetChild(1).GetComponent<Image>().sprite = sprite;
+        info.transform.GetChild(i).GetChild(1).gameObject.SetActive(true);
+    }
+
     // Lives 
     public void SetLivesActive(int n)
     {
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 11; i++)
         {
             if (i < n)
                 lives.transform.GetChild(i).gameObject.SetActive(true);
@@ -126,9 +149,11 @@ public class UIManager : MonoBehaviour
     
     public void SetLives(int n)
     {
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 11; i++)
         {
-            if (i < n)
+            if (i < n && playerController.livesActive - i < 3 && playerController.playerDisciplines[0].Equals("Defensive"))
+                lives.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = blueLife;
+            else if (i < n)
                 lives.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = fullLife;
             else
                 lives.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = emptyLife;
@@ -170,6 +195,16 @@ public class UIManager : MonoBehaviour
         options.SetActive(false);
         inventory.SetActive(true);
         ChangeItem(0);
+        if (playerController.playerDisciplines[1] != null && playerController.playerDisciplines[1].Equals("Collection"))
+        {
+            inactive1.SetActive(false);
+            inactive2.SetActive(false);
+        }
+        else
+        {
+            inactive1.SetActive(true);
+            inactive2.SetActive(true);
+        }
     }
 
     public void ExitInventory()
@@ -224,9 +259,9 @@ public class UIManager : MonoBehaviour
     {
         for (int i=activeItem; i < 7; i++)
         {
-            Image next = items.transform.GetChild(i + 1).gameObject.GetComponent<Image>();
-            items.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = next.sprite;
-            next.sprite = null;
+            Image j = items.transform.GetChild(i + 1).gameObject.GetComponent<Image>();
+            items.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = j.sprite;
+            j.sprite = null;
         }
     }
 
@@ -249,6 +284,25 @@ public class UIManager : MonoBehaviour
             items.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = null;
             items.transform.GetChild(i).gameObject.SetActive(false);
         }
+    }
+
+    public IEnumerator Upgrade(string e)
+    {
+        PauseGame();
+        upgrade.SetActive(true);
+        upgradeText.text = "You got the " + e + "!";
+        equipment.sprite = (e.Equals("Blue Robe") ? blueRobe : (e.Equals("Red Robe") ? redRobe : (e.Equals("Rusty Sword")
+                    ? rustySword : (e.Equals("Jagged Blade") ? jaggedBlade : (e.Equals("Warped Edge")
+                            ? warpedEdge : (e.Equals("Knight's Sword") ? knightsSword : kingsbane))))));
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
+        upgrade.SetActive(false);
+        playerController.playerAnimator.runtimeAnimatorController = Instantiate((e.Equals("Blue Robe") ? playerController.playerB 
+            : (e.Equals("Red Robe") ? playerController.playerR : playerController.playerG)), playerController.transform);
+        playerController.weaponAnimator.runtimeAnimatorController = Instantiate((e.Equals("Rusty Sword") ? playerController.rustySword
+                : (e.Equals("Jagged Blade") ? playerController.jaggedBlade : (e.Equals("Warped Edge") ? playerController.warpedEdge
+                        : (e.Equals("Knight's Sword") ? playerController.knightsSword : (e.Equals("Kingsbane") ? playerController.kingsbane
+                                : playerController.weaponAnimator.runtimeAnimatorController))))), playerController.weapon.transform);
+        ResumeGame();
     }
 
     // Options
@@ -306,13 +360,9 @@ public class UIManager : MonoBehaviour
         dialog.SetActive(false);
     }
 
-    public IEnumerator GameOver()
+    public void GameOver()
     {
-        StartCoroutine(FadeIn());
-        yield return new WaitForSeconds(0.5f);
         gameOver.SetActive(true);
-        StartCoroutine(FadeOut());
-        yield return new WaitForSeconds(0.5f);
     }
 
     public bool IsGameOver()
@@ -322,6 +372,7 @@ public class UIManager : MonoBehaviour
 
     public void Level(int n, int d)
     {
+        levelNum = n;
         difficulty = d;
         PauseGame();
         level.transform.GetChild(1).GetComponent<Text>().text = "Level " + n.ToString();
@@ -365,6 +416,11 @@ public class UIManager : MonoBehaviour
         StartCoroutine(FadeOut());
     }
 
+    public void LevelNext()
+    {
+        next.SetActive(true);
+    }
+
     public bool IsLevel()
     {
         return level.activeSelf;
@@ -398,56 +454,93 @@ public class UIManager : MonoBehaviour
     public IEnumerator Disciplines()
     {
         disciplines.SetActive(true);
-        GameObject primary = disciplines.transform.GetChild(3).gameObject;
-        GameObject secondary = disciplines.transform.GetChild(4).gameObject;
-        GameObject tertiary = disciplines.transform.GetChild(5).gameObject;
+        List<string> t = new List<string>(3);
+        List<string> d = new List<string>(3);
+        GameObject primary = disciplines.transform.GetChild(4).gameObject;
+        GameObject secondary = disciplines.transform.GetChild(5).gameObject;
+        GameObject tertiary = disciplines.transform.GetChild(6).gameObject;
         var strPrimary = ScoreManager.DisciplinePrimary();
         var strSecondary = ScoreManager.DisciplineSecondary();
         switch (strPrimary)
         {
             case "Aggressive":
+                string titleAggressive = ScoreManager.TitleAggressive(difficulty);
                 primary.GetComponent<Image>().sprite = spriteAggressive;
-                primary.GetComponentInChildren<TextMeshProUGUI>().color = Color.red;
-                primary.GetComponentInChildren<TextMeshProUGUI>().SetText(ScoreManager.TitleAggressive(difficulty));
+                primary.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.red;
+                primary.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = Color.red;
+                primary.transform.GetChild(0).GetComponent<TextMeshProUGUI>().SetText(titleAggressive);
+                primary.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText("+1 Attack");
+                d.Add("Aggressive");
+                t.Add(titleAggressive);
                 break;
             case "Defensive":
+                string titleDefensive = ScoreManager.TitleDefensive(difficulty);
                 primary.GetComponent<Image>().sprite = spriteDefensive;
-                primary.GetComponentInChildren<TextMeshProUGUI>().color = new Color(0, 0.7f, 1);
-                primary.GetComponentInChildren<TextMeshProUGUI>().SetText(ScoreManager.TitleDefensive(difficulty));
+                primary.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(0, 0.7f, 1);
+                primary.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = new Color(0, 0.7f, 1);
+                primary.transform.GetChild(0).GetComponent<TextMeshProUGUI>().SetText(titleDefensive);
+                primary.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText("+2 Health");
+                d.Add("Defensive");
+                t.Add(titleDefensive);
                 break;
         }
         switch (strSecondary)
         {
             case "Exploration":
+                string titleExploration = ScoreManager.TitleExploration(difficulty);
                 secondary.GetComponent<Image>().sprite = spriteExploration;
-                secondary.GetComponentInChildren<TextMeshProUGUI>().color = new Color(0.1f, 0.8f, 0);
-                secondary.GetComponentInChildren<TextMeshProUGUI>().SetText(ScoreManager.TitleExploration(difficulty));
+                secondary.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(0.1f, 0.8f, 0);
+                secondary.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = new Color(0.1f, 0.8f, 0);
+                secondary.transform.GetChild(0).GetComponent<TextMeshProUGUI>().SetText(titleExploration);
+                secondary.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText("+50% Map Vision");
+                d.Add("Exploration");
+                t.Add(titleExploration);
                 break;
             case "Collection":
-                secondary.GetComponent<Image>().sprite = spriteDefensive;
-                secondary.GetComponentInChildren<TextMeshProUGUI>().color = new Color(1, 0.75f, 0);
-                secondary.GetComponentInChildren<TextMeshProUGUI>().SetText(ScoreManager.TitleCollection(difficulty));
+                string titleCollection = ScoreManager.TitleCollection(difficulty);
+                secondary.GetComponent<Image>().sprite = spriteCollection;
+                secondary.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(1, 0.75f, 0);
+                secondary.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = new Color(1, 0.75f, 0);
+                secondary.transform.GetChild(0).GetComponent<TextMeshProUGUI>().SetText(titleCollection);
+                secondary.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText("+2 Inventory");
+                d.Add("Collection");
+                t.Add(titleCollection);
                 break;
-            case "PuzzleSolving":
+            case "Puzzle Solving":
+                string titlePuzzleSolving = ScoreManager.TitlePuzzleSolving(difficulty);
                 secondary.GetComponent<Image>().sprite = spritePuzzleSolving;
-                secondary.GetComponentInChildren<TextMeshProUGUI>().color = new Color(0.7f, 0.2f, 1);
-                secondary.GetComponentInChildren<TextMeshProUGUI>().SetText(ScoreManager.TitlePuzzleSolving(difficulty));
+                secondary.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(0.7f, 0.2f, 1);
+                secondary.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = new Color(0.7f, 0.2f, 1);
+                secondary.transform.GetChild(0).GetComponent<TextMeshProUGUI>().SetText(titlePuzzleSolving);
+                secondary.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText("+3 Speed");
+                d.Add("Puzzle Solving");
+                t.Add(titlePuzzleSolving);
                 break;
         }
-        tertiary.GetComponent<TextMeshProUGUI>().color = new Color(1, 0.55f, 0); 
-        tertiary.GetComponent<TextMeshProUGUI>().SetText(ScoreManager.TitleTertiary());
         yield return new WaitForSecondsRealtime(1);
         primary.SetActive(true);
         yield return new WaitForSecondsRealtime(1);
         secondary.SetActive(true);
-        if (levelNum > 7)
+        if (levelNum > 10)
         {
             yield return new WaitForSecondsRealtime(1);
+            tertiary.GetComponent<TextMeshProUGUI>().color = new Color(1, 0.55f, 0);
+            string titleTertiary = ScoreManager.TitleTertiary();
+            tertiary.GetComponent<TextMeshProUGUI>().SetText(titleTertiary);
+            d.Add("Tertiary");
+            t.Add(titleTertiary);
             tertiary.SetActive(true);
+        }
+        else
+        {
+            d.Add(null);
+            t.Add(null);
         }
         disciplines.transform.GetChild(3).gameObject.SetActive(true);
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
         disciplines.SetActive(false);
+        playerController.SaveData(d, t);
+        LevelNext();
     }
 
     IEnumerator Timer()
@@ -479,10 +572,17 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 1;
     }
+
+    public void Next()
+    {
+        SceneManager.LoadScene("Main");
+    }
     
     public void Restart()
     {
-        
+        playerController.health = 0;
+        playerController.SaveData();
+        SceneManager.LoadScene("Main");
     }
 
     public void Exit()

@@ -13,10 +13,11 @@ public class DenController : MonoBehaviour
     public bool complete;
     public bool active;
     
-    void Update()
+    void FixedUpdate()
     {
-        if (active && enemy1 == null && enemy2 == null && enemy3 == null)
+        if (active && !complete && (enemy1 == null || enemy1.name.Equals("Respawn")) && (enemy2 == null || enemy2.name.Equals("Respawn")) && (enemy3 == null || enemy3.name.Equals("Respawn")))
         {
+            active = false;
             complete = true;
             spikes.SetActive(false);
             ScoreManager.AddPuzzleSolving(3);

@@ -11,6 +11,7 @@ public class DungeonManager : MonoBehaviour
     public GameObject items;
     public GameObject objects;
     public GameObject colliders;
+    public Rect playerRoom;
     // Enemies
     public GameObject impPrefab;
     public GameObject goblinPrefab;
@@ -54,27 +55,30 @@ public class DungeonManager : MonoBehaviour
 
     public Vector2 RandomPosition(Rect room)
     {
-        Vector2 position = new Vector2((int) Random.Range(room.xMin + 1, room.xMax - 1), (int) Random.Range(room.yMin + 1, room.yMax - 1));
+        Vector2 position = new Vector2((int) Random.Range(room.xMin + 1, room.xMax - 1),
+            (int) Random.Range(room.yMin + 1, room.yMax - 1));
         if (Mathf.Abs(player.transform.position.magnitude - position.magnitude) > 1)
             return position;
         else
             return RandomPosition(room);
     }
 
-    public void PlacePlayer(Vector3 position, bool placeFire)
+    public void PlacePlayer(Rect room)
+    {
+        playerRoom = room;
+        player.transform.position = room.center;
+        GameObject campfire = Instantiate(campfirePrefab, new Vector3(room.center.x - 1, room.center.y - 1, -3), Quaternion.Euler(0, 0, 0), objects.transform);
+        campfire.name = "Campfire";
+    }
+    
+    public void PlacePlayer(Vector3 position)
     {
         player.transform.position = position;
-        if (placeFire)
-        {
-            GameObject campfire = Instantiate(campfirePrefab, new Vector3(position.x - 1, position.y - 1, -3),
-                Quaternion.Euler(0, 0, 0), objects.transform);
-            campfire.name = "Campfire";
-        }
     }
 
     public void PlaceDoor(Vector3 position)
     {
-        if (position.magnitude - player.transform.position.magnitude > 1)
+        if (position.magnitude - player.transform.position.magnitude > 3)
         {
             GameObject door = Instantiate(doorPrefab, position, Quaternion.Euler(0, 0, 0), objects.transform);
             door.name = "Door";
@@ -118,51 +122,64 @@ public class DungeonManager : MonoBehaviour
     public void PlaceSpikes(Dungeon dungeon)
     {
         Vector3 position = RandomPosition(dungeon.room);
-        position.x += 0.5f;
-        position.y += 0.5f;
-        GameObject spikes = Instantiate(spikesPrefab, position, Quaternion.Euler(0, 0, 0), objects.transform);
-        spikes.name = "Spikes";
+        if (position != Vector3.zero)
+        {
+            position.x += 0.5f;
+            position.y += 0.5f;
+            GameObject spikes = Instantiate(spikesPrefab, position, Quaternion.Euler(0, 0, 0), objects.transform);
+            spikes.name = "Spikes";
+        }
     }
 
     public void PlaceMerchant(Dungeon dungeon)
     {
-        if (dungeon.room.width >= 10 && dungeon.room.height >= 4 && dungeon.room.center != (Vector2) player.transform.position)
+        if (dungeon.rect != playerRoom)
         {
-            GameObject merchant = Instantiate(merchantPrefab, dungeon.room.center, Quaternion.Euler(0, 0, 0),
-                NPCs.transform);
-            merchant.name = "Merchant";
+            if (dungeon.room.width >= 10 && dungeon.room.height >= 4 &&
+                dungeon.room.center != (Vector2) player.transform.position)
+            {
+                GameObject merchant = Instantiate(merchantPrefab, dungeon.room.center, Quaternion.Euler(0, 0, 0),
+                    NPCs.transform);
+                merchant.name = "Merchant";
+            }
         }
     }
 
     public void PlaceWizard(Dungeon dungeon, int difficulty)
     {
-        var choice = Random.Range(0, 3);
-        switch (choice)
+        if (dungeon.rect != playerRoom)
         {
-            case(0):
-                GameObject questFetch = Instantiate(wizardFetchPrefab, RandomPosition(dungeon.room), Quaternion.Euler(0, 0, 0), NPCs.transform);
-                questFetch.name = "Wizard";
-                break;
-            case(1):
-                GameObject questDefeat = Instantiate(wizardDefeatPrefab, RandomPosition(dungeon.room), Quaternion.Euler(0, 0, 0), NPCs.transform);
-                GameObject obj = PlaceEnemy(dungeon, difficulty);
-                questDefeat.name = "Wizard";
-                questDefeat.GetComponent<QuestDefeat>().obj = obj;
-                break;
-            case(2):
-                GameObject questRescue = Instantiate(wizardRescuePrefab, RandomPosition(dungeon.room), Quaternion.Euler(0, 0, 0), NPCs.transform);
-                GameObject obj1 = PlaceEnemy(dungeon, difficulty);
-                GameObject obj2 = PlaceEnemy(dungeon, difficulty);
-                GameObject obj3 = PlaceEnemy(dungeon, difficulty);
-                questRescue.name = "Wizard";
-                questRescue.GetComponent<QuestRescue>().obj1 = obj1;
-                questRescue.GetComponent<QuestRescue>().obj2 = obj2;
-                questRescue.GetComponent<QuestRescue>().obj3 = obj3;
-                break;
+            var choice = Random.Range(0, 3);
+            switch (choice)
+            {
+                case (0):
+                    GameObject questFetch = Instantiate(wizardFetchPrefab, RandomPosition(dungeon.room),
+                        Quaternion.Euler(0, 0, 0), NPCs.transform);
+                    questFetch.name = "Wizard";
+                    break;
+                case (1):
+                    GameObject questDefeat = Instantiate(wizardDefeatPrefab, RandomPosition(dungeon.room),
+                        Quaternion.Euler(0, 0, 0), NPCs.transform);
+                    GameObject obj = PlaceEnemy(dungeon, difficulty);
+                    questDefeat.name = "Wizard";
+                    questDefeat.GetComponent<QuestDefeat>().obj = obj;
+                    break;
+                case (2):
+                    GameObject questRescue = Instantiate(wizardRescuePrefab, RandomPosition(dungeon.room),
+                        Quaternion.Euler(0, 0, 0), NPCs.transform);
+                    GameObject obj1 = PlaceEnemy(dungeon, difficulty);
+                    GameObject obj2 = PlaceEnemy(dungeon, difficulty);
+                    GameObject obj3 = PlaceEnemy(dungeon, difficulty);
+                    questRescue.name = "Wizard";
+                    questRescue.GetComponent<QuestRescue>().obj1 = obj1;
+                    questRescue.GetComponent<QuestRescue>().obj2 = obj2;
+                    questRescue.GetComponent<QuestRescue>().obj3 = obj3;
+                    break;
+            }
         }
     }
 
-    public void PlaceBoss(Vector3 position, int difficulty)
+    public void PlaceBoss(Vector3 position, int level)
     {
         var choice = Random.Range(0, 4);
         GameObject prefab = null;
@@ -183,21 +200,8 @@ public class DungeonManager : MonoBehaviour
         }
         GameObject boss = Instantiate(prefab, position, Quaternion.Euler(0, 0, 0), enemies.transform);
         boss.name = boss.name.Replace("(Clone)", "");
-        switch (difficulty)
-        {
-            case(1):
-                boss.GetComponent<EnemyController>().health = 25;
-                boss.GetComponent<EnemyController>().attack = 1;
-                break;
-            case(2):
-                boss.GetComponent<EnemyController>().health = 50;
-                boss.GetComponent<EnemyController>().attack = 2;
-                break;
-            case(3):
-                boss.GetComponent<EnemyController>().health = 75;
-                boss.GetComponent<EnemyController>().attack = 3;
-                break;
-        }
+        boss.GetComponent<EnemyController>().health = (level == 1 ? 10 : (level < 5 ? 25 : (level < 8 ? 50 : (level < 11 ? 75 : 100))));
+        boss.GetComponent<EnemyController>().attack = (level == 1 ? 1 : (level < 5 ? 2 : (level < 8 ? 3 : (level < 11 ? 4 : 5))));
         uiManager.background.color = Color.red;
         uiManager.Level(boss.name);
     }
@@ -258,25 +262,35 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
-    public GameObject PlaceEnemy(Dungeon dungeon, int enemyLevel)
+    public GameObject PlaceEnemy(Dungeon dungeon, int difficulty)
     {
-        switch (enemyLevel)
+        if (dungeon.rect != playerRoom)
         {
-            case 1:
-                return PlaceEnemyEasy(dungeon);
-            case 2:
-                return PlaceEnemyMed(dungeon);
-            case 3:
+            if (difficulty >= 75)
                 return PlaceEnemyHard(dungeon);
+            else if (difficulty >= 50)
+                return PlaceEnemyMed(dungeon);
+            else if (difficulty >= 25)
+                return PlaceEnemyEasy(dungeon);
+            else if (difficulty >= 10)
+                return PlaceEnemyVeryEasy(dungeon);
         }
         return null;
     }
     
+    public GameObject PlaceEnemyVeryEasy(Dungeon dungeon)
+    {
+        GameObject enemy = Instantiate(impPrefab, RandomPosition(dungeon.room), Quaternion.Euler(0, 0, 0), enemies.transform);
+        enemy.GetComponent<EnemyController>().SetDungeon(dungeon);
+        enemy.name = enemy.name.Replace("(Clone)", "");
+        return enemy;
+    }
+    
     public GameObject PlaceEnemyEasy(Dungeon dungeon)
     {
-        var choice = Random.Range(0, 2);
+        var choice1 = Random.Range(0, 2);
         GameObject prefab = null;
-        switch (choice)
+        switch (choice1)
         {
             case(0):
                 prefab = impPrefab;
@@ -361,31 +375,34 @@ public class DungeonManager : MonoBehaviour
 
     public void PlaceDen(Dungeon dungeon, int difficulty)
     {
-        Vector2 position = dungeon.room.center;
-        if (position != (Vector2) player.transform.position)
+        if (dungeon.rect != playerRoom)
         {
-            position = new Vector2((int) position.x, (int) position.y);
-            GameObject den = Instantiate(denPrefab, position, Quaternion.Euler(0, 0, 0), objects.transform);
-            den.name = "Den";
-            switch (difficulty)
+            Vector2 position = dungeon.room.center;
+            if (position != (Vector2) player.transform.position)
             {
-                case 1:
-                    den.GetComponent<DenController>().enemy1 = PlaceEnemyEasy(dungeon);
-                    den.GetComponent<DenController>().enemy2 = PlaceEnemyEasy(dungeon);
-                    den.GetComponent<DenController>().enemy3 = PlaceEnemyEasy(dungeon);
-                    break;
-                case 2:
+                position = new Vector2((int) position.x, (int) position.y);
+                GameObject den = Instantiate(denPrefab, position, Quaternion.Euler(0, 0, 0), objects.transform);
+                den.name = "Den";
+                if (difficulty >= 75)
+                {
+                    den.GetComponent<DenController>().enemy1 = PlaceEnemyHard(dungeon);
+                    den.GetComponent<DenController>().enemy2 = PlaceEnemyHard(dungeon);
+                    den.GetComponent<DenController>().enemy3 = PlaceEnemyHard(dungeon); 
+                }
+                else if (difficulty >= 50)
+                {
                     den.GetComponent<DenController>().enemy1 = PlaceEnemyMed(dungeon);
                     den.GetComponent<DenController>().enemy2 = PlaceEnemyMed(dungeon);
                     den.GetComponent<DenController>().enemy3 = PlaceEnemyMed(dungeon);
-                    break;
-                case 3:
-                    den.GetComponent<DenController>().enemy1 = PlaceEnemyHard(dungeon);
-                    den.GetComponent<DenController>().enemy2 = PlaceEnemyHard(dungeon);
-                    den.GetComponent<DenController>().enemy3 = PlaceEnemyHard(dungeon);
-                    break;
+                }
+                else if (difficulty >= 10)
+                {
+                    den.GetComponent<DenController>().enemy1 = PlaceEnemyEasy(dungeon);
+                    den.GetComponent<DenController>().enemy2 = PlaceEnemyEasy(dungeon);
+                    den.GetComponent<DenController>().enemy3 = PlaceEnemyEasy(dungeon);
+                }
+                den.GetComponent<DenController>().active = true;
             }
-            den.GetComponent<DenController>().active = true;
         }
     }
     

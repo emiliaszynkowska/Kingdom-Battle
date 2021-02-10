@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -41,7 +42,6 @@ public class Quest : MonoBehaviour
         {
             if (active && complete)
             {
-                ScoreManager.AddPuzzleSolving(3);
                 talking = true;
                 message = "Thank you for helping me! Here, take this *.";
                 message = message.Replace("*", reward);
@@ -51,6 +51,7 @@ public class Quest : MonoBehaviour
                 yield return new WaitForSeconds(0.1f);
                 yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
                 uiManager.StopSpeak();
+                ScoreManager.AddPuzzleSolving(3);
                 StartCoroutine(Disappear());
             }
             else

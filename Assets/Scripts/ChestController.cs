@@ -32,7 +32,6 @@ public class ChestController : MonoBehaviour
     {
         if (!opened)
         {
-            ScoreManager.AddCollection(1);
             opened = true;
             animator.SetTrigger("Open");
             dungeonManager.PlaceItem(item, new Vector3(transform.position.x, transform.position.y + 1, 0));

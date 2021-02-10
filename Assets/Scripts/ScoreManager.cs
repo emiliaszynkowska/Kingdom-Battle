@@ -56,10 +56,19 @@ public class ScoreManager : MonoBehaviour
     {
         puzzlesolving += score;
     }
-    
+
     public static int[] GetScores()
     {
         return new [] {aggressive, defensive, exploration, collection, puzzlesolving};
+    }
+    
+    public static void Reset()
+    {
+        aggressive = 0;
+        defensive = 0;
+        exploration = 0;
+        collection = 0;
+        puzzlesolving = 0;
     }
 
     public static string DisciplinePrimary()
@@ -86,72 +95,52 @@ public class ScoreManager : MonoBehaviour
 
     public static string TitleAggressive(int level)
     {
-        switch (level)
-        {
-            case 1:
-                return titlesAggressive1[Random.Range(0, 4)];
-            case 2:
-                return titlesAggressive2[Random.Range(0, 4)];
-            case 3:
-                return titlesAggressive3[Random.Range(0, 6)];
-        }
-        return null;
+        if (level >= 75)
+            return titlesAggressive3[Random.Range(0, 6)];
+        else if (level >= 50)
+            return titlesAggressive2[Random.Range(0, 4)];
+        else
+         return titlesAggressive1[Random.Range(0, 4)];
     }
 
     public static string TitleDefensive(int level)
     {
-        switch (level)
-        {
-            case 1:
-                return titlesDefensive1[Random.Range(0, 5)];
-            case 2:
-                return titlesDefensive2[Random.Range(0, 5)];
-            case 3:
-                return titlesDefensive3[Random.Range(0, 4)];
-        }
-        return null;
+        if (level >= 75)
+            return titlesDefensive3[Random.Range(0, 4)];
+        else if (level >= 50)
+            return titlesDefensive2[Random.Range(0, 5)];
+        else
+            return titlesDefensive1[Random.Range(0, 5)];
     }
     
     public static string TitleExploration(int level)
     {
-        switch (level)
-        {
-            case 1:
-                return titlesExploration1[Random.Range(0, 3)];
-            case 2:
-                return titlesExploration2[Random.Range(0, 4)];
-            case 3:
-                return titlesExploration3[Random.Range(0, 4)];
-        }
-        return null;
+        if (level >= 75)
+            return titlesExploration3[Random.Range(0, 4)];
+        else if (level >= 50)
+            return titlesExploration2[Random.Range(0, 4)];
+        else
+            return titlesExploration1[Random.Range(0, 3)];
     }
     
     public static string TitleCollection(int level)
     {
-        switch (level)
-        {
-            case 1:
-                return titlesCollection1[Random.Range(0, 3)];
-            case 2:
-                return titlesCollection2[Random.Range(0, 3)];
-            case 3:
-                return titlesCollection3[Random.Range(0, 2)];
-        }
-        return null; 
+        if (level >= 75)
+            return titlesCollection3[Random.Range(0, 2)];
+        else if (level >= 50)
+            return titlesCollection2[Random.Range(0, 3)];
+        else
+            return titlesCollection1[Random.Range(0, 3)];
     }
     
     public static string TitlePuzzleSolving(int level)
     {
-        switch (level)
-        {
-            case 1:
-                return titlesPuzzleSolving1[Random.Range(0, 3)];
-            case 2:
-                return titlesPuzzleSolving2[Random.Range(0, 5)];
-            case 3:
-                return titlesPuzzleSolving3[Random.Range(0, 6)];
-        }
-        return null;
+        if (level >= 75)
+            return titlesPuzzleSolving3[Random.Range(0, 6)];
+        else if (level >= 50)
+            return titlesPuzzleSolving2[Random.Range(0, 5)];
+        else
+            return titlesPuzzleSolving1[Random.Range(0, 3)];
     }
 
     public static string TitleTertiary()
