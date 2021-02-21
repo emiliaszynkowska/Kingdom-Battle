@@ -1,59 +1,84 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class TitleManager : MonoBehaviour
+namespace Assets.Scripts
 {
-    public Image startImage;
-    public Image fade;
-
-    private void Start()
+    public class TitleManager : MonoBehaviour
     {
-        StartCoroutine(FadeOut());
-    }
+        public SoundManager soundManager;
+        public Image startImage;
+        public Image startButton;
+        public Image quitButton;
+        public Text text;
+        public Image fade;
 
-    public void StartGame()
-    {
-        StartCoroutine(FadeIn());
-        SceneManager.LoadScene("Main");
-    }
+        public void Start()
+        {
+            StartCoroutine(FadeOut());
+            StartCoroutine(FadeText());
+        }
 
-    public void Easy()
-    {
-        StartCoroutine(FadeIn());
-        SceneManager.LoadScene("Easy");
-    }
+        public void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                soundManager.PlaySound(soundManager.clickButton);
+                startButton.enabled = true;
+                quitButton.enabled = false;
+            }
+            else if (Input.GetKeyDown(KeyCode.S))
+            {
+                soundManager.PlaySound(soundManager.clickButton);
+                startButton.enabled = false;
+                quitButton.enabled = true;
+            }
+            else if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                if (startButton.enabled)
+                    StartGame();
+                else if (quitButton.enabled)
+                        Quit();
+            }
+        }
+
+        public void StartGame()
+        {
+            soundManager.PlaySound(soundManager.play);
+            StartCoroutine(FadeIn());
+            SceneManager.LoadScene("Main");
+        }
+
+        public void Quit()
+        {
+            soundManager.PlaySound(soundManager.clickButton);
+            StartCoroutine(FadeOut());
+            Application.Quit();
+        }
+
+        public IEnumerator FadeText()
+        {
+            while (true)
+            {
+                text.CrossFadeColor(new Color(0.3f, 0, 0, 1), 1, true, false);
+                yield return new WaitForSecondsRealtime(1);
+                text.CrossFadeColor(new Color(1, 0, 0, 1), 1, true, false);
+                yield return new WaitForSecondsRealtime(1);
+            }
+        }
     
-    public void Medium()
-    {
-        StartCoroutine(FadeIn());
-        SceneManager.LoadScene("Medium");
-    }
+        public IEnumerator FadeIn()
+        {
+            fade.CrossFadeAlpha(1.0f, 1, true);
+            yield return new WaitForSecondsRealtime(1);
+        }
     
-    public void Hard()
-    {
-        StartCoroutine(FadeIn());
-        SceneManager.LoadScene("Hard");
-    }
+        public IEnumerator FadeOut()
+        {
+            fade.CrossFadeAlpha(0.0f, 1, true);
+            yield return new WaitForSecondsRealtime(1);
+        }
 
-    public void Boss()
-    {
-        StartCoroutine(FadeIn());
-        SceneManager.LoadScene("Boss");
     }
-    
-    public IEnumerator FadeIn()
-    {
-        fade.CrossFadeAlpha(1.0f, 1, true);
-        yield return new WaitForSecondsRealtime(1);
-    }
-    
-    public IEnumerator FadeOut()
-    {
-        fade.CrossFadeAlpha(0.0f, 1, true);
-        yield return new WaitForSecondsRealtime(1);
-    }
-
 }

@@ -5,6 +5,7 @@ public class ChestController : MonoBehaviour
 {
     public GameObject player;
     public DungeonManager dungeonManager;
+    public SoundManager soundManager;
     public UIManager uiManager;
     public Animator animator;
     public string item;
@@ -16,6 +17,7 @@ public class ChestController : MonoBehaviour
         player = GameObject.Find("Player");
         dungeonManager = GameObject.Find("Map").GetComponent<DungeonManager>();
         uiManager = GameObject.Find("UI").GetComponent<UIManager>();
+        soundManager = GameObject.Find("Main Camera").GetComponent<SoundManager>();
         animator = GetComponent<Animator>();
         SetItem("random");
     }
@@ -33,6 +35,7 @@ public class ChestController : MonoBehaviour
         if (!opened)
         {
             opened = true;
+            soundManager.PlaySound(soundManager.open);
             animator.SetTrigger("Open");
             dungeonManager.PlaceItem(item, new Vector3(transform.position.x, transform.position.y + 1, 0));
             return true;

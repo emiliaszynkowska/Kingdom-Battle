@@ -182,25 +182,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 15
-  attack: 3
+  attack: 0
   speed: 10
   boss: 0
   groundPoundAttack: 1
   magicAttack: 0
   spawnEnemies: 0
+  difficulty: 0
   groundPoundTime: 3
   magicTime: 0
   spawnTime: 0
+  uiManager: {fileID: 0}
+  enemies: {fileID: 0}
   text: {fileID: 7291941944541465958}
   particles: {fileID: 1484304525313702822, guid: 740a6d4dab6fce94ebaf523c203cdf0f,
     type: 3}
   groundPoundCollider: {fileID: 7233763007580880204}
   projectilePrefab: {fileID: 8442078517516998046, guid: 072313397c2624e4b955446c756f23ae,
     type: 3}
-  knightPrefab: {fileID: 8052890031221065366, guid: 8007efd8ee797114a99afb59e65c1254,
-    type: 3}
-  goblinPrefab: {fileID: 8409285535565243240, guid: 8b895fe03dc93884bb3200cd4d40053d,
-    type: 3}
+  knightPrefab: {fileID: 0}
+  goblinPrefab: {fileID: 0}
 --- !u!1 &4229223896409793706
 GameObject:
   m_ObjectHideFlags: 0

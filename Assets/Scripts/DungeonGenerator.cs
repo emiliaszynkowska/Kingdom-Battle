@@ -41,12 +41,30 @@ public class DungeonGenerator : MonoBehaviour
     {
         // Generate 
         LoadData();
-        if (level == 11)
+        if (PlayerData.Boss)
             GenerateBossRoom();
         else
         {
-            width = Mathf.Clamp(level * 50, 0, 300);
-            height = Mathf.Clamp(level * 50, 0, 300);
+            if (level < 2)
+            {
+                width = 50; 
+                height = 50;
+            }
+            if (level < 5)
+            {
+                width = 75; 
+                height = 75;
+            }
+            else if (level < 8)
+            {
+                width = 100; 
+                height = 100;
+            }
+            else
+            {
+                width = 125;
+                height = 125;
+            }
             Dungeon root = new Dungeon(new Rect(0, 0, width, height));
             Generate(root);
             root.CreateRoom();
@@ -74,8 +92,8 @@ public class DungeonGenerator : MonoBehaviour
             level = PlayerData.Level;
         }
         else
-            level = 1;
-        // Set Difficulty
+            level = 4;
+        // Set Difficultyoss)
         if (level == 1)
             difficulty = 10;
         else if (level < 5)
@@ -353,24 +371,18 @@ public class DungeonGenerator : MonoBehaviour
                     merchant = true;
                 } 
             }
-            // Place Enemies
-            if (!wizard && !merchant)
-                dungeonManager.PlaceEnemy(dungeon, difficulty);
-            for (int i = 0; i < 2; i++)
-            {
-                if (!wizard && !merchant && Random.Range(0,100) < difficulty)
-                    dungeonManager.PlaceEnemy(dungeon, difficulty);
-            }
             // Place Chests
             var chest = false;
+            var den = false;
             for (int i = 0; i < 3; i++)
             {
-                if (!chest && Random.Range(0, 100) > difficulty)
+                if (!chest && Random.Range(0, 100) > difficulty + 15)
                 {
                     if (!wizard && !merchant && difficulty >= 50 && Random.Range(0, 3) == 0)
                     {
                         // Place Den
                         dungeonManager.PlaceDen(dungeon, difficulty);
+                        den = true;
                         chest = true;
                     }
                     else
@@ -379,6 +391,14 @@ public class DungeonGenerator : MonoBehaviour
                         chest = true;
                     }
                 }
+            }
+            // Place Enemies
+            if (!wizard && !merchant && !den)
+                dungeonManager.PlaceEnemy(dungeon, difficulty);
+            for (int i = 0; i < 2; i++)
+            {
+                if (!wizard && !merchant && !den && Random.Range(0,100) < difficulty)
+                    dungeonManager.PlaceEnemy(dungeon, difficulty);
             }
             // Place Spikes
             for (int i = 0; i < 3; i++)
@@ -390,7 +410,7 @@ public class DungeonGenerator : MonoBehaviour
             var key = false;
             for (int i = 0; i < 3; i++)
             {
-                if (!key && Random.Range(0, 100) > difficulty)
+                if (!key && Random.Range(0, 100) > difficulty + 15)
                 {
                     dungeonManager.PlaceItem("Key", dungeonManager.RandomPosition(dungeon.room));
                     key = true;
@@ -416,9 +436,13 @@ public class DungeonGenerator : MonoBehaviour
         // Place Player
         dungeonManager.PlacePlayer(new Vector3(8, 3, 0));
         // Place Boss
-        dungeonManager.PlaceBoss(new Vector3(8, 8, 0), level);
+        dungeonManager.PlaceBoss(new Vector3(8, 8, 0), level, difficulty);
         // Place Door
         dungeonManager.PlaceBossDoor(new Vector3(8, 17, 0));
+        // Set UI
+        dungeonManager.uiManager.difficulty = difficulty;
+        dungeonManager.uiManager.levelNum = level;
+        dungeonManager.uiManager.bossFight = true;
     }
 
 }

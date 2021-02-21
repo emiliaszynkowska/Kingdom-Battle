@@ -10,6 +10,7 @@ public class MerchantController : MonoBehaviour
 {
     public GameObject player;
     public PlayerController playerController;
+    public SoundManager soundManager;
     public UIManager uiManager;
     public GameObject items;
     public GameObject active;
@@ -47,6 +48,7 @@ public class MerchantController : MonoBehaviour
         player = GameObject.Find("Player");
         playerController = player.GetComponent<PlayerController>();
         uiManager = GameObject.Find("UI").GetComponent<UIManager>();
+        soundManager = GameObject.Find("Main Camera").GetComponent<SoundManager>();
         SetItems();
     }
 
@@ -54,21 +56,25 @@ public class MerchantController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E) && active.activeSelf && !shopping)
         {
+            StartCoroutine(uiManager.Interact(0, 2, 0));
             Buy();
         }
-        else if (Input.GetKeyDown(KeyCode.I) && active.activeSelf)
+        else if (Input.GetKeyDown(KeyCode.Q) && active.activeSelf)
         {
+            StartCoroutine(uiManager.Interact(1, 2, 0));
             ExitShop();
         }
-        else if (Input.GetKeyDown(KeyCode.A) && active.activeSelf && activeItem > 0)
+        else if (Input.GetKeyDown(KeyCode.D) && active.activeSelf && activeItem < 5)
         {
-            activeItem--;
+            StartCoroutine(uiManager.Interact(2, 2, 1));
+            activeItem++;
             active.transform.position = items.transform.GetChild(activeItem).position;
             Price();
         }
-        else if (Input.GetKeyDown(KeyCode.D) && active.activeSelf && activeItem < 7)
+        else if (Input.GetKeyDown(KeyCode.A) && active.activeSelf && activeItem > 0)
         {
-            activeItem++;
+            StartCoroutine(uiManager.Interact(3, 2, 1));
+            activeItem--;
             active.transform.position = items.transform.GetChild(activeItem).position;
             Price();
         }
@@ -92,7 +98,7 @@ public class MerchantController : MonoBehaviour
         talking = true;
         message = messages[Random.Range(0, 5)];
         uiManager.StartSpeak(npcName, message);
-        yield return new WaitForSeconds(1);
+        yield return null;
         Shop();
     }
     
@@ -133,6 +139,7 @@ public class MerchantController : MonoBehaviour
         var price = prices[itemName];
         if (playerController.GetCoins() >= price && items.transform.GetChild(activeItem).gameObject.activeSelf)
         {
+            soundManager.PlaySound(soundManager.buyItem);
             playerController.Spend(price);
             uiManager.AddItem(itemName, playerController.GetInventory().Count);
             playerController.AddItem(itemName);
@@ -141,6 +148,7 @@ public class MerchantController : MonoBehaviour
         }
         else if (playerController.GetCoins() < price && items.transform.GetChild(activeItem).gameObject.activeSelf)
         {
+            soundManager.PlaySound(soundManager.error);
             uiManager.StartSpeak(npcName, "You don't have enough coins.");
         }
         shopping = false;

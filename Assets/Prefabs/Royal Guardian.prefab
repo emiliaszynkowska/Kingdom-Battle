@@ -318,7 +318,7 @@ CircleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8059929757679764139}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
@@ -326,7 +326,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 1}
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 2
 --- !u!114 &8059929757679764137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -343,12 +343,16 @@ MonoBehaviour:
   attack: 0
   speed: 10
   boss: 1
+  den: 0
   groundPoundAttack: 1
   magicAttack: 1
   spawnEnemies: 0
+  difficulty: 0
   groundPoundTime: 3
   magicTime: 1
   spawnTime: 0
+  uiManager: {fileID: 0}
+  enemies: {fileID: 0}
   text: {fileID: 8059929756819285289}
   particles: {fileID: 1484304525313702822, guid: 740a6d4dab6fce94ebaf523c203cdf0f,
     type: 3}

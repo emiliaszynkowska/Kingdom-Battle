@@ -9,6 +9,7 @@ public class Quest : MonoBehaviour
 {
     public GameObject player;
     public PlayerController playerController;
+    public SoundManager soundManager;
     public UIManager uiManager;
     public string npcName;
     public string message;
@@ -22,6 +23,7 @@ public class Quest : MonoBehaviour
         player = GameObject.Find("Player");
         playerController = player.GetComponent<PlayerController>();
         uiManager = GameObject.Find("UI").GetComponent<UIManager>();
+        soundManager = GameObject.Find("Main Camera").GetComponent<SoundManager>();
         List<string> npcNames = new List<string>() {"Rhys", "Samuel", "Lucius", "Jedediah", "Matthew", "David"};
         List<string> rewards = new List<string>() {"Key", "Wigg's Brew", "Liquid Luck", "Ogre's Strength", "Elixir of Speed"};
         npcName = npcNames[Random.Range(0, 6)];
@@ -51,6 +53,7 @@ public class Quest : MonoBehaviour
                 yield return new WaitForSeconds(0.1f);
                 yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
                 uiManager.StopSpeak();
+                soundManager.PlaySound(soundManager.complete);
                 ScoreManager.AddPuzzleSolving(3);
                 StartCoroutine(Disappear());
             }

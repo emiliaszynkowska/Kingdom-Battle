@@ -348,9 +348,11 @@ MonoBehaviour:
   groundPoundAttack: 0
   magicAttack: 0
   spawnEnemies: 0
+  difficulty: 0
   groundPoundTime: 0
   magicTime: 0
   spawnTime: 0
+  uiManager: {fileID: 0}
   text: {fileID: 3816004869102617929}
   particles: {fileID: 1484304525313702822, guid: 740a6d4dab6fce94ebaf523c203cdf0f,
     type: 3}

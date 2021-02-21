@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using Assets.Scripts;
 using TMPro;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class UIManager : MonoBehaviour
 {
     // Objects
     public PlayerController playerController;
+    public SoundManager soundManager;
     public GameObject map;
     public GameObject info;
     public GameObject lives;
@@ -20,6 +22,7 @@ public class UIManager : MonoBehaviour
     public GameObject active;
     public GameObject inactive1;
     public GameObject inactive2;
+    public GameObject description;
     public GameObject options;
     public GameObject optionsInventory;
     public GameObject optionsShop;
@@ -35,7 +38,7 @@ public class UIManager : MonoBehaviour
     public GameObject gameOver;
     public Text powerup;
     public GameObject upgrade;
-    public Text upgradeText;
+    public GameObject invFull;
     public Image equipment;
     public Image background;
     public Image fade;
@@ -43,6 +46,7 @@ public class UIManager : MonoBehaviour
     public int time;
     public bool isPowerup;
     public int levelNum;
+    public bool bossFight;
     public int difficulty;
     public int activeItem;
     // Assets
@@ -69,10 +73,24 @@ public class UIManager : MonoBehaviour
     public Sprite spriteCollection;
     public Sprite spritePuzzleSolving;
 
+    private Dictionary<string,string> descriptions = new Dictionary<string, string>()
+    {
+        {"Key", "Opens doors and chests."},
+        {"Wigg's Brew", "Heals your wounds and restores some health."},
+        {"Liquid Luck", "Increases your ability in combat."},
+        {"Ogre's Strength", "Gradually poisons enemies over time."},
+        {"Elixir of Speed", "Increases your movement speed."},
+        {"Boss Key", "A large gold key engraved with a monster head."},
+        {"Scroll", "A mysterious item filled with knowledge."}
+    };
+        
     public void Start()
     {
         ScoreManager.Reset();
-        StartCoroutine(Timer());
+        if (!bossFight)
+            StartCoroutine(Timer());
+        else
+            Powerup("", Color.white);
     }
 
     // Player Information
@@ -166,23 +184,30 @@ public class UIManager : MonoBehaviour
         {
             case 1:
                 timers.transform.GetChild(0).gameObject.SetActive(true);
-                timers.transform.GetChild(1).gameObject.SetActive(false);
+                timers.transform.GetChild(1).gameObject.SetActive(true);
                 timers.transform.GetChild(2).gameObject.SetActive(false);
-                timers.transform.GetChild(0).localPosition = new Vector3(0, 50, 0);
+                timers.transform.GetChild(3).gameObject.SetActive(false);
+                timers.transform.GetChild(0).localPosition = new Vector3(-150, 50, 0);
+                timers.transform.GetChild(1).localPosition = new Vector3(150, 50, 0);
                 break;
             case 2: 
                 timers.transform.GetChild(0).gameObject.SetActive(true);
                 timers.transform.GetChild(1).gameObject.SetActive(true);
-                timers.transform.GetChild(2).gameObject.SetActive(false);
-                timers.transform.GetChild(0).localPosition = new Vector3(-175, 50, 0);
-                timers.transform.GetChild(1).localPosition = new Vector3(175, 50, 0);
+                timers.transform.GetChild(2).gameObject.SetActive(true);
+                timers.transform.GetChild(3).gameObject.SetActive(false);
+                timers.transform.GetChild(1).localPosition = new Vector3(-300, 50, 0);
+                timers.transform.GetChild(1).localPosition = new Vector3(0, 50, 0);
+                timers.transform.GetChild(2).localPosition = new Vector3(300, 50, 0);
                 break;
             case 3: 
                 timers.transform.GetChild(0).gameObject.SetActive(true);
                 timers.transform.GetChild(1).gameObject.SetActive(true);
                 timers.transform.GetChild(2).gameObject.SetActive(true);
-                timers.transform.GetChild(0).localPosition = new Vector3(-350, 50, 0);
-                timers.transform.GetChild(1).localPosition = new Vector3(0, 50, 0);
+                timers.transform.GetChild(3).gameObject.SetActive(true);
+                timers.transform.GetChild(0).localPosition = new Vector3(-500, 50, 0);
+                timers.transform.GetChild(1).localPosition = new Vector3(-220, 50, 0);
+                timers.transform.GetChild(2).localPosition = new Vector3(90, 50, 0);
+                timers.transform.GetChild(3).localPosition = new Vector3(410, 50, 0);
                 break;
         }
     }
@@ -251,8 +276,22 @@ public class UIManager : MonoBehaviour
     
     public void ChangeItem(int index)
     {
+        soundManager.PlaySound(soundManager.changeItem);
         activeItem = index;
         active.transform.position = items.transform.GetChild(activeItem).position;
+        if (playerController.GetInventory().Count > 0)
+        {
+            ChangeDescription(playerController.GetInventory()[activeItem]);
+            description.SetActive(true);
+        }
+        else
+            description.SetActive(false);
+    }
+
+    public void ChangeDescription(string item)
+    {
+        description.transform.GetChild(0).GetComponent<Text>().text = item;
+        description.transform.GetChild(1).GetComponent<Text>().text = descriptions[item];
     }
     
     public void UseItem()
@@ -268,6 +307,18 @@ public class UIManager : MonoBehaviour
     public void DisableItem(int index)
     {
         items.transform.GetChild(index).gameObject.SetActive(false);
+    }
+
+    public void InvFull(Vector3 pos)
+    {
+        soundManager.PlaySound(soundManager.error);
+        invFull.SetActive(true);
+        invFull.transform.localPosition = new Vector3(0, pos.y + 40, 0);
+    }
+
+    public void ExitInvFull()
+    {
+        invFull.SetActive(false);
     }
 
     public void Powerup(string text, Color color)
@@ -289,28 +340,98 @@ public class UIManager : MonoBehaviour
     public IEnumerator Upgrade(string e)
     {
         PauseGame();
+        soundManager.PlaySound(soundManager.complete);
         upgrade.SetActive(true);
-        upgradeText.text = "You got the " + e + "!";
-        equipment.sprite = (e.Equals("Blue Robe") ? blueRobe : (e.Equals("Red Robe") ? redRobe : (e.Equals("Rusty Sword")
-                    ? rustySword : (e.Equals("Jagged Blade") ? jaggedBlade : (e.Equals("Warped Edge")
-                            ? warpedEdge : (e.Equals("Knight's Sword") ? knightsSword : kingsbane))))));
+        upgrade.GetComponent<Text>().text = "You got the " + e + "!";
+        switch (e)
+        {
+          case("Blue Robe"):
+              equipment.sprite = blueRobe;
+              break;
+          case("Red Robe"):
+              equipment.sprite = redRobe;
+              break;
+          case("Rusty Sword"):
+              equipment.sprite = rustySword;
+              break;
+          case("Jagged Blade"):
+              equipment.sprite = jaggedBlade;
+              break;
+          case("Warped Edge"):
+              equipment.sprite = warpedEdge;
+              break;
+          case("Knight's Sword"):
+              equipment.sprite = knightsSword;
+              break;
+          case("Kingsbane"):
+              equipment.sprite = kingsbane;
+              break;
+        }
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
         upgrade.SetActive(false);
-        playerController.playerAnimator.runtimeAnimatorController = Instantiate((e.Equals("Blue Robe") ? playerController.playerB 
-            : (e.Equals("Red Robe") ? playerController.playerR : playerController.playerG)), playerController.transform);
-        playerController.weaponAnimator.runtimeAnimatorController = Instantiate((e.Equals("Rusty Sword") ? playerController.rustySword
-                : (e.Equals("Jagged Blade") ? playerController.jaggedBlade : (e.Equals("Warped Edge") ? playerController.warpedEdge
-                        : (e.Equals("Knight's Sword") ? playerController.knightsSword : (e.Equals("Kingsbane") ? playerController.kingsbane
-                                : playerController.weaponAnimator.runtimeAnimatorController))))), playerController.weapon.transform);
+        switch (e)
+        {
+            case("Blue Robe"):
+                playerController.playerAnimator.runtimeAnimatorController =
+                    Instantiate(playerController.playerB, playerController.transform);
+                break;
+            case("Red Robe"):
+                playerController.playerAnimator.runtimeAnimatorController =
+                    Instantiate(playerController.playerR, playerController.transform);
+                break;
+            case("Rusty Sword"):
+                playerController.weaponAnimator.runtimeAnimatorController = Instantiate(playerController.rustySword,
+                    playerController.weapon.transform);
+                break;
+            case("Jagged Blade"):
+                playerController.weaponAnimator.runtimeAnimatorController = Instantiate(playerController.jaggedBlade,
+                    playerController.weapon.transform);
+                break;
+            case("Warped Edge"):
+                playerController.weaponAnimator.runtimeAnimatorController = Instantiate(playerController.warpedEdge,
+                    playerController.weapon.transform);
+                break;
+            case("Knight's Sword"):
+                playerController.weaponAnimator.runtimeAnimatorController = Instantiate(playerController.knightsSword,
+                    playerController.weapon.transform);
+                break;
+            case("Kingsbane"):
+                playerController.weaponAnimator.runtimeAnimatorController = Instantiate(playerController.kingsbane,
+                    playerController.weapon.transform);
+                break;
+        }
         ResumeGame();
+        yield return null;
     }
 
     // Options
-    public IEnumerator Interact()
+    public IEnumerator Interact(int index, int option, int sound)
     {
-        options.transform.GetChild(0).GetComponent<Image>().CrossFadeAlpha(0.25f, 0, true);
-        yield return new WaitForSeconds(0.2f);
-        options.transform.GetChild(0).GetComponent<Image>().CrossFadeAlpha(1, 0, true);
+        if (sound == 0)
+            soundManager.PlaySound(soundManager.clickButton);
+        else
+            soundManager.PlaySound(soundManager.changeItem);
+        switch (option)
+        {
+            // Options
+            case(0):
+                this.options.transform.GetChild(index).GetComponent<Image>().CrossFadeAlpha(0.25f, 0, true);
+                yield return new WaitForSecondsRealtime(0.2f);
+                this.options.transform.GetChild(index).GetComponent<Image>().CrossFadeAlpha(1, 0, true);
+                break;
+            // Inventory
+            case(1):
+                optionsInventory.transform.GetChild(index).GetComponent<Image>().CrossFadeAlpha(0.25f, 0, true);
+                yield return new WaitForSecondsRealtime(0.2f);
+                optionsInventory.transform.GetChild(index).GetComponent<Image>().CrossFadeAlpha(1, 0, true);
+                break;
+            // Shop
+            case(2):
+                optionsShop.transform.GetChild(index).GetComponent<Image>().CrossFadeAlpha(0.25f, 0, true);
+                yield return new WaitForSecondsRealtime(0.2f);
+                optionsShop.transform.GetChild(index).GetComponent<Image>().CrossFadeAlpha(1, 0, true);
+                break;
+        }
     }
 
     public void Quests()
@@ -353,6 +474,7 @@ public class UIManager : MonoBehaviour
         npcName.text = npc;
         message.text = text;
         dialog.SetActive(true);
+        soundManager.PlaySound(soundManager.speech);
     }
 
     public void StopSpeak()
@@ -384,6 +506,8 @@ public class UIManager : MonoBehaviour
     
     public void Level(string s)
     {
+        if (levelNum == 10)
+            StartCoroutine(ExitFade());
         PauseGame();
         Text text = level.transform.GetChild(1).GetComponent<Text>();
         text.text = String.Format("Boss: {0}", s);
@@ -410,6 +534,13 @@ public class UIManager : MonoBehaviour
 
     public void LevelStart()
     {
+        soundManager.PlaySound(soundManager.clickButton);
+        if (bossFight)
+            soundManager.PlayMusic(soundManager.bossMusic);
+        else
+        {
+            soundManager.PlayMusic(soundManager.dungeonMusic);
+        }
         level.SetActive(false);
         ResumeGame();
         fade.CrossFadeAlpha(0.8f, 0, true);
@@ -427,7 +558,8 @@ public class UIManager : MonoBehaviour
     }
 
     public IEnumerator Scores(int[] s)
-    { 
+    {
+        soundManager.PlaySound(soundManager.win);
         PauseGame(); 
         scores.SetActive(true);
         GameObject aggressive = scores.transform.GetChild(4).gameObject;
@@ -436,17 +568,23 @@ public class UIManager : MonoBehaviour
         GameObject collection = scores.transform.GetChild(7).gameObject;
         GameObject puzzlesolving = scores.transform.GetChild(8).gameObject;
         yield return new WaitForSecondsRealtime(1);
+        soundManager.PlaySound(soundManager.item);
         aggressive.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(s[0].ToString());
         yield return new WaitForSecondsRealtime(1);
+        soundManager.PlaySound(soundManager.item);
         defensive.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(s[1].ToString());
         yield return new WaitForSecondsRealtime(1);
+        soundManager.PlaySound(soundManager.item);
         exploration.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(s[2].ToString());
         yield return new WaitForSecondsRealtime(1);
+        soundManager.PlaySound(soundManager.item);
         collection.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(s[3].ToString());
         yield return new WaitForSecondsRealtime(1);
+        soundManager.PlaySound(soundManager.item);
         puzzlesolving.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(s[4].ToString());
         scores.transform.GetChild(3).gameObject.SetActive(true);
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
+        soundManager.PlaySound(soundManager.clickButton);
         scores.SetActive(false);
         StartCoroutine(Disciplines());
     }
@@ -518,12 +656,15 @@ public class UIManager : MonoBehaviour
                 break;
         }
         yield return new WaitForSecondsRealtime(1);
+        soundManager.PlaySound(soundManager.complete);
         primary.SetActive(true);
         yield return new WaitForSecondsRealtime(1);
+        soundManager.PlaySound(soundManager.complete);
         secondary.SetActive(true);
         if (levelNum > 10)
         {
             yield return new WaitForSecondsRealtime(1);
+            soundManager.PlaySound(soundManager.complete);
             tertiary.GetComponent<TextMeshProUGUI>().color = new Color(1, 0.55f, 0);
             string titleTertiary = ScoreManager.TitleTertiary();
             tertiary.GetComponent<TextMeshProUGUI>().SetText(titleTertiary);
@@ -538,8 +679,9 @@ public class UIManager : MonoBehaviour
         }
         disciplines.transform.GetChild(3).gameObject.SetActive(true);
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
+        soundManager.PlaySound(soundManager.clickButton);
         disciplines.SetActive(false);
-        playerController.SaveData(d, t);
+        playerController.SaveData(d, t, true);
         LevelNext();
     }
 
@@ -575,18 +717,24 @@ public class UIManager : MonoBehaviour
 
     public void Next()
     {
+        soundManager.PlaySound(soundManager.clickButton);
         SceneManager.LoadScene("Main");
     }
     
     public void Restart()
     {
+        soundManager.PlaySound(soundManager.clickButton);
         playerController.health = 0;
-        playerController.SaveData();
+        if (bossFight)
+            playerController.SaveData(true, false);
+        else
+            playerController.SaveData(false, false);
         SceneManager.LoadScene("Main");
     }
 
     public void Exit()
     {
+        soundManager.PlaySound(soundManager.clickButton);
         StartCoroutine(ExitFade());
     }
 

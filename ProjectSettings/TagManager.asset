@@ -15,6 +15,7 @@ TagManager:
   - Chest
   - Door
   - Collider
+  - Shield
   layers:
   - Default
   - TransparentFX

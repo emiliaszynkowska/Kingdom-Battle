@@ -73,7 +73,7 @@ public class ScoreManager : MonoBehaviour
 
     public static string DisciplinePrimary()
     {
-        return aggressive > defensive ? "Aggressive" : "Defensive";
+        return aggressive >= defensive ? "Aggressive" : "Defensive";
     }
 
     public static string DisciplineSecondary()

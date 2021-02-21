@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 
@@ -32,7 +34,9 @@ namespace Assets.Scripts
         public Animator playerAnimator;
         public Animator weaponAnimator;
         public GameObject weapon;
+        public GameObject shield;
         public UIManager uiManager;
+        public SoundManager soundManager;
         public GameObject lifeup;
         public GameObject shadow;
         public GameObject shine;
@@ -61,9 +65,10 @@ namespace Assets.Scripts
 
         public void Update()
         {
-            // Check UI Inputs
+            // Check Inputs
+            CheckCombat();
             CheckUI();
-        
+
             // Calculate player movement
             movement = new Vector2(Input.GetAxis("Horizontal"),Input.GetAxis("Vertical"));
             Flip();
@@ -73,14 +78,15 @@ namespace Assets.Scripts
             playerAnimator.SetFloat("Speed",movement.sqrMagnitude);
         
             // Move the weapon
-            if (Input.GetKeyDown("right") || Input.GetKeyDown("d"))
+            var pos = weapon.transform.localPosition;
+            if (Input.GetKey(KeyCode.D))
             {
-                weapon.transform.localPosition = new Vector2(0.9f, -0.2f);
+                weapon.transform.localPosition = new Vector2(1, 0);
                 weapon.GetComponent<SpriteRenderer>().flipX = false;
             }
-            else if (Input.GetKeyDown("left") || Input.GetKeyDown("a"))
+            else if (Input.GetKey(KeyCode.A))
             {
-                weapon.transform.localPosition = new Vector2(-0.9f,-0.2f);
+                weapon.transform.localPosition = new Vector2(-1, 0);
                 weapon.GetComponent<SpriteRenderer>().flipX = true;
             }
         }
@@ -141,6 +147,11 @@ namespace Assets.Scripts
             body.velocity = new Vector2(body.velocity.x, 0);
         }
 
+        public void StartBlock()
+        {
+            StartCoroutine(Block());
+        }
+
         public void StartAttack()
         {
             StartCoroutine(Attack());
@@ -171,28 +182,27 @@ namespace Assets.Scripts
     
         IEnumerator TakeDamage(int damage)
         {
-            if (health > 1 && !IsHurt() && !IsAttacking())
+            if (health > 0 && !IsHurt() && !IsAttacking())
             {
                 isHurt = true;
                 health -= damage;
                 uiManager.SetLives(health);
+                soundManager.PlaySound(soundManager.damage);
                 playerRenderer.color = new Color(0.8f, 0.22f, 0.2f);
                 yield return new WaitForSeconds(1);
                 playerRenderer.color = Color.white;
                 isHurt = false;
-                ScoreManager.AddDefensive(1);
             }
-            else if (health <= 1 && !uiManager.IsGameOver())
+            if (health <= 0 && !uiManager.IsGameOver())
             {
                 uiManager.PauseGame();
-                health -= damage;
-                uiManager.SetLives(health);
-                death.GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.22f, 0.2f);
+                death.GetComponent<SpriteRenderer>().flipX = playerRenderer.flipX;
                 death.GetComponent<SpriteRenderer>().flipY = playerRenderer.flipX;
                 death.transform.position = new Vector2(transform.position.x + 0.5f, transform.position.y - 0.5f);
                 death.SetActive(true);
                 playerRenderer.enabled = false;
                 weapon.SetActive(false);
+                soundManager.PlaySound(soundManager.die);
                 yield return new WaitForSecondsRealtime(1);
                 uiManager.GameOver();
             }
@@ -209,13 +219,36 @@ namespace Assets.Scripts
             StopBounceVertical();
         }
 
-        IEnumerator Attack()
+        IEnumerator Block()
         {
             if (timers.transform.GetChild(0).gameObject.GetComponent<TimerController>().CanAttack())
+            {
+                // Start Blocking
+                isAttacking = true;
+                // Animate Block
+                soundManager.PlaySound(soundManager.block);
+                shield.transform.localPosition =
+                    playerRenderer.flipX ? new Vector3(-1, -0.3f, 0) : new Vector3(1, -0.3f, 0);
+                weapon.SetActive(false);
+                shield.SetActive(true);
+                yield return new WaitForSeconds(2);
+                // Stop Blocking
+                shield.SetActive(false);
+                weapon.SetActive(true);
+                isAttacking = false;
+                ScoreManager.AddDefensive(1);
+                timers.transform.GetChild(0).gameObject.GetComponent<TimerController>().Reset();
+            }
+        }
+
+        IEnumerator Attack()
+        {
+            if (timers.transform.GetChild(1).gameObject.GetComponent<TimerController>().CanAttack())
             {
                 // Start Attacking
                 isAttacking = true;
                 // Animate Attack
+                soundManager.PlaySound(soundManager.swordAttack);
                 weaponAnimator.SetTrigger("Attack");
                 // Damage Enemies
                 Collider2D[] results = new Collider2D[5];
@@ -237,17 +270,18 @@ namespace Assets.Scripts
                 yield return new WaitForSeconds(0.5f);
                 // Stop Attacking
                 isAttacking = false;
-                timers.transform.GetChild(0).gameObject.GetComponent<TimerController>().Reset();
+                timers.transform.GetChild(1).gameObject.GetComponent<TimerController>().Reset();
             }
         }
     
         IEnumerator SpinAttack()
         {
-            if (timers.transform.GetChild(1).gameObject.GetComponent<TimerController>().CanAttack())
+            if (timers.transform.GetChild(2).gameObject.GetComponent<TimerController>().CanAttack())
             {
                 // Start Attacking
                 isAttacking = true;
                 // Animate Spin Attack
+                soundManager.PlaySound(soundManager.spinAttack);
                 weaponAnimator.SetTrigger("Spin");
                 // Damage Enemies
                 Collider2D[] results = new Collider2D[5];
@@ -269,21 +303,23 @@ namespace Assets.Scripts
                 yield return new WaitForSeconds(0.5f);
                 // Stop Attacking
                 isAttacking = false;
-                timers.transform.GetChild(1).gameObject.GetComponent<TimerController>().Reset();
+                timers.transform.GetChild(2).gameObject.GetComponent<TimerController>().Reset();
             }
         }
     
         IEnumerator GroundPound()
         {
-            if (timers.transform.GetChild(2).gameObject.GetComponent<TimerController>().CanAttack())
+            if (timers.transform.GetChild(3).gameObject.GetComponent<TimerController>().CanAttack())
             {
                 // Start Attacking
                 isAttacking = true;
                 // Animate Jump
+                soundManager.PlaySound(soundManager.jump);
                 playerAnimator.SetTrigger("Jump");
                 yield return new WaitForSeconds(0.5f);
                 shadow.SetActive(true);
                 // Animate Ground Pound
+                soundManager.PlaySound(soundManager.groundPound);
                 Instantiate(particles, transform);
                 // Damage Enemies
                 Collider2D[] results = new Collider2D[8];
@@ -305,41 +341,59 @@ namespace Assets.Scripts
                 yield return new WaitForSeconds(1);
                 shadow.SetActive(false);
                 isAttacking = false;
-                timers.transform.GetChild(2).gameObject.GetComponent<TimerController>().Reset();
+                timers.transform.GetChild(3).gameObject.GetComponent<TimerController>().Reset();
             }
         }
     
 // ---------------------------------------------------------------------------------------------------------------------
-// UI Checking
+// Input
 
+        void CheckCombat()
+        {
+            // Block
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                StartBlock();
+                timers.transform.GetChild(0).GetComponent<TimerController>().Reset();
+            }
+            // Attack
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                StartAttack();
+                timers.transform.GetChild(1).GetComponent<TimerController>().Reset();
+            }
+            // Spin Attack
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                StartSpinAttack();
+                timers.transform.GetChild(2).GetComponent<TimerController>().Reset();
+            }
+            // Ground Pound
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                StartGroundPound();
+                timers.transform.GetChild(3).GetComponent<TimerController>().Reset();
+            }
+        }
+        
         void CheckUI()
         {
             // Interact
             if (Input.GetKeyDown(KeyCode.E) && !uiManager.IsInventory() && Time.timeScale != 0)
             {
+                StartCoroutine(uiManager.Interact(0, 0, 0));
                 Collider2D[] results = new Collider2D[8];
                 groundPoundCollider.OverlapCollider(contactFilter, results);
                 foreach (Collider2D col in results)
                 {
                     if (col != null && col.CompareTag("NPC"))
                     {
-                        StartCoroutine(uiManager.Interact());
                         if (col.name.Equals("Wizard"))
                             StartCoroutine(col.GetComponent<Quest>().Talk());
                         else if (col.name.Equals("Merchant"))
                             col.GetComponent<MerchantController>().Talk();
                     }
                     else if (col != null && col.CompareTag("Chest") && inventory.Contains("Key"))
-                    {
-                        var index = inventory.IndexOf("Key");
-                        if (UseItem(index))
-                        {
-                            uiManager.activeItem = index;
-                            uiManager.UseItem();
-                            uiManager.DisableItem(inventory.Count);
-                        }
-                    }
-                    else if (col != null && col.CompareTag("Door") && inventory.Contains("Key"))
                     {
                         var index = inventory.IndexOf("Key");
                         if (UseItem(index))
@@ -359,19 +413,35 @@ namespace Assets.Scripts
                             uiManager.DisableItem(inventory.Count);
                         }
                     }
+                    else if (col != null && col.CompareTag("Door") && inventory.Contains("Key"))
+                    {
+                        var index = inventory.IndexOf("Key");
+                        if (UseItem(index))
+                        {
+                            uiManager.activeItem = index;
+                            uiManager.UseItem();
+                            uiManager.DisableItem(inventory.Count);
+                        }
+                    }
                 }
             }
         
             // Inventory
             if (Input.GetKeyDown(KeyCode.I) && !uiManager.IsInventory() && uiManager.options.activeSelf && Time.timeScale != 0)
-                uiManager.Inventory();
-            else if (Input.GetKeyDown(KeyCode.A) && uiManager.IsInventory() && uiManager.activeItem > 0)
             {
-                uiManager.activeItem--;
-                uiManager.ChangeItem(uiManager.activeItem);
+                StartCoroutine(uiManager.Interact(1, 0, 0));
+                StartCoroutine(uiManager.Interact(1, 1, 0));
+                uiManager.Inventory();
+            }
+            else if (Input.GetKeyDown(KeyCode.I) && uiManager.IsInventory())
+            {
+                StartCoroutine(uiManager.Interact(1, 1, 0));
+                StartCoroutine(uiManager.Interact(1, 0, 0));
+                uiManager.ExitInventory();
             }
             else if (Input.GetKeyDown(KeyCode.D) && uiManager.IsInventory() && inventory.Count - 1 > uiManager.activeItem)
             {
+                StartCoroutine(uiManager.Interact(2, 1, 1));
                 if (uiManager.activeItem >= 5 && playerDisciplines[1].Equals("Collection"))
                 {
                     uiManager.activeItem++;
@@ -383,27 +453,38 @@ namespace Assets.Scripts
                     uiManager.ChangeItem(uiManager.activeItem);
                 }
             }
+            else if (Input.GetKeyDown(KeyCode.A) && uiManager.IsInventory() && uiManager.activeItem > 0)
+            {
+                StartCoroutine(uiManager.Interact(3, 1, 1));
+                uiManager.activeItem--;
+                uiManager.ChangeItem(uiManager.activeItem);
+            }
             else if (Input.GetKeyDown(KeyCode.E) && uiManager.IsInventory())
             {
+                StartCoroutine(uiManager.Interact(0, 1, 0));
                 if (UseItem(uiManager.activeItem))
                 {
                     uiManager.UseItem();
                     uiManager.DisableItem(inventory.Count);
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.I) && uiManager.IsInventory())
-                uiManager.ExitInventory();
 
             // Quests
             if (Input.GetKeyDown(KeyCode.Q))
             {
-            
+                StartCoroutine(uiManager.Interact(2, 0, 0));
             }
         
             // Menu
             else if (Input.GetKeyDown(KeyCode.Escape) && !uiManager.IsMenu() && Time.timeScale != 0)
             {
+                StartCoroutine(uiManager.Interact(3, 0, 0));
                 uiManager.Menu();
+            }
+            else if (Input.GetKeyDown(KeyCode.Escape) && uiManager.IsMenu())
+            {
+                StartCoroutine(uiManager.Interact(3, 0, 0));
+                uiManager.ExitMenu();
             }
         }
 
@@ -492,6 +573,7 @@ namespace Assets.Scripts
         IEnumerator WiggsBrew()
         {
             ScoreManager.AddDefensive(5);
+            soundManager.PlaySound(soundManager.lifeup);
             uiManager.Powerup("Wigg's Brew: +1 Health", Color.red);
             lifeup.SetActive(true);
             yield return new WaitForSeconds(3);
@@ -503,6 +585,7 @@ namespace Assets.Scripts
         IEnumerator LiquidLuck()
         {
             ScoreManager.AddAggressive(1);
+            soundManager.PlaySound(soundManager.powerup);
             uiManager.Powerup("Liquid Luck: +1 Attack", new Color(1,0.9f,0));
             var color = GetComponent<SpriteRenderer>().color;
             GetComponent<SpriteRenderer>().color = new Color(1,0.9f,0);
@@ -519,6 +602,7 @@ namespace Assets.Scripts
         IEnumerator OgreStrength()
         {
             ScoreManager.AddAggressive(1);
+            soundManager.PlaySound(soundManager.powerup);
             uiManager.Powerup("Ogre's Strength: +Poison Damage", new Color(0, 0.75f, 0));
             var color = GetComponent<SpriteRenderer>().color;
             GetComponent<SpriteRenderer>().color = new Color(0, 0.75f, 0);
@@ -533,6 +617,7 @@ namespace Assets.Scripts
         IEnumerator ElixirOfSpeed()
         {
             ScoreManager.AddExploration(1);
+            soundManager.PlaySound(soundManager.powerup);
             uiManager.Powerup("Elixir of Speed: +5 Speed", new Color(0,0.4f,1));
             GetComponent<SpriteRenderer>().color = new Color(0,0.4f,1);
             speed *= 1.5f;
@@ -572,22 +657,27 @@ namespace Assets.Scripts
             if (other.gameObject.CompareTag("Item") && GetComponent<BoxCollider2D>().IsTouching(other))
             {
                 if (!other.gameObject.name.Equals("Coin"))
+                {
                     ScoreManager.AddCollection(1);
-                if ((inventory.Count == 6 && !playerDisciplines[1].Equals("Collection")) || (inventory.Count == 8 && playerDisciplines[1].Equals("Collection")))
-                    ScoreManager.AddCollection(1);
+                    if ((inventory.Count == 6 && !playerDisciplines.Contains("Collection")) ||
+                        (inventory.Count == 8 && playerDisciplines.Contains("Collection")))
+                        uiManager.InvFull(other.transform.position);
+                }
                 // Check item
                 switch (other.name)
                 {
                     // Coin
                     case "Coin":
+                        soundManager.PlaySound(soundManager.coin);
                         Destroy(other.gameObject);
                         playerCoins++;
                         uiManager.SetCoins(playerCoins);
                         break;
                     // Key
                     case "Key":
-                        if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines[1].Equals("Collection")))
+                        if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines.Contains("Collection")))
                         {
+                            soundManager.PlaySound(soundManager.item);
                             Destroy(other.gameObject);
                             uiManager.AddItem("Key", inventory.Count);
                             AddItem("Key");
@@ -595,8 +685,9 @@ namespace Assets.Scripts
                         break;
                     // Boss Key
                     case "Boss Key":
-                        if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines[1].Equals("Collection")))
+                        if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines.Contains("Collection")))
                         {
+                            soundManager.PlaySound(soundManager.item);
                             Destroy(other.gameObject);
                             uiManager.AddItem("Boss Key", inventory.Count);
                             AddItem("Boss Key");
@@ -604,8 +695,9 @@ namespace Assets.Scripts
                         break;
                     // Scroll
                     case "Scroll":
-                        if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines[1].Equals("Collection")))
+                        if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines.Contains("Collection")))
                         {
+                            soundManager.PlaySound(soundManager.item);
                             Destroy(other.gameObject);
                             uiManager.AddItem("Scroll", inventory.Count);
                             AddItem("Scroll");
@@ -613,32 +705,36 @@ namespace Assets.Scripts
                         break;
                     // Potion
                     case "Wigg's Brew":
-                        if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines[1].Equals("Collection")))
+                        if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines.Contains("Collection")))
                         {
+                            soundManager.PlaySound(soundManager.item);
                             Destroy(other.gameObject);
                             uiManager.AddItem("Wigg's Brew", inventory.Count);
                             AddItem("Wigg's Brew");
                         }
                         break;
                     case "Liquid Luck":
-                        if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines[1].Equals("Collection")))
+                        if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines.Contains("Collection")))
                         {
+                            soundManager.PlaySound(soundManager.item);
                             Destroy(other.gameObject);
                             uiManager.AddItem("Liquid Luck", inventory.Count);
                             AddItem("Liquid Luck");
                         }
                         break;
                     case "Ogre's Strength":
-                        if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines[1].Equals("Collection")))
+                        if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines.Contains("Collection")))
                         {
+                            soundManager.PlaySound(soundManager.item);
                             Destroy(other.gameObject);
                             uiManager.AddItem("Ogre's Strength", inventory.Count);
                             AddItem("Ogre's Strength");
                         }
                         break;
                     case "Elixir of Speed":
-                        if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines[1].Equals("Collection")))
+                        if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines.Contains("Collection")))
                         {
+                            soundManager.PlaySound(soundManager.item);
                             Destroy(other.gameObject);
                             uiManager.AddItem("Elixir of Speed", inventory.Count);
                             AddItem("Elixir of Speed");
@@ -647,7 +743,7 @@ namespace Assets.Scripts
                 }
             }
         
-            if (other.gameObject.CompareTag("Enemy") && other is CircleCollider2D)
+            if (other.gameObject.CompareTag("Enemy") && other is CircleCollider2D && GetComponent<BoxCollider2D>().IsTouching(other))
             {
                 // Take damage
                 EnemyController enemyController = other.gameObject.GetComponent<EnemyController>();
@@ -682,32 +778,46 @@ namespace Assets.Scripts
                 Destroy(other.gameObject);
             }
         }
-    
-// ---------------------------------------------------------------------------------------------------------------------
+
+        private void OnTriggerStay2D(Collider2D other)
+        {
+            if (other.gameObject.CompareTag("Item") && GetComponent<BoxCollider2D>().IsTouching(other) && !other.gameObject.name.Equals("Coin") && 
+                ((inventory.Count == 6 && !playerDisciplines.Contains("Collection")) || (inventory.Count == 8 && playerDisciplines.Contains("Collection"))))
+                uiManager.InvFull(other.transform.position);
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            uiManager.ExitInvFull();
+        }
+
+        // ---------------------------------------------------------------------------------------------------------------------
 // Player Data
 
-        public void SaveData()
+        public void SaveData(bool boss, bool increment)
         {
             PlayerData.LivesActive = livesActive;
             PlayerData.Health = health;
             PlayerData.Name = playerName;
             PlayerData.Coins = playerCoins;
-            PlayerData.Level = uiManager.levelNum;
+            if (increment)
+                PlayerData.Level = uiManager.levelNum + 1;
+            else
+                PlayerData.Level = uiManager.levelNum;
+            PlayerData.Boss = boss;
             PlayerData.Disciplines = playerDisciplines;
             PlayerData.Titles = playerTitles;
-            // todo
-            // upgrade UI
-            // boss fights
         }
     
-        public void SaveData(List<string> d, List<string> t)
+        public void SaveData(List<string> d, List<string> t, bool boss)
         {
             PlayerData.LivesActive = livesActive;
             PlayerData.Health = health;
             PlayerData.Name = playerName;
             PlayerData.Coins = playerCoins;
             PlayerData.Inventory = inventory;
-            PlayerData.Level = uiManager.levelNum + 1;
+            PlayerData.Level = uiManager.levelNum;
+            PlayerData.Boss = boss;
             PlayerData.Disciplines = d;
             PlayerData.Titles = t;
         }
@@ -734,8 +844,11 @@ namespace Assets.Scripts
                 else
                 {
                     playerName = PlayerData.Name;
+                    attack = (PlayerData.Level < 2) ? 1 : (PlayerData.Level < 5 ? 2 : (PlayerData.Level < 8 ? 3 : (PlayerData.Level < 11 ? 4 : 5)));
                     livesActive = (PlayerData.Level < 5) ? 3 : (PlayerData.Level < 8 ? 6 : 9);
                     health = livesActive;
+                    playerDisciplines = PlayerData.Disciplines;
+                    playerTitles = PlayerData.Titles;
                 }
             }
             else
@@ -761,8 +874,7 @@ namespace Assets.Scripts
             {
                 uiManager.AddItem(inventory[i], i);
             }
-
-            playerAnimator.runtimeAnimatorController = Instantiate((health < 6 ? playerG : (health < 9 ? playerB : playerR)));
+            playerAnimator.runtimeAnimatorController = Instantiate((livesActive < 6 ? playerG : (livesActive < 9 ? playerB : playerR)));
             weaponAnimator.runtimeAnimatorController = Instantiate((attack == 1 ? rustySword : (attack == 2 ? jaggedBlade : (attack == 3 ? warpedEdge : (attack == 4 ? knightsSword : kingsbane)))), weapon.transform);
             // Apply discipline rewards
             if (playerDisciplines[1] != null)

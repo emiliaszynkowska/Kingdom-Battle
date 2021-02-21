@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class DungeonManager : MonoBehaviour
@@ -179,92 +180,9 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
-    public void PlaceBoss(Vector3 position, int level)
-    {
-        var choice = Random.Range(0, 4);
-        GameObject prefab = null;
-        switch (choice)
-        {
-            case(0):
-                prefab = eliteKnightPrefab;
-                break;
-            case(1):
-                prefab = royalGuardianPrefab;
-                break;
-            case(2):
-                prefab = golemPrefab;
-                break;
-            case(3):
-                prefab = trollPrefab;
-                break;
-        }
-        GameObject boss = Instantiate(prefab, position, Quaternion.Euler(0, 0, 0), enemies.transform);
-        boss.name = boss.name.Replace("(Clone)", "");
-        boss.GetComponent<EnemyController>().health = (level == 1 ? 10 : (level < 5 ? 25 : (level < 8 ? 50 : (level < 11 ? 75 : 100))));
-        boss.GetComponent<EnemyController>().attack = (level == 1 ? 1 : (level < 5 ? 2 : (level < 8 ? 3 : (level < 11 ? 4 : 5))));
-        uiManager.background.color = Color.red;
-        uiManager.Level(boss.name);
-    }
-    
-    public void PlaceItem(string itemName, Vector3 position)
-    {
-        switch (itemName)
-        {
-            case("Coin"):
-                GameObject item = Instantiate(coinPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
-                item.name = "Coin";
-                break;
-            case("Coins"):
-                item = Instantiate(coinPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
-                item.name = "Coin";
-                item = Instantiate(coinPrefab, new Vector3(position.x + Random.Range(-1,1), position.y + Random.Range(-1,1), 0), Quaternion.Euler(0, 0, 0), items.transform);
-                item.name = "Coin";
-                var chance = Random.Range(0, 3);
-                if (chance > 0)
-                {
-                    item = Instantiate(coinPrefab, new Vector3(position.x + Random.Range(-1, 1), position.y + Random.Range(-1, 1), 0), Quaternion.Euler(0, 0, 0), items.transform);
-                    item.name = "Coin";
-                }
-                if (chance > 1)
-                {
-                    item = Instantiate(coinPrefab, new Vector3(position.x + Random.Range(-1,1), position.y + Random.Range(-1,1), 0), Quaternion.Euler(0, 0, 0), items.transform);
-                    item.name = "Coin";
-                }
-                break;
-            case("Key"):
-                item = Instantiate(keyPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
-                item.name = "Key";
-                break;
-            case("Boss Key"):
-                item = Instantiate(bossKeyPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
-                item.name = "Boss Key";
-                break;
-            case("Scroll"):
-                item = Instantiate(scrollPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
-                item.name = "Scroll";
-                break;
-            case("Wigg's Brew"):
-                item = Instantiate(wiggsBrewPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
-                item.name = "Wigg's Brew";
-                break;
-            case("Liquid Luck"):
-                item = Instantiate(liquidLuckPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
-                item.name = "Liquid Luck";
-                break;
-            case("Ogre's Strength"):
-                item = Instantiate(ogresStrengthPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
-                item.name = "Ogre's Strength";
-                break;
-            case("Elixir of Speed"):
-                item = Instantiate(elixirofSpeedPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
-                item.name = "Elixir of Speed";
-                break;
-        }
-    }
-
     public GameObject PlaceEnemy(Dungeon dungeon, int difficulty)
     {
-        if (dungeon.rect != playerRoom)
+        if (uiManager.bossFight || (!uiManager.bossFight && dungeon.rect != playerRoom))
         {
             if (difficulty >= 75)
                 return PlaceEnemyHard(dungeon);
@@ -372,6 +290,8 @@ public class DungeonManager : MonoBehaviour
         enemy.name = enemy.name.Replace("(Clone)", "");
         return enemy;
     }
+    
+    
 
     public void PlaceDen(Dungeon dungeon, int difficulty)
     {
@@ -401,8 +321,117 @@ public class DungeonManager : MonoBehaviour
                     den.GetComponent<DenController>().enemy2 = PlaceEnemyEasy(dungeon);
                     den.GetComponent<DenController>().enemy3 = PlaceEnemyEasy(dungeon);
                 }
+                den.GetComponent<DenController>().enemy1.GetComponent<EnemyController>().den = true;
+                den.GetComponent<DenController>().enemy2.GetComponent<EnemyController>().den = true;
+                den.GetComponent<DenController>().enemy3.GetComponent<EnemyController>().den = true;
                 den.GetComponent<DenController>().active = true;
             }
+        }
+    }
+    
+    public void PlaceBoss(Vector3 position, int level, int difficulty)
+    {
+        var choice = Random.Range(0, 4);
+        GameObject prefab = null;
+        switch (choice)
+        {
+            case(0):
+                prefab = eliteKnightPrefab;
+                break;
+            case(1):
+                prefab = royalGuardianPrefab;
+                break;
+            case(2):
+                prefab = golemPrefab;
+                break;
+            case(3):
+                prefab = trollPrefab;
+                break;
+        }
+        GameObject boss = Instantiate(prefab, position, Quaternion.Euler(0, 0, 0), enemies.transform);
+        boss.name = boss.name.Replace("(Clone)", "");
+        boss.GetComponent<EnemyController>().SetBoss();
+        boss.GetComponent<EnemyController>().SetDifficulty(difficulty);
+        boss.GetComponent<EnemyController>().health = (difficulty <= 10 ? 10 : difficulty <= 25 ? 25 : difficulty <= 50 ? 50 : difficulty <= 75 ? 75 : 100);
+        boss.GetComponent<EnemyController>().attack = (difficulty <= 10 ? 1 : difficulty <= 25 ? 2 : difficulty <= 50 ? 3 : difficulty <= 75 ? 4 : 5);
+        switch (level)
+        {
+            // Boss 1 - Jagged Blade
+            case(1):
+                boss.GetComponent<EnemyController>().SetUpgrade("Jagged Blade");
+                break;
+            // Boss 4 - Warped Edge & Blue Robe
+            case(4):
+                boss.GetComponent<EnemyController>().SetUpgrade("Warped Edge");
+                boss.GetComponent<EnemyController>().SetUpgrade("Blue Robe");
+                break;
+            // Boss 7 - Knight's Sword & Red Robe
+            case(7):
+                boss.GetComponent<EnemyController>().SetUpgrade("Knight's Sword");
+                boss.GetComponent<EnemyController>().SetUpgrade("Red Robe");
+                break;
+            // Boss 10 - Kingsbane
+            case(10):
+                boss.GetComponent<EnemyController>().SetUpgrade("Kingsbane");
+                break;
+        }
+        uiManager.background.color = Color.red;
+        uiManager.Level(boss.name);
+    }
+    
+    public void PlaceItem(string itemName, Vector3 position)
+    {
+        switch (itemName)
+        {
+            case("Coin"):
+                GameObject item = Instantiate(coinPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
+                item.name = "Coin";
+                break;
+            case("Coins"):
+                item = Instantiate(coinPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
+                item.name = "Coin";
+                item = Instantiate(coinPrefab, new Vector3(position.x + Random.Range(-1,1), position.y + Random.Range(-1,1), 0), Quaternion.Euler(0, 0, 0), items.transform);
+                item.name = "Coin";
+                var chance = Random.Range(0, 3);
+                if (chance > 0)
+                {
+                    item = Instantiate(coinPrefab, new Vector3(position.x + Random.Range(-1, 1), position.y + Random.Range(-1, 1), 0), Quaternion.Euler(0, 0, 0), items.transform);
+                    item.name = "Coin";
+                }
+                if (chance > 1)
+                {
+                    item = Instantiate(coinPrefab, new Vector3(position.x + Random.Range(-1,1), position.y + Random.Range(-1,1), 0), Quaternion.Euler(0, 0, 0), items.transform);
+                    item.name = "Coin";
+                }
+                break;
+            case("Key"):
+                item = Instantiate(keyPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
+                item.name = "Key";
+                break;
+            case("Boss Key"):
+                item = Instantiate(bossKeyPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
+                item.name = "Boss Key";
+                break;
+            case("Scroll"):
+                item = Instantiate(scrollPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
+                item.name = "Scroll";
+                break;
+            case("Wigg's Brew"):
+                item = Instantiate(wiggsBrewPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
+                item.name = "Wigg's Brew";
+                break;
+            case("Liquid Luck"):
+                item = Instantiate(liquidLuckPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
+                item.name = "Liquid Luck";
+                break;
+            case("Ogre's Strength"):
+                item = Instantiate(ogresStrengthPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
+                item.name = "Ogre's Strength";
+                break;
+            case("Elixir of Speed"):
+                item = Instantiate(elixirofSpeedPrefab, position, Quaternion.Euler(0, 0, 0), items.transform);
+                item.name = "Elixir of Speed";
+                break;
         }
     }
     

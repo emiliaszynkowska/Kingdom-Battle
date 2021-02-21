@@ -18,7 +18,8 @@ public class SoundManager : MonoBehaviour
     public AudioClip speech;
     public AudioClip error;
     public AudioClip play;
-    // Effect
+    // Effects
+    public AudioClip block;
     public AudioClip swordAttack;
     public AudioClip spinAttack;
     public AudioClip groundPound;
@@ -29,14 +30,17 @@ public class SoundManager : MonoBehaviour
     public AudioClip lifeup;
     public AudioClip damage;
     public AudioClip die;
+    public AudioClip win;
     public AudioClip jump;
     public AudioClip coin;
+    public AudioClip item;
     public AudioClip open;
     public AudioClip monster;
 
     public void PlayMusic(AudioClip music)
     {
         audioSource.clip = music;
+        audioSource.Play();
     }
 
     public void PlaySound(AudioClip sound)
