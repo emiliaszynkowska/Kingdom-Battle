@@ -2,11 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class DenController : MonoBehaviour
 {
     public SoundManager soundManager;
+    private GameObject player;
     public GameObject chest;
     public GameObject spikes;
     public GameObject enemy1;
@@ -18,7 +18,8 @@ public class DenController : MonoBehaviour
     void Start()
     {
         soundManager = GameObject.Find("Main Camera").GetComponent<SoundManager>();
-        StartCoroutine(PlaySounds());
+        player = GameObject.Find("Player");
+        StartCoroutine(Growl());
     }
 
     void FixedUpdate()
@@ -29,17 +30,19 @@ public class DenController : MonoBehaviour
             complete = true;
             spikes.SetActive(false);
             soundManager.PlaySound(soundManager.complete);
-            ScoreManager.AddPuzzleSolving(3);
-        }
-    }
-
-    IEnumerator PlaySounds()
-    {
-        while (!complete)
-        {
-            soundManager.PlaySound(soundManager.monster);
-            yield return new WaitForSeconds(3);
+            ScoreManager.AddPuzzleSolving(5);
         }
     }
     
+    IEnumerator Growl()
+    {
+        while (active)
+        {
+            yield return new WaitForSeconds(3);
+            if (Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 5 &&
+                Time.timeScale == 1)
+                soundManager.PlaySound(soundManager.monsterDamage);
+        }
+    }
+
 }

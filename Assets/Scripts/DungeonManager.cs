@@ -146,37 +146,33 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
-    public void PlaceWizard(Dungeon dungeon, int difficulty)
+    public void PlaceWizard(Vector3 position, int difficulty)
     {
-        if (dungeon.rect != playerRoom)
+        Dungeon dungeon = new Dungeon(new Rect(position.x - 1, position.y - 3, 2, 6));
+        dungeon.room = new Rect(position.x - 1, position.y - 3, 2, 6);
+        var choice = Random.Range(0, 3);
+        switch (choice)
         {
-            var choice = Random.Range(0, 3);
-            switch (choice)
-            {
-                case (0):
-                    GameObject questFetch = Instantiate(wizardFetchPrefab, RandomPosition(dungeon.room),
-                        Quaternion.Euler(0, 0, 0), NPCs.transform);
-                    questFetch.name = "Wizard";
-                    break;
-                case (1):
-                    GameObject questDefeat = Instantiate(wizardDefeatPrefab, RandomPosition(dungeon.room),
-                        Quaternion.Euler(0, 0, 0), NPCs.transform);
-                    GameObject obj = PlaceEnemy(dungeon, difficulty);
-                    questDefeat.name = "Wizard";
-                    questDefeat.GetComponent<QuestDefeat>().obj = obj;
-                    break;
-                case (2):
-                    GameObject questRescue = Instantiate(wizardRescuePrefab, RandomPosition(dungeon.room),
-                        Quaternion.Euler(0, 0, 0), NPCs.transform);
-                    GameObject obj1 = PlaceEnemy(dungeon, difficulty);
-                    GameObject obj2 = PlaceEnemy(dungeon, difficulty);
-                    GameObject obj3 = PlaceEnemy(dungeon, difficulty);
-                    questRescue.name = "Wizard";
-                    questRescue.GetComponent<QuestRescue>().obj1 = obj1;
-                    questRescue.GetComponent<QuestRescue>().obj2 = obj2;
-                    questRescue.GetComponent<QuestRescue>().obj3 = obj3;
-                    break;
-            }
+            case (0):
+                GameObject questFetch = Instantiate(wizardFetchPrefab, position, Quaternion.Euler(0, 0, 0), NPCs.transform);
+                questFetch.name = "Wizard";
+                break;
+            case (1):
+                GameObject questDefeat = Instantiate(wizardDefeatPrefab, position, Quaternion.Euler(0, 0, 0), NPCs.transform);
+                GameObject obj = PlaceEnemy(dungeon,difficulty);
+                questDefeat.name = "Wizard";
+                questDefeat.GetComponent<QuestDefeat>().obj = obj;
+                break;
+            case (2):
+                GameObject questRescue = Instantiate(wizardRescuePrefab, position, Quaternion.Euler(0, 0, 0), NPCs.transform);
+                GameObject obj1 = PlaceEnemy(dungeon,difficulty);
+                GameObject obj2 = PlaceEnemy(dungeon,difficulty);
+                GameObject obj3 = PlaceEnemy(dungeon,difficulty);
+                questRescue.name = "Wizard";
+                questRescue.GetComponent<QuestRescue>().obj1 = obj1;
+                questRescue.GetComponent<QuestRescue>().obj2 = obj2;
+                questRescue.GetComponent<QuestRescue>().obj3 = obj3;
+                break;
         }
     }
 
@@ -291,8 +287,6 @@ public class DungeonManager : MonoBehaviour
         return enemy;
     }
     
-    
-
     public void PlaceDen(Dungeon dungeon, int difficulty)
     {
         if (dungeon.rect != playerRoom)

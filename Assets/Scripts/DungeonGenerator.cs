@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Assets.Scripts;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -76,7 +77,7 @@ public class DungeonGenerator : MonoBehaviour
             Rect room = dungeons[Random.Range(0, dungeons.Count)].rect;
             dungeonManager.PlacePlayer(room);
             // Place Doors
-            FillDoors();
+            FillDoorways();
             // Place Entities
             PlaceEntities();
             // Start Level
@@ -92,8 +93,8 @@ public class DungeonGenerator : MonoBehaviour
             level = PlayerData.Level;
         }
         else
-            level = 4;
-        // Set Difficultyoss)
+            level = 1;
+        // Set Difficulty
         if (level == 1)
             difficulty = 10;
         else if (level < 5)
@@ -306,7 +307,7 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    private void FillDoors()
+    private void FillDoorways()
     {
         BoundsInt bounds = groundMap.cellBounds;
         for (int xMap = bounds.xMin - 10; xMap <= bounds.xMax + 10; xMap++)
@@ -329,9 +330,15 @@ public class DungeonGenerator : MonoBehaviour
                     outerWallMap.GetTile(posLeft) != null && outerWallMap.GetTile(posRight) != null
                     && outerWallMap.GetTile(posLeftLeft) != null & outerWallMap.GetTile(posRightRight) != null)
                 {
-                    // Place a door
-                    if (Random.Range(0, 100) < difficulty + 20)
-                        dungeonManager.PlaceDoor(posUpperRight);
+                    var choice = Random.Range(0, 2);
+                    // Place a door or wizard
+                    if (Random.Range(0, 100) < Mathf.Clamp(difficulty + 25, 0, 100))
+                    {
+                        if (choice == 0)
+                            dungeonManager.PlaceDoor(posUpperRight);
+                        else if (choice == 1)
+                            dungeonManager.PlaceWizard(posUpperRight, difficulty);
+                    }
                 }
             }
         }
@@ -351,21 +358,11 @@ public class DungeonGenerator : MonoBehaviour
     {
         foreach (Dungeon dungeon in dungeons)
         {
-            // Place Wizards
-            bool wizard = false;
-            for (int i = 0; i < 3; i++)
-            {
-                if (!wizard && Random.Range(0,100) < difficulty && Random.Range(0, 10) == 0)
-                {
-                    dungeonManager.PlaceWizard(dungeon, difficulty);
-                    wizard = true;
-                } 
-            }
             // Place Merchants
             bool merchant = false;
             for (int i = 0; i < 3; i++)
             {
-                if (!wizard && !merchant && Random.Range(0,100) > difficulty && Random.Range(0, 10) == 0)
+                if (!merchant && Random.Range(0,100) > difficulty && Random.Range(0, 10) == 0)
                 {
                     dungeonManager.PlaceMerchant(dungeon);
                     merchant = true;
@@ -378,7 +375,7 @@ public class DungeonGenerator : MonoBehaviour
             {
                 if (!chest && Random.Range(0, 100) > difficulty + 15)
                 {
-                    if (!wizard && !merchant && difficulty >= 50 && Random.Range(0, 3) == 0)
+                    if (!merchant && difficulty >= 50 && Random.Range(0, 3) == 0)
                     {
                         // Place Den
                         dungeonManager.PlaceDen(dungeon, difficulty);
@@ -393,11 +390,11 @@ public class DungeonGenerator : MonoBehaviour
                 }
             }
             // Place Enemies
-            if (!wizard && !merchant && !den)
+            if (!merchant && !den)
                 dungeonManager.PlaceEnemy(dungeon, difficulty);
             for (int i = 0; i < 2; i++)
             {
-                if (!wizard && !merchant && !den && Random.Range(0,100) < difficulty)
+                if (!merchant && !den && Random.Range(0,100) < difficulty)
                     dungeonManager.PlaceEnemy(dungeon, difficulty);
             }
             // Place Spikes

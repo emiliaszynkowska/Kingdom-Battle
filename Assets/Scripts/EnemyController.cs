@@ -143,7 +143,7 @@ namespace Assets.Scripts
         IEnumerator Die()
         {
             // Prepare for Respawn
-            soundManager.PlaySound(soundManager.monster);
+            soundManager.PlaySound(soundManager.monsterDie);
             yield return new WaitForSeconds(0.5f);
             name = "Respawn";
             // Disable Enemy
@@ -159,6 +159,8 @@ namespace Assets.Scripts
             DungeonManager dungeonManager = dungeonGenerator.dungeonManager;
             if (boss)
             {
+                soundManager.PauseMusic();
+                soundManager.PlayMusic(soundManager.victoryMusic);
                 dungeonManager.PlaceItem("Boss Key", transform.position);
                 // Create Upgrades
                 if (upgrades.Count > 0)
@@ -197,7 +199,7 @@ namespace Assets.Scripts
             {
                 SavedTime = Time.time;
                 // Take Damage
-                soundManager.PlaySound(soundManager.damage);
+                soundManager.PlaySound(soundManager.monsterDamage);
                 isHurt = true;
                 health -= playerAttack;
                 if (health <= 0)
@@ -291,7 +293,7 @@ namespace Assets.Scripts
             {
                 if (spawnEnemies && isMoving)
                 {
-                    soundManager.PlaySound(soundManager.monster);
+                    soundManager.PlaySound(soundManager.monsterDamage);
                     if (name.Equals("Elite Knight") || name.Equals("Royal Guardian"))
                     {
                         GameObject knight = Instantiate(knightPrefab, transform.position, transform.rotation, enemies.transform);

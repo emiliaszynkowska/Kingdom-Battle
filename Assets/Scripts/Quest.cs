@@ -13,6 +13,7 @@ public class Quest : MonoBehaviour
     public UIManager uiManager;
     public string npcName;
     public string message;
+    public string message2;
     public string reward;
     public bool active;
     public bool complete;
@@ -42,14 +43,12 @@ public class Quest : MonoBehaviour
     {
         if (!talking)
         {
-            if (active && complete)
+            if (complete)
             {
                 talking = true;
-                message = "Thank you for helping me! Here, take this *.";
-                message = message.Replace("*", reward);
                 uiManager.AddItem(reward, playerController.GetInventory().Count);
                 playerController.AddItem(reward);
-                uiManager.StartSpeak(npcName, message);
+                uiManager.StartSpeak(npcName, message2);
                 yield return new WaitForSeconds(0.1f);
                 yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
                 uiManager.StopSpeak();

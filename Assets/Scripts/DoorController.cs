@@ -32,13 +32,9 @@ public class DoorController : MonoBehaviour
             boxCollider.enabled = false;
             capsuleCollider.enabled = false;
             soundManager.PlaySound(soundManager.open);
-            ScoreManager.AddPuzzleSolving(1);
             ScoreManager.AddExploration(1);
             if (boss)
-            {
-                soundManager.PlaySound(soundManager.win);
                 uiManager.LevelNext();
-            }
             return true;
         }
         return false;

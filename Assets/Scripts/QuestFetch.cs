@@ -19,6 +19,9 @@ public class QuestFetch : Quest
         message = messages[Random.Range(0, 4)];
         message = message.Replace("*", item);
         message = message.Replace("Key", "a Key");
+        message2 = "Thank you for bringing me ^. Here, take this *.";
+        message2 = message2.Replace("^", item);
+        message2 = message2.Replace("*", reward);
     }
 
     void Update()

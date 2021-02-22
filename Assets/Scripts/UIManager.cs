@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     // Objects
     public PlayerController playerController;
     public SoundManager soundManager;
+    public Camera mainCamera;
     public GameObject map;
     public GameObject info;
     public GameObject lives;
@@ -45,6 +46,7 @@ public class UIManager : MonoBehaviour
     // Variables
     public int time;
     public bool isPowerup;
+    public bool isError;
     public int levelNum;
     public bool bossFight;
     public int difficulty;
@@ -76,7 +78,7 @@ public class UIManager : MonoBehaviour
     private Dictionary<string,string> descriptions = new Dictionary<string, string>()
     {
         {"Key", "Opens doors and chests."},
-        {"Wigg's Brew", "Heals your wounds and restores some health."},
+        {"Wigg's Brew", "Restores some health."},
         {"Liquid Luck", "Increases your ability in combat."},
         {"Ogre's Strength", "Gradually poisons enemies over time."},
         {"Elixir of Speed", "Increases your movement speed."},
@@ -87,6 +89,7 @@ public class UIManager : MonoBehaviour
     public void Start()
     {
         ScoreManager.Reset();
+        ResetCamera();
         if (!bossFight)
             StartCoroutine(Timer());
         else
@@ -102,7 +105,6 @@ public class UIManager : MonoBehaviour
         GameObject title2 = info.transform.GetChild(2).gameObject;
         GameObject title3 = info.transform.GetChild(3).gameObject;
         GameObject money = info.transform.GetChild(4).gameObject;
-        
         // Name
         playerText.text = player;
         // Coins
@@ -187,7 +189,7 @@ public class UIManager : MonoBehaviour
                 timers.transform.GetChild(1).gameObject.SetActive(true);
                 timers.transform.GetChild(2).gameObject.SetActive(false);
                 timers.transform.GetChild(3).gameObject.SetActive(false);
-                timers.transform.GetChild(0).localPosition = new Vector3(-150, 50, 0);
+                timers.transform.GetChild(0).localPosition = new Vector3(-150, 25, 0);
                 timers.transform.GetChild(1).localPosition = new Vector3(150, 50, 0);
                 break;
             case 2: 
@@ -195,7 +197,7 @@ public class UIManager : MonoBehaviour
                 timers.transform.GetChild(1).gameObject.SetActive(true);
                 timers.transform.GetChild(2).gameObject.SetActive(true);
                 timers.transform.GetChild(3).gameObject.SetActive(false);
-                timers.transform.GetChild(1).localPosition = new Vector3(-300, 50, 0);
+                timers.transform.GetChild(0).localPosition = new Vector3(-300, 25, 0);
                 timers.transform.GetChild(1).localPosition = new Vector3(0, 50, 0);
                 timers.transform.GetChild(2).localPosition = new Vector3(300, 50, 0);
                 break;
@@ -204,7 +206,7 @@ public class UIManager : MonoBehaviour
                 timers.transform.GetChild(1).gameObject.SetActive(true);
                 timers.transform.GetChild(2).gameObject.SetActive(true);
                 timers.transform.GetChild(3).gameObject.SetActive(true);
-                timers.transform.GetChild(0).localPosition = new Vector3(-500, 50, 0);
+                timers.transform.GetChild(0).localPosition = new Vector3(-500, 25, 0);
                 timers.transform.GetChild(1).localPosition = new Vector3(-220, 50, 0);
                 timers.transform.GetChild(2).localPosition = new Vector3(90, 50, 0);
                 timers.transform.GetChild(3).localPosition = new Vector3(410, 50, 0);
@@ -216,6 +218,7 @@ public class UIManager : MonoBehaviour
     public void Inventory()
     {
         PauseGame();
+        soundManager.PauseMusic();
         minimap.SetActive(false);
         options.SetActive(false);
         inventory.SetActive(true);
@@ -235,6 +238,7 @@ public class UIManager : MonoBehaviour
     public void ExitInventory()
     {
         ResumeGame();
+        soundManager.ResumeMusic();
         inventory.SetActive(false);
         options.SetActive(true);
         minimap.SetActive(true);
@@ -311,7 +315,7 @@ public class UIManager : MonoBehaviour
 
     public void InvFull(Vector3 pos)
     {
-        soundManager.PlaySound(soundManager.error);
+        StartCoroutine(Error());
         invFull.SetActive(true);
         invFull.transform.localPosition = new Vector3(0, pos.y + 40, 0);
     }
@@ -321,6 +325,22 @@ public class UIManager : MonoBehaviour
         invFull.SetActive(false);
     }
 
+    public bool IsError()
+    {
+        return isError;
+    }
+
+    public IEnumerator Error()
+    {
+        if (!IsError())
+        {
+            Debug.Log("Error");
+            isError = true;
+            soundManager.PlaySound(soundManager.error);
+            yield return new WaitForSecondsRealtime(1);
+            isError = false;
+        }
+    }
     public void Powerup(string text, Color color)
     {
         powerup.text = text;
@@ -442,12 +462,14 @@ public class UIManager : MonoBehaviour
     public void Menu()
     {
         PauseGame();
+        soundManager.PauseMusic();
         menu.SetActive(true);
     }
 
     public void ExitMenu()
     {
         ResumeGame();
+        soundManager.ResumeMusic();
         menu.SetActive(false);
     }
 
@@ -458,6 +480,8 @@ public class UIManager : MonoBehaviour
 
     public void Shop()
     {
+        soundManager.PauseMusic();
+        soundManager.PlayMusic(soundManager.shopMusic);
         options.SetActive(false);
         optionsShop.SetActive(true);
     }
@@ -465,6 +489,7 @@ public class UIManager : MonoBehaviour
     public IEnumerator ExitShop()
     {
         yield return new WaitForSeconds(0.1f);
+        soundManager.PlayMusic(soundManager.dungeonMusic);
         options.SetActive(true);
         optionsShop.SetActive(false);
     }
@@ -474,7 +499,6 @@ public class UIManager : MonoBehaviour
         npcName.text = npc;
         message.text = text;
         dialog.SetActive(true);
-        soundManager.PlaySound(soundManager.speech);
     }
 
     public void StopSpeak()
@@ -485,6 +509,7 @@ public class UIManager : MonoBehaviour
     public void GameOver()
     {
         gameOver.SetActive(true);
+        soundManager.PlayMusic(soundManager.gameOverMusic);
     }
 
     public bool IsGameOver()
@@ -494,6 +519,7 @@ public class UIManager : MonoBehaviour
 
     public void Level(int n, int d)
     {
+        ResetCamera();
         levelNum = n;
         difficulty = d;
         PauseGame();
@@ -506,6 +532,7 @@ public class UIManager : MonoBehaviour
     
     public void Level(string s)
     {
+        ResetCamera();
         if (levelNum == 10)
             StartCoroutine(ExitFade());
         PauseGame();
@@ -534,6 +561,8 @@ public class UIManager : MonoBehaviour
 
     public void LevelStart()
     {
+        ResetCamera();
+        soundManager.ResumeMusic();
         soundManager.PlaySound(soundManager.clickButton);
         if (bossFight)
             soundManager.PlayMusic(soundManager.bossMusic);
@@ -557,10 +586,16 @@ public class UIManager : MonoBehaviour
         return level.activeSelf;
     }
 
+    public void ResetCamera()
+    {
+        mainCamera.orthographicSize = 7;
+    }
+
     public IEnumerator Scores(int[] s)
     {
-        soundManager.PlaySound(soundManager.win);
         PauseGame(); 
+        soundManager.PauseMusic();
+        soundManager.PlayMusic(soundManager.victoryMusic);
         scores.SetActive(true);
         GameObject aggressive = scores.transform.GetChild(4).gameObject;
         GameObject defensive = scores.transform.GetChild(5).gameObject;
@@ -570,16 +605,16 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(1);
         soundManager.PlaySound(soundManager.item);
         aggressive.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(s[0].ToString());
-        yield return new WaitForSecondsRealtime(1);
+        yield return new WaitForSecondsRealtime(0.5f);
         soundManager.PlaySound(soundManager.item);
         defensive.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(s[1].ToString());
-        yield return new WaitForSecondsRealtime(1);
+        yield return new WaitForSecondsRealtime(0.5f);
         soundManager.PlaySound(soundManager.item);
         exploration.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(s[2].ToString());
-        yield return new WaitForSecondsRealtime(1);
+        yield return new WaitForSecondsRealtime(0.5f);
         soundManager.PlaySound(soundManager.item);
         collection.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(s[3].ToString());
-        yield return new WaitForSecondsRealtime(1);
+        yield return new WaitForSecondsRealtime(0.5f);
         soundManager.PlaySound(soundManager.item);
         puzzlesolving.transform.GetChild(1).GetComponent<TextMeshProUGUI>().SetText(s[4].ToString());
         scores.transform.GetChild(3).gameObject.SetActive(true);

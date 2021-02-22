@@ -18,6 +18,7 @@ namespace Assets.Scripts
         public int livesActive;
         // Booleans
         private bool isAttacking;
+        private bool isBlocking;
         private bool isHurt;
         private bool isBouncing;
         private bool ogreStrength;
@@ -76,19 +77,6 @@ namespace Assets.Scripts
             // Set animations
             playerAnimator.SetFloat("Horizontal",movement.x);
             playerAnimator.SetFloat("Speed",movement.sqrMagnitude);
-        
-            // Move the weapon
-            var pos = weapon.transform.localPosition;
-            if (Input.GetKey(KeyCode.D))
-            {
-                weapon.transform.localPosition = new Vector2(1, 0);
-                weapon.GetComponent<SpriteRenderer>().flipX = false;
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {
-                weapon.transform.localPosition = new Vector2(-1, 0);
-                weapon.GetComponent<SpriteRenderer>().flipX = true;
-            }
         }
 
         private void FixedUpdate()
@@ -109,10 +97,24 @@ namespace Assets.Scripts
 
         void Flip()
         {
+            // Player
             if (Input.GetAxis("Horizontal") > 0)
                 playerRenderer.flipX = false;
             else if (Input.GetAxis("Horizontal") < 0)
                 playerRenderer.flipX = true;
+            // Weapon & Shield
+            if (Input.GetKey(KeyCode.D))
+            {
+                weapon.transform.localPosition = new Vector2(1, 0);
+                weapon.GetComponent<SpriteRenderer>().flipX = false;
+                shield.transform.localPosition = new Vector3(1, -0.3f, 0);
+            }
+            else if (Input.GetKey(KeyCode.A))
+            {
+                weapon.transform.localPosition = new Vector2(-1, 0);
+                weapon.GetComponent<SpriteRenderer>().flipX = true;
+                shield.transform.localPosition = new Vector3(-1, -0.3f, 0);
+            }
         }
     
         public int GetAttack()
@@ -123,6 +125,11 @@ namespace Assets.Scripts
         public bool IsAttacking()
         {
             return isAttacking;
+        }
+
+        public bool IsBlocking()
+        {
+            return isBlocking;
         }
     
         public bool IsBouncing()
@@ -182,12 +189,12 @@ namespace Assets.Scripts
     
         IEnumerator TakeDamage(int damage)
         {
-            if (health > 0 && !IsHurt() && !IsAttacking())
+            if (health > 0 && !IsHurt() && !IsAttacking() && !IsBlocking())
             {
                 isHurt = true;
                 health -= damage;
                 uiManager.SetLives(health);
-                soundManager.PlaySound(soundManager.damage);
+                soundManager.PlaySound(soundManager.elfDamage);
                 playerRenderer.color = new Color(0.8f, 0.22f, 0.2f);
                 yield return new WaitForSeconds(1);
                 playerRenderer.color = Color.white;
@@ -196,13 +203,12 @@ namespace Assets.Scripts
             if (health <= 0 && !uiManager.IsGameOver())
             {
                 uiManager.PauseGame();
-                death.GetComponent<SpriteRenderer>().flipX = playerRenderer.flipX;
-                death.GetComponent<SpriteRenderer>().flipY = playerRenderer.flipX;
+                soundManager.PlaySound(soundManager.elfDie);
+                death.GetComponent<SpriteRenderer>().flipX = false;
                 death.transform.position = new Vector2(transform.position.x + 0.5f, transform.position.y - 0.5f);
                 death.SetActive(true);
                 playerRenderer.enabled = false;
                 weapon.SetActive(false);
-                soundManager.PlaySound(soundManager.die);
                 yield return new WaitForSecondsRealtime(1);
                 uiManager.GameOver();
             }
@@ -210,13 +216,16 @@ namespace Assets.Scripts
 
         IEnumerator TakeKnockback(Vector3 source)
         {
-            isBouncing = true;
-            Vector3 force = transform.position - source;
-            body.AddForce((force.normalized) * 3, ForceMode2D.Impulse);
-            yield return new WaitForSeconds(0.5f);
-            isBouncing = false;
-            StopBounceHorizontal();
-            StopBounceVertical();
+            if (isBlocking)
+            {
+                isBouncing = true;
+                Vector3 force = transform.position - source;
+                body.AddForce((force.normalized) * 3, ForceMode2D.Impulse);
+                yield return new WaitForSeconds(0.5f);
+                isBouncing = false;
+                StopBounceHorizontal();
+                StopBounceVertical();
+            }
         }
 
         IEnumerator Block()
@@ -224,18 +233,16 @@ namespace Assets.Scripts
             if (timers.transform.GetChild(0).gameObject.GetComponent<TimerController>().CanAttack())
             {
                 // Start Blocking
-                isAttacking = true;
+                isBlocking = true;
                 // Animate Block
                 soundManager.PlaySound(soundManager.block);
-                shield.transform.localPosition =
-                    playerRenderer.flipX ? new Vector3(-1, -0.3f, 0) : new Vector3(1, -0.3f, 0);
                 weapon.SetActive(false);
                 shield.SetActive(true);
                 yield return new WaitForSeconds(2);
                 // Stop Blocking
                 shield.SetActive(false);
                 weapon.SetActive(true);
-                isAttacking = false;
+                isBlocking = false;
                 ScoreManager.AddDefensive(1);
                 timers.transform.GetChild(0).gameObject.GetComponent<TimerController>().Reset();
             }
@@ -249,6 +256,8 @@ namespace Assets.Scripts
                 isAttacking = true;
                 // Animate Attack
                 soundManager.PlaySound(soundManager.swordAttack);
+                shield.SetActive(false);
+                weapon.SetActive(true);
                 weaponAnimator.SetTrigger("Attack");
                 // Damage Enemies
                 Collider2D[] results = new Collider2D[5];
@@ -282,6 +291,8 @@ namespace Assets.Scripts
                 isAttacking = true;
                 // Animate Spin Attack
                 soundManager.PlaySound(soundManager.spinAttack);
+                shield.SetActive(false);
+                weapon.SetActive(true);
                 weaponAnimator.SetTrigger("Spin");
                 // Damage Enemies
                 Collider2D[] results = new Collider2D[5];
@@ -315,6 +326,8 @@ namespace Assets.Scripts
                 isAttacking = true;
                 // Animate Jump
                 soundManager.PlaySound(soundManager.jump);
+                shield.SetActive(false);
+                weapon.SetActive(true);
                 playerAnimator.SetTrigger("Jump");
                 yield return new WaitForSeconds(0.5f);
                 shadow.SetActive(true);
@@ -467,6 +480,10 @@ namespace Assets.Scripts
                     uiManager.UseItem();
                     uiManager.DisableItem(inventory.Count);
                 }
+            }
+            else if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.A)) && uiManager.IsInventory())
+            {
+                StartCoroutine(uiManager.Error());
             }
 
             // Quests
@@ -687,7 +704,7 @@ namespace Assets.Scripts
                     case "Boss Key":
                         if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines.Contains("Collection")))
                         {
-                            soundManager.PlaySound(soundManager.item);
+                            soundManager.PlaySound(soundManager.win);
                             Destroy(other.gameObject);
                             uiManager.AddItem("Boss Key", inventory.Count);
                             AddItem("Boss Key");
@@ -872,7 +889,10 @@ namespace Assets.Scripts
             uiManager.SetLives(health);
             for (int i = 0; i < inventory.Count; i++)
             {
-                uiManager.AddItem(inventory[i], i);
+                if (i <= 5)
+                    uiManager.AddItem(inventory[i], i);
+                if (i > 5 && playerDisciplines.Contains("Collection"))
+                    uiManager.AddItem(inventory[i], i);
             }
             playerAnimator.runtimeAnimatorController = Instantiate((livesActive < 6 ? playerG : (livesActive < 9 ? playerB : playerR)));
             weaponAnimator.runtimeAnimatorController = Instantiate((attack == 1 ? rustySword : (attack == 2 ? jaggedBlade : (attack == 3 ? warpedEdge : (attack == 4 ? knightsSword : kingsbane)))), weapon.transform);

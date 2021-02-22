@@ -14,6 +14,8 @@ public class QuestDefeat : Quest
             "I saw a monster earlier. I'll move if you can defeat it."
         };
         message = messages[Random.Range(0, 3)];
+        message2 = "Thank you for killing that monster. Here, take this *.";
+        message2 = message2.Replace("*", reward);
     }
     
     void Update()

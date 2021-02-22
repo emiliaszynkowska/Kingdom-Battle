@@ -326,7 +326,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 1}
   serializedVersion: 2
-  m_Radius: 2
+  m_Radius: 2.5
 --- !u!114 &8059929757679764137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -352,6 +352,7 @@ MonoBehaviour:
   magicTime: 1
   spawnTime: 0
   uiManager: {fileID: 0}
+  soundManager: {fileID: 0}
   enemies: {fileID: 0}
   text: {fileID: 8059929756819285289}
   particles: {fileID: 1484304525313702822, guid: 740a6d4dab6fce94ebaf523c203cdf0f,

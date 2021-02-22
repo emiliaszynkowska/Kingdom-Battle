@@ -59,6 +59,7 @@ public class ScoreManager : MonoBehaviour
 
     public static int[] GetScores()
     {
+        collection = collection / 2;
         return new [] {aggressive, defensive, exploration, collection, puzzlesolving};
     }
     
