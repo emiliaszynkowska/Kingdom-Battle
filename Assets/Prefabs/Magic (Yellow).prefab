@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 423678147143658550}
   - component: {fileID: 1564311025862300647}
   - component: {fileID: -7370446869604362749}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Magic (Yellow)
   m_TagString: Projectile
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -879713707
+  m_SortingLayerID: -1081677195
   m_SortingLayer: 3
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 36ca590dfe24fc440a6ee680a5c9880b, type: 3}

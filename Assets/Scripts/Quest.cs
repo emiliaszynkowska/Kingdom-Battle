@@ -15,7 +15,6 @@ public class Quest : MonoBehaviour
     public string message;
     public string message2;
     public string reward;
-    public bool active;
     public bool complete;
     public bool talking;
     
@@ -62,11 +61,24 @@ public class Quest : MonoBehaviour
                 soundManager.PlaySound(soundManager.complete);
                 ScoreManager.AddPuzzleSolving(3);
                 if (this is QuestFetch)
-                    questManager.Event("Complete a fetch quest");
+                {
+                    questManager.AddQuest($"Bring {npcName} {GetComponent<QuestFetch>().item}");
+                    questManager.Event("Complete a fetch quest", 0);
+                    questManager.Event($"Bring {npcName} {GetComponent<QuestFetch>().item}", 1);
+                }
                 else if (this is QuestDefeat)
-                    questManager.Event("Complete a defeat quest");
+                {
+                    questManager.AddQuest($"Save {npcName} from the {GetComponent<QuestDefeat>().enemy}");
+                    questManager.Event("Complete a defeat quest", 0);
+                    questManager.Event($"Save {npcName} from the {GetComponent<QuestDefeat>().enemy}", 1);
+                }
                 else if (this is QuestRescue)
-                    questManager.Event("Complete a rescue quest");
+                {
+                    questManager.AddQuest($"Rescue {npcName}");
+                    questManager.Event("Complete a rescue quest", 0);
+                    questManager.Event($"Rescue {npcName}", 1);
+                }
+
                 StartCoroutine(Disappear());
             }
             else
@@ -75,9 +87,14 @@ public class Quest : MonoBehaviour
                 uiManager.StartSpeak(npcName, message);
                 yield return new WaitForSeconds(0.1f);
                 yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
+                if (this is QuestFetch)
+                    questManager.AddQuest($"Bring {npcName} {GetComponent<QuestFetch>().item}");
+                else if (this is QuestDefeat)
+                    questManager.AddQuest($"Save {npcName} from the {GetComponent<QuestDefeat>().enemy}");
+                else if (this is QuestRescue)
+                    questManager.AddQuest($"Rescue {npcName}");
                 uiManager.StopSpeak();
                 talking = false;
-                active = true;
             }
         }
     }

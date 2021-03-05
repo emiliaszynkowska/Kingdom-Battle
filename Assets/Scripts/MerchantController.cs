@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -32,6 +33,15 @@ public class MerchantController : MonoBehaviour
         "So you're interested in my merchandise?", 
         "I've got plenty of tools and potions.",
         "Take a look at my merchandise."
+    };
+
+    private List<string> merchandise = new List<string>()
+    {
+        "Key",
+        "Wigg's Brew",
+        "Liquid Luck",
+        "Ogre's Strength",
+        "Elixir of Speed"
     };
 
     private Dictionary<string,int> prices = new Dictionary<string, int>()
@@ -144,7 +154,7 @@ public class MerchantController : MonoBehaviour
             playerController.Spend(price);
             uiManager.AddItem(itemName, playerController.GetInventory().Count);
             playerController.AddItem(itemName);
-            questManager.Event($"Buy {itemName}");
+            questManager.Event($"Buy {itemName}", 0);
             DisableItem();
             uiManager.StartSpeak(npcName, "Here you go.");
         }
@@ -158,30 +168,28 @@ public class MerchantController : MonoBehaviour
 
     public void SetItems()
     {
+        var itemsList = merchandise.OrderBy(x => Guid.NewGuid()).ToList();
+        itemsList.Add(merchandise[Random.Range(0,5)]);
         for (int i=0; i<items.transform.childCount; i++)
         {
             GameObject item = items.transform.GetChild(i).gameObject;
-            var choice = Random.Range(0, 5);
-            switch (choice)
+            var itemName = itemsList[i];
+            item.name = itemName;
+            switch (itemName)
             {
-                case 0:
-                    item.name = "Key";
+                case "Key":
                     item.GetComponent<Image>().sprite = key;
                     break;
-                case 1:
-                    item.name = "Wigg's Brew";
+                case "Wigg's Brew":
                     item.GetComponent<Image>().sprite = wiggsBrew;
                     break;
-                case 2:
-                    item.name = "Liquid Luck";
+                case "Liquid Luck":
                     item.GetComponent<Image>().sprite = liquidLuck;
                     break;
-                case 3:
-                    item.name = "Ogre's Strength";
+                case "Ogre's Strength":
                     item.GetComponent<Image>().sprite = ogresStrength;
                     break;
-                case 4:
-                    item.name = "Elixir of Speed";
+                case "Elixir of Speed":
                     item.GetComponent<Image>().sprite = elixirofSpeed;
                     break;
             }

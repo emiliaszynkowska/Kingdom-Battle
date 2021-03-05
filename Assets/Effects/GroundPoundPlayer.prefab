@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 88376960663731268}
   - component: {fileID: 1484304525313702822}
   - component: {fileID: 5762332663147019296}
-  m_Layer: 9
-  m_Name: GroundPound
+  m_Layer: 0
+  m_Name: GroundPoundPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4787,7 +4787,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -879713707
-  m_SortingLayer: 3
+  m_SortingLayer: 0
   m_SortingOrder: -1
   m_RenderMode: 0
   m_SortMode: 0

@@ -141,11 +141,11 @@ public class EnemyController : MonoBehaviour
     IEnumerator Die()
     {
         // Prepare for Respawn
+        name = "Respawn";
         soundManager.PlaySound(soundManager.monsterDie);
-        questManager.Event($"Defeat 1 {name}");
+        questManager.Event($"Defeat 1 {name}                        0/1", 0);
         questManager.Event(name, "Defeat");
         yield return new WaitForSeconds(0.5f);
-        name = "Respawn";
         // Disable Enemy
         enemyRenderer.enabled = false;
         magicAttack = false;
@@ -202,7 +202,7 @@ public class EnemyController : MonoBehaviour
             soundManager.PlaySound(soundManager.monsterDamage);
             isHurt = true;
             health -= playerAttack;
-            if (health <= 0)
+            if (health <= 0 && !name.Equals("Respawn"))
                 StartCoroutine(Die());
             yield return new WaitForSeconds(0.5f);
             isHurt = false;
@@ -211,7 +211,7 @@ public class EnemyController : MonoBehaviour
 
     public IEnumerator PoisonDamage()
     {
-        questManager.Event("Poison an enemy");
+        questManager.Event("Poison an enemy", 0);
         isPoisoned = true;
         yield return new WaitForSeconds(1);
         health -= 1;

@@ -31,6 +31,7 @@ public class UIManager : MonoBehaviour
     public Text message;
     public GameObject menu;
     public GameObject quests;
+    public GameObject complete;
     public GameObject scores;
     public GameObject disciplines;
     public GameObject level;
@@ -461,8 +462,9 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public IEnumerator Notification(string s)
+    public IEnumerator Notification(string s, Color c)
     {
+        notification.color = c;
         notification.text = s;
         yield return new WaitForSeconds(3);
         notification.text = "";
@@ -609,6 +611,14 @@ public class UIManager : MonoBehaviour
         next.SetActive(true);
     }
 
+    public void LevelComplete()
+    {
+        PauseGame(); 
+        complete.SetActive(true);
+        soundManager.PauseMusic();
+        soundManager.PlayMusic(soundManager.victoryMusic);
+    }
+
     public bool IsLevel()
     {
         return level.activeSelf;
@@ -619,11 +629,14 @@ public class UIManager : MonoBehaviour
         mainCamera.orthographicSize = 7;
     }
 
+    public void StartScores()
+    {
+        StartCoroutine(Scores(ScoreManager.GetScores()));
+    }
+
     public IEnumerator Scores(int[] s)
     {
-        PauseGame(); 
-        soundManager.PauseMusic();
-        soundManager.PlayMusic(soundManager.victoryMusic);
+        complete.SetActive(false);
         scores.SetActive(true);
         GameObject aggressive = scores.transform.GetChild(4).gameObject;
         GameObject defensive = scores.transform.GetChild(5).gameObject;

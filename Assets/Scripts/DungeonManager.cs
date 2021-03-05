@@ -161,6 +161,7 @@ public class DungeonManager : MonoBehaviour
                 GameObject obj = PlaceEnemy(dungeon,difficulty);
                 questDefeat.name = "WizardDefeat";
                 questDefeat.GetComponent<QuestDefeat>().obj = obj;
+                questDefeat.GetComponent<QuestDefeat>().enemy = obj.name;
                 break;
             case (2):
                 GameObject questRescue = Instantiate(wizardRescuePrefab, position, Quaternion.Euler(0, 0, 0), NPCs.transform);

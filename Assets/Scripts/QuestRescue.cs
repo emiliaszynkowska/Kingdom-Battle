@@ -24,7 +24,7 @@ public class QuestRescue : Quest
     
     void Update()
     {
-        if (active && !complete && (obj1 == null || obj1.name.Equals("Respawn")) && (obj2 == null || obj2.name.Equals("Respawn")) && (obj3 == null || obj3.name.Equals("Respawn")))
+        if (!complete && (obj1 == null || obj1.name.Equals("Respawn")) && (obj2 == null || obj2.name.Equals("Respawn")) && (obj3 == null || obj3.name.Equals("Respawn")))
         {
             alert.SetActive(false);
             complete = true;

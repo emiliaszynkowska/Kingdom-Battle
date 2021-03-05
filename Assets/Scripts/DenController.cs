@@ -32,7 +32,7 @@ public class DenController : MonoBehaviour
             complete = true;
             spikes.SetActive(false);
             soundManager.PlaySound(soundManager.complete);
-            questManager.Event("Infiltrate a monster den");
+            questManager.Event("Infiltrate a monster den", 0);
             ScoreManager.AddPuzzleSolving(5);
         }
     }

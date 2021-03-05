@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5041460049380903771}
   - component: {fileID: 2935667984145143468}
   - component: {fileID: 4474675097618030336}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 5939552826339553120}
   - component: {fileID: 2062664420695239758}
   - component: {fileID: 580179635859427776}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 8409285535565243028}
   - component: {fileID: 8409285535565243031}
   - component: {fileID: 8409285535565243030}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Goblin
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -249,7 +249,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -879713707
+  m_SortingLayerID: -1081677195
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 602241d5b56564148a71018ab0554845, type: 3}
@@ -345,12 +345,18 @@ MonoBehaviour:
   attack: 1
   speed: 20
   boss: 0
+  den: 0
   groundPoundAttack: 0
   magicAttack: 0
   spawnEnemies: 0
+  difficulty: 0
   groundPoundTime: 0
   magicTime: 0
   spawnTime: 0
+  questManager: {fileID: 0}
+  soundManager: {fileID: 0}
+  uiManager: {fileID: 0}
+  enemies: {fileID: 0}
   text: {fileID: 4474675097618030336}
   particles: {fileID: 1484304525313702822, guid: 740a6d4dab6fce94ebaf523c203cdf0f,
     type: 3}

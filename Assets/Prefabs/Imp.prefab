@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5700092898778206482}
   - component: {fileID: 2472906124064427237}
   - component: {fileID: 3816004869102617929}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 6377544218455848233}
   - component: {fileID: 1606693399911118343}
   - component: {fileID: 207490148430760841}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 9106236515464820957}
   - component: {fileID: 9106236515464820958}
   - component: {fileID: 9106236515464820959}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Imp
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -249,7 +249,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -879713707
+  m_SortingLayerID: -1081677195
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 48d4c68863aed3140af512df96422126, type: 3}
@@ -345,6 +345,7 @@ MonoBehaviour:
   attack: 1
   speed: 20
   boss: 0
+  den: 0
   groundPoundAttack: 0
   magicAttack: 0
   spawnEnemies: 0
@@ -352,7 +353,10 @@ MonoBehaviour:
   groundPoundTime: 0
   magicTime: 0
   spawnTime: 0
+  questManager: {fileID: 0}
+  soundManager: {fileID: 0}
   uiManager: {fileID: 0}
+  enemies: {fileID: 0}
   text: {fileID: 3816004869102617929}
   particles: {fileID: 1484304525313702822, guid: 740a6d4dab6fce94ebaf523c203cdf0f,
     type: 3}

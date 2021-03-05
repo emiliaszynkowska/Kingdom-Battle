@@ -25,12 +25,12 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Character
+  - Wizard
+  - Player
+  - UI
+  - Map
+  - Shield
   - 
   - 
   - 
@@ -52,4 +52,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 1146438929
+    locked: 0
+  - name: Foreground
+    uniqueID: 2683809851
+    locked: 0
+  - name: Characters
+    uniqueID: 3213290101
+    locked: 0
+  - name: UI
+    uniqueID: 3229905999
     locked: 0

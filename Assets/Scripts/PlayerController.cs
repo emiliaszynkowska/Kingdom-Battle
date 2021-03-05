@@ -139,16 +139,10 @@ public class PlayerController : MonoBehaviour
         return isHurt;
     }
     
-    void StopBounceHorizontal()
+    void StopBounce()
     {
         isBouncing = false;
-        body.velocity = new Vector2(0, body.velocity.y);
-    }
-    
-    void StopBounceVertical()
-    {
-        isBouncing = false;
-        body.velocity = new Vector2(body.velocity.x, 0);
+        body.velocity = new Vector2(0, 0);
     }
 
     public void StartBlock()
@@ -179,7 +173,7 @@ public class PlayerController : MonoBehaviour
     public void AddItem(string item)
     {
         inventory.Add(item);
-        questManager.Event($"Find {item}");
+        questManager.Event($"Find {item}", 0);
     }
     
 // ---------------------------------------------------------------------------------------------------------------------
@@ -214,15 +208,14 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator TakeKnockback(Vector3 source)
     {
-        if (isBlocking)
+        if (!isBlocking)
         {
             isBouncing = true;
             Vector3 force = transform.position - source;
             body.AddForce((force.normalized) * 3, ForceMode2D.Impulse);
             yield return new WaitForSeconds(0.5f);
             isBouncing = false;
-            StopBounceHorizontal();
-            StopBounceVertical();
+            StopBounce();
         }
     }
 
@@ -402,12 +395,12 @@ public class PlayerController : MonoBehaviour
                     if (col.name.Contains("Wizard"))
                     {
                         StartCoroutine(col.GetComponent<Quest>().Talk());
-                        questManager.Event($"Talk to {col.GetComponent<Quest>().npcName}");
+                        questManager.Event($"Talk to {col.GetComponent<Quest>().npcName}", 0);
                     }
                     else if (col.name.Equals("Merchant"))
                     {
                         col.GetComponent<MerchantController>().Talk();
-                        questManager.Event("Talk to Merchant");
+                        questManager.Event("Talk to Merchant", 0);
                     }
                 }
                 else if (col != null && col.CompareTag("Chest") && inventory.Contains("Key"))
@@ -520,7 +513,7 @@ public class PlayerController : MonoBehaviour
 
     public bool UseItem(int index)
     {
-        questManager.Event($"Use {inventory[index]}");
+        questManager.Event($"Use {inventory[index]}", 0);
         switch (inventory[index])
         {
             // Key
@@ -534,7 +527,7 @@ public class PlayerController : MonoBehaviour
                         if (col.GetComponent<ChestController>().Open())
                         {
                             inventory.RemoveAt(index);
-                            questManager.Event("Open a chest");
+                            questManager.Event("Open a chest", 0);
                             questManager.Event("chest", "Open");
                             return true;
                         }
@@ -544,7 +537,7 @@ public class PlayerController : MonoBehaviour
                         if (!col.GetComponent<DoorController>().boss && col.GetComponent<DoorController>().Open())
                         {
                             inventory.RemoveAt(index);
-                            questManager.Event("Open a door");
+                            questManager.Event("Open a door", 0);
                             questManager.Event("door", "Open");
                             return true;
                         }
@@ -606,7 +599,7 @@ public class PlayerController : MonoBehaviour
     {
         ScoreManager.AddDefensive(5);
         soundManager.PlaySound(soundManager.lifeup);
-        questManager.Event("Restore some health");
+        questManager.Event("Restore some health", 0);
         uiManager.Powerup("Wigg's Brew: +1 Health", Color.red);
         lifeup.SetActive(true);
         yield return new WaitForSeconds(3);
@@ -619,7 +612,7 @@ public class PlayerController : MonoBehaviour
     {
         ScoreManager.AddAggressive(1);
         soundManager.PlaySound(soundManager.powerup);
-        questManager.Event("Gain an attack boost");
+        questManager.Event("Gain an attack boost", 0);
         uiManager.Powerup("Liquid Luck: +1 Attack", new Color(1,0.9f,0));
         GetComponent<SpriteRenderer>().color = new Color(1,0.9f,0);
         shine.SetActive(true);
@@ -650,7 +643,7 @@ public class PlayerController : MonoBehaviour
     {
         ScoreManager.AddExploration(1);
         soundManager.PlaySound(soundManager.powerup);
-        questManager.Event("Gain a speed boost");
+        questManager.Event("Gain a speed boost", 0);
         uiManager.Powerup("Elixir of Speed: +5 Speed", new Color(0,0.4f,1));
         GetComponent<SpriteRenderer>().color = new Color(0,0.4f,1);
         speed *= 1.5f;
@@ -674,7 +667,6 @@ public class PlayerController : MonoBehaviour
         {
             // Bounce off the enemy
             StartCoroutine(TakeKnockback(collision.transform.position));
-            Invoke("StopBounceHorizontal", 0.5f);
             EnemyController enemyController = collision.gameObject.GetComponent<EnemyController>();
             if (enemyController != null && enemyController.health > 0)
             {
@@ -805,7 +797,7 @@ public class PlayerController : MonoBehaviour
             // Bounce off the spikes
             body.AddForce(Vector2.up * 100);
             isBouncing = true;
-            Invoke("StopBounceVertical", 0.2f);
+            Invoke("StopBounce", 0.2f);
         }
 
         else if (other.gameObject.CompareTag("Projectile") && GetComponent<BoxCollider2D>().IsTouching(other))

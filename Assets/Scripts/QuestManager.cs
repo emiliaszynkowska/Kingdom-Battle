@@ -18,9 +18,10 @@ public class QuestManager : MonoBehaviour
     public GameObject mainQuests;
     public GameObject sideQuests;
     // Variables
+    public int complete;
     public int maxQuests;
     private List<string> listMainQuests = new List<string>();
-    //private List<string> listSideQuests = new List<string>();
+    private List<string> listSideQuests = new List<string>();
 
     public void Start()
     {
@@ -241,17 +242,40 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    public void Event(string e)
+    public void AddQuest(string q)
     {
+        if (!listSideQuests.Contains(q))
+        {
+            listSideQuests.Add(q);
+            sideQuests.transform.GetChild(listSideQuests.Count).GetComponent<Text>().text = q;
+            StartCoroutine(uiManager.Notification($"Quest Started: {q}", Color.white));
+            soundManager.PlaySound(soundManager.item);
+        }
+    }
+
+    public void CheckQuests()
+    {
+        if (complete == maxQuests && !uiManager.bossFight)
+        {
+            uiManager.LevelComplete();
+        }
+    }
+
+    public void Event(string e, int type)
+    {
+        List<string> lst = type == 0 ? listMainQuests : listSideQuests;
+        GameObject obj = type == 0 ? mainQuests : sideQuests;
         try
         {
-            var index = listMainQuests.FindIndex(x => x.Equals(e)) + 1;
-            if (index != 0 && mainQuests.transform.GetChild(index).GetComponent<Text>().color != new Color(0, 0.85f, 0))
+            var index = lst.FindIndex(x => x.Equals(e)) + 1;
+            if (index != 0 && obj.transform.GetChild(index).GetComponent<Text>().color != new Color(0, 0.85f, 0))
             {
-                mainQuests.transform.GetChild(index).GetComponent<Text>().color = new Color(0, 0.85f, 0);
-                StartCoroutine(uiManager.Notification($"Quest Complete: {e}"));
+                obj.transform.GetChild(index).GetComponent<Text>().color = new Color(0, 0.85f, 0);
+                StartCoroutine(uiManager.Notification($"Quest Complete: {e}", new Color(0, 0.85f, 0)));
                 soundManager.PlaySound(soundManager.complete);
+                complete++;
             }
+            CheckQuests();
         }
         catch {}
     }
@@ -274,12 +298,14 @@ public class QuestManager : MonoBehaviour
                 {
                     mainQuests.transform.GetChild(index).GetComponent<Text>().color = new Color(0, 0.85f, 0);
                     if (int.Parse(digits[1]) == 1)
-                        StartCoroutine(uiManager.Notification($"Quest Complete: {s} {digits[1]} {e}"));
+                        StartCoroutine(uiManager.Notification($"Quest Complete: {s} {digits[1]} {e}", new Color(0, 0.85f, 0)));
                     else
-                        StartCoroutine(uiManager.Notification($"Quest Complete: {s} {digits[1]} {e}s"));
+                        StartCoroutine(uiManager.Notification($"Quest Complete: {s} {digits[1]} {e}s", new Color(0, 0.85f, 0)));
                     soundManager.PlaySound(soundManager.complete);
+                    complete++;
                 }
             }
+            CheckQuests();
         }
         catch {}
     }

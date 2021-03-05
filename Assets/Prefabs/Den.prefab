@@ -12,11 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df74eced753c95647bf9079b70830520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questManager: {fileID: 0}
+  soundManager: {fileID: 0}
   chest: {fileID: 293318852478225644}
   spikes: {fileID: 3439537939972267695}
   enemy1: {fileID: 0}
   enemy2: {fileID: 0}
   enemy3: {fileID: 0}
+  complete: 0
+  active: 0
 --- !u!1 &3439537939972267695
 GameObject:
   m_ObjectHideFlags: 0
@@ -67,11 +71,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df74eced753c95647bf9079b70830520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questManager: {fileID: 0}
+  soundManager: {fileID: 0}
   chest: {fileID: 293318852478225644}
   spikes: {fileID: 3439537939972267695}
   enemy1: {fileID: 0}
   enemy2: {fileID: 0}
   enemy3: {fileID: 0}
+  complete: 0
+  active: 0
 --- !u!114 &659913555901355811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,11 +92,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df74eced753c95647bf9079b70830520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questManager: {fileID: 0}
+  soundManager: {fileID: 0}
   chest: {fileID: 293318852478225644}
   spikes: {fileID: 3439537939972267695}
   enemy1: {fileID: 0}
   enemy2: {fileID: 0}
   enemy3: {fileID: 0}
+  complete: 0
+  active: 0
 --- !u!1 &6040434119456030231
 GameObject:
   m_ObjectHideFlags: 0
@@ -99,7 +111,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1243475395210763803}
   - component: {fileID: -7140779143812980982}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Den
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,11 +147,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df74eced753c95647bf9079b70830520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questManager: {fileID: 0}
+  soundManager: {fileID: 0}
   chest: {fileID: 293318852478225644}
   spikes: {fileID: 3439537939972267695}
   enemy1: {fileID: 0}
   enemy2: {fileID: 0}
   enemy3: {fileID: 0}
+  complete: 0
+  active: 0
 --- !u!114 &1961696985777310536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,11 +168,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df74eced753c95647bf9079b70830520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questManager: {fileID: 0}
+  soundManager: {fileID: 0}
   chest: {fileID: 293318852478225644}
   spikes: {fileID: 3439537939972267695}
   enemy1: {fileID: 0}
   enemy2: {fileID: 0}
   enemy3: {fileID: 0}
+  complete: 0
+  active: 0
 --- !u!114 &4018255035571454234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,11 +189,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df74eced753c95647bf9079b70830520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questManager: {fileID: 0}
+  soundManager: {fileID: 0}
   chest: {fileID: 293318852478225644}
   spikes: {fileID: 3439537939972267695}
   enemy1: {fileID: 0}
   enemy2: {fileID: 0}
   enemy3: {fileID: 0}
+  complete: 0
+  active: 0
 --- !u!114 &1617447565209191609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,11 +210,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df74eced753c95647bf9079b70830520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questManager: {fileID: 0}
+  soundManager: {fileID: 0}
   chest: {fileID: 293318852478225644}
   spikes: {fileID: 3439537939972267695}
   enemy1: {fileID: 0}
   enemy2: {fileID: 0}
   enemy3: {fileID: 0}
+  complete: 0
+  active: 0
 --- !u!114 &7540428309053177954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,11 +231,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df74eced753c95647bf9079b70830520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questManager: {fileID: 0}
+  soundManager: {fileID: 0}
   chest: {fileID: 293318852478225644}
   spikes: {fileID: 3439537939972267695}
   enemy1: {fileID: 0}
   enemy2: {fileID: 0}
   enemy3: {fileID: 0}
+  complete: 0
+  active: 0
 --- !u!114 &385579029052160565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,11 +252,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df74eced753c95647bf9079b70830520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questManager: {fileID: 0}
+  soundManager: {fileID: 0}
   chest: {fileID: 293318852478225644}
   spikes: {fileID: 3439537939972267695}
   enemy1: {fileID: 0}
   enemy2: {fileID: 0}
   enemy3: {fileID: 0}
+  complete: 0
+  active: 0
 --- !u!1001 &1000163925401807635
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -291,6 +327,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Spikes
+      objectReference: {fileID: 0}
+    - target: {fileID: 3869514152725024156, guid: 93ee9b7daca6acc409de995da79cdca5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93ee9b7daca6acc409de995da79cdca5, type: 3}
@@ -373,6 +414,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spikes
       objectReference: {fileID: 0}
+    - target: {fileID: 3869514152725024156, guid: 93ee9b7daca6acc409de995da79cdca5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93ee9b7daca6acc409de995da79cdca5, type: 3}
 --- !u!1 &3910806115557082 stripped
@@ -453,6 +499,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Spikes
+      objectReference: {fileID: 0}
+    - target: {fileID: 3869514152725024156, guid: 93ee9b7daca6acc409de995da79cdca5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93ee9b7daca6acc409de995da79cdca5, type: 3}
@@ -616,6 +667,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spikes
       objectReference: {fileID: 0}
+    - target: {fileID: 3869514152725024156, guid: 93ee9b7daca6acc409de995da79cdca5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93ee9b7daca6acc409de995da79cdca5, type: 3}
 --- !u!1 &8950685477598833814 stripped
@@ -696,6 +752,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Spikes
+      objectReference: {fileID: 0}
+    - target: {fileID: 3869514152725024156, guid: 93ee9b7daca6acc409de995da79cdca5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93ee9b7daca6acc409de995da79cdca5, type: 3}
@@ -778,6 +839,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spikes
       objectReference: {fileID: 0}
+    - target: {fileID: 3869514152725024156, guid: 93ee9b7daca6acc409de995da79cdca5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93ee9b7daca6acc409de995da79cdca5, type: 3}
 --- !u!1 &8760071624118853123 stripped
@@ -858,6 +924,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Spikes
+      objectReference: {fileID: 0}
+    - target: {fileID: 3869514152725024156, guid: 93ee9b7daca6acc409de995da79cdca5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93ee9b7daca6acc409de995da79cdca5, type: 3}
@@ -940,6 +1011,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spikes
       objectReference: {fileID: 0}
+    - target: {fileID: 3869514152725024156, guid: 93ee9b7daca6acc409de995da79cdca5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93ee9b7daca6acc409de995da79cdca5, type: 3}
 --- !u!4 &5526262315911543101 stripped
@@ -1020,6 +1096,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Shine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8577702577121378104, guid: ec6fab71f786b1a499cad12d96ad33fd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec6fab71f786b1a499cad12d96ad33fd, type: 3}

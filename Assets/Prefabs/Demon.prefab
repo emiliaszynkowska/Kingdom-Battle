@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2491921259458668513}
   - component: {fileID: 6511238355194699734}
   - component: {fileID: 3742774643505119237}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ GameObject:
   - component: {fileID: 8131619134480364412}
   - component: {fileID: 8131619134480364413}
   - component: {fileID: 8131619134480364414}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Demon
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -171,7 +171,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -879713707
+  m_SortingLayerID: -1081677195
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: fb9556ff97ab6714380ae27f087792c5, type: 3}
@@ -267,12 +267,18 @@ MonoBehaviour:
   attack: 3
   speed: 10
   boss: 0
+  den: 0
   groundPoundAttack: 0
   magicAttack: 0
   spawnEnemies: 0
+  difficulty: 0
   groundPoundTime: 0
   magicTime: 0
   spawnTime: 0
+  questManager: {fileID: 0}
+  soundManager: {fileID: 0}
+  uiManager: {fileID: 0}
+  enemies: {fileID: 0}
   text: {fileID: 6149269397652412962}
   particles: {fileID: 1484304525313702822, guid: 740a6d4dab6fce94ebaf523c203cdf0f,
     type: 3}
@@ -294,7 +300,7 @@ GameObject:
   - component: {fileID: 5399614505097846776}
   - component: {fileID: 6073416863030655638}
   - component: {fileID: 6149269397652412962}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}

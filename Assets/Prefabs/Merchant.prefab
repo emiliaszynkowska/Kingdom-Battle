@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7822930541346550625}
   - component: {fileID: 8388737680717643034}
   - component: {fileID: 5451918779675702046}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Box
   m_TagString: UI
   m_Icon: {fileID: 0}
@@ -112,7 +112,7 @@ GameObject:
   - component: {fileID: 2567915522185378278}
   - component: {fileID: 51491733683043066}
   - component: {fileID: 4908840018949336977}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Active
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -184,7 +184,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1877379119346671723}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Items
   m_TagString: UI
   m_Icon: {fileID: 0}
@@ -225,7 +225,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3320023739344461534}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Boxes
   m_TagString: UI
   m_Icon: {fileID: 0}
@@ -268,7 +268,7 @@ GameObject:
   - component: {fileID: 6068555128717952323}
   - component: {fileID: 5455738896279629473}
   - component: {fileID: 4499026394699475960}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Item
   m_TagString: UI
   m_Icon: {fileID: 0}
@@ -343,7 +343,7 @@ GameObject:
   - component: {fileID: 8433436814076546393}
   - component: {fileID: 3448431102092508174}
   - component: {fileID: 4642769246388496946}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Box
   m_TagString: UI
   m_Icon: {fileID: 0}
@@ -447,7 +447,7 @@ GameObject:
   - component: {fileID: 2257543521791972722}
   - component: {fileID: 2257543521791972727}
   - component: {fileID: 395163507072413545}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Merchant
   m_TagString: NPC
   m_Icon: {fileID: 0}
@@ -505,7 +505,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -879713707
+  m_SortingLayerID: -1081677195
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: eb59eea9b9917b645b1d6fb1a5b263a5, type: 3}
@@ -615,6 +615,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   playerController: {fileID: 0}
+  questManager: {fileID: 0}
+  soundManager: {fileID: 0}
   uiManager: {fileID: 0}
   items: {fileID: 272717596966782364}
   active: {fileID: 197172391099017038}
@@ -640,7 +642,7 @@ GameObject:
   - component: {fileID: 2939033368421491613}
   - component: {fileID: 6889901771880519632}
   - component: {fileID: 3287887867034404974}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Box
   m_TagString: UI
   m_Icon: {fileID: 0}
@@ -741,7 +743,7 @@ GameObject:
   - component: {fileID: 7641489691507440643}
   - component: {fileID: 8475083994806439746}
   - component: {fileID: 7226670757143356866}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Box
   m_TagString: UI
   m_Icon: {fileID: 0}
@@ -842,7 +844,7 @@ GameObject:
   - component: {fileID: 980904121306321072}
   - component: {fileID: 5356260219366347337}
   - component: {fileID: 9134801138386283678}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Box
   m_TagString: UI
   m_Icon: {fileID: 0}
@@ -942,7 +944,7 @@ GameObject:
   - component: {fileID: 5377522703747464386}
   - component: {fileID: 8823899652514746759}
   - component: {fileID: 7915861781687466508}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Item
   m_TagString: UI
   m_Icon: {fileID: 0}
@@ -1017,7 +1019,7 @@ GameObject:
   - component: {fileID: 1903760766821266554}
   - component: {fileID: 7039271527190817401}
   - component: {fileID: 8982464924060665935}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Box
   m_TagString: UI
   m_Icon: {fileID: 0}
@@ -1117,7 +1119,7 @@ GameObject:
   - component: {fileID: 4535322376173667537}
   - component: {fileID: 6865995728593822050}
   - component: {fileID: 7744367373915702378}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Item
   m_TagString: UI
   m_Icon: {fileID: 0}
@@ -1191,7 +1193,7 @@ GameObject:
   - component: {fileID: 6814576992859942511}
   - component: {fileID: 4283839979880199778}
   - component: {fileID: 2076219630213834531}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Item
   m_TagString: UI
   m_Icon: {fileID: 0}
@@ -1266,7 +1268,7 @@ GameObject:
   - component: {fileID: 8315654894966288437}
   - component: {fileID: 7202133586003013923}
   - component: {fileID: 5193577041506496098}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Shop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1366,7 +1368,7 @@ GameObject:
   - component: {fileID: 1027354895503342542}
   - component: {fileID: 7373114167209354894}
   - component: {fileID: 5298428934769143230}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Item
   m_TagString: UI
   m_Icon: {fileID: 0}
@@ -1440,7 +1442,7 @@ GameObject:
   - component: {fileID: 3508347649339437331}
   - component: {fileID: 8130813542480573016}
   - component: {fileID: 3981184139918725811}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Item
   m_TagString: UI
   m_Icon: {fileID: 0}

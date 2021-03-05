@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class QuestDefeat : Quest
 {
+    public string enemy;
     public GameObject obj;
     
     void Awake()
@@ -20,7 +21,7 @@ public class QuestDefeat : Quest
     
     void Update()
     {
-        if (active && !complete && (obj == null || obj.name.Equals("Respawn")))
+        if (!complete && (obj == null || obj.name.Equals("Respawn")))
         {
             complete = true;
             ScoreManager.AddAggressive(3);

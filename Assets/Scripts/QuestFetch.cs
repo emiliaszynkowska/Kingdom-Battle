@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class QuestFetch : Quest
 {
-    private string item;
+    public string item;
     
     void Awake()
     {
@@ -26,7 +26,7 @@ public class QuestFetch : Quest
 
     void Update()
     {
-        if (playerController.GetInventory().Contains(item))
+        if (!complete && playerController.GetInventory().Contains(item))
             complete = true;
     }
     
