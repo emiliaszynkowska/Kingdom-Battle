@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class DenController : MonoBehaviour
 {
+    public QuestManager questManager;
     public SoundManager soundManager;
     private GameObject player;
     public GameObject chest;
@@ -17,6 +18,7 @@ public class DenController : MonoBehaviour
 
     void Start()
     {
+        questManager = GameObject.Find("UI").GetComponent<QuestManager>();
         soundManager = GameObject.Find("Main Camera").GetComponent<SoundManager>();
         player = GameObject.Find("Player");
         StartCoroutine(Growl());
@@ -30,6 +32,7 @@ public class DenController : MonoBehaviour
             complete = true;
             spikes.SetActive(false);
             soundManager.PlaySound(soundManager.complete);
+            questManager.Event("Infiltrate a monster den");
             ScoreManager.AddPuzzleSolving(5);
         }
     }
@@ -39,8 +42,7 @@ public class DenController : MonoBehaviour
         while (active)
         {
             yield return new WaitForSeconds(3);
-            if (Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 5 &&
-                Time.timeScale == 1)
+            if (Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 5 && Time.timeScale == 1)
                 soundManager.PlaySound(soundManager.monsterDamage);
         }
     }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Assets.Scripts;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -28,6 +27,7 @@ public class DungeonGenerator : MonoBehaviour
     public int avgRoomSize;
     public int difficulty;
     public int level;
+    public bool generated;
     private List<Dungeon> dungeons = new List<Dungeon>();
     public DungeonManager dungeonManager;
     public GameObject dungeonColliders;
@@ -36,6 +36,11 @@ public class DungeonGenerator : MonoBehaviour
     public void AddDungeon(Dungeon dungeon)
     {
         dungeons.Add(dungeon);
+    }
+
+    public List<Dungeon> GetDungeons()
+    {
+        return dungeons;
     }
 
     void Start()
@@ -82,6 +87,7 @@ public class DungeonGenerator : MonoBehaviour
             PlaceEntities();
             // Start Level
             dungeonManager.uiManager.Level(level, difficulty);
+            generated = true;
         }
     }
 

@@ -375,17 +375,17 @@ MonoBehaviour:
   startMusic: {fileID: 8300000, guid: 2082994f2761f2443b1e44c8aa457051, type: 3}
   prologueMusic: {fileID: 0}
   castleMusic: {fileID: 0}
+  shopMusic: {fileID: 0}
   dungeonMusic: {fileID: 0}
   bossMusic: {fileID: 0}
+  victoryMusic: {fileID: 0}
+  gameOverMusic: {fileID: 0}
   caveAmbience: {fileID: 0}
   clickButton: {fileID: 8300000, guid: 3ed3a35b2047a854b9070ad3a231733a, type: 3}
   changeItem: {fileID: 0}
   buyItem: {fileID: 0}
-  speech: {fileID: 0}
   error: {fileID: 0}
   play: {fileID: 8300000, guid: 1b22a47a4516c7a4c9f0725f8ccb86de, type: 3}
-  levelComplete: {fileID: 0}
-  gameOver: {fileID: 0}
   block: {fileID: 0}
   swordAttack: {fileID: 0}
   spinAttack: {fileID: 0}
@@ -395,13 +395,15 @@ MonoBehaviour:
   complete: {fileID: 0}
   powerup: {fileID: 0}
   lifeup: {fileID: 0}
-  damage: {fileID: 0}
-  die: {fileID: 0}
+  elfDamage: {fileID: 0}
+  elfDie: {fileID: 0}
+  monsterDamage: {fileID: 0}
+  monsterDie: {fileID: 0}
+  win: {fileID: 0}
   jump: {fileID: 0}
   coin: {fileID: 0}
   item: {fileID: 0}
   open: {fileID: 0}
-  monster: {fileID: 0}
 --- !u!82 &203989812
 AudioSource:
   m_ObjectHideFlags: 0
@@ -655,8 +657,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 0.0990099, b: 0, a: 0.2}
-  m_RaycastTarget: 0
-  m_Maskable: 0
+  m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -685,7 +687,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1162305750}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -800,7 +802,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 1162305750}
+  m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &1237791718
@@ -968,7 +970,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Use W and S to move, space bar to select
+  m_Text: Use the mouse to move and select
 --- !u!1 &1680567952
 GameObject:
   m_ObjectHideFlags: 0
@@ -986,7 +988,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1680567953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1164,7 +1166,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1883281361}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -1218,15 +1220,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1883281361}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 0.0990099, b: 0, a: 0.2}
-  m_RaycastTarget: 0
-  m_Maskable: 0
+  m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []

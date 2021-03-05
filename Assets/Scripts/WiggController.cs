@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Assets.Scripts;
 using UnityEngine;
 
 public class WiggController : MonoBehaviour

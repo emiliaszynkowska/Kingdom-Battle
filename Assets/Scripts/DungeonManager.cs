@@ -1,5 +1,4 @@
-﻿using Assets.Scripts;
-using UnityEngine;
+﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class DungeonManager : MonoBehaviour
@@ -155,12 +154,12 @@ public class DungeonManager : MonoBehaviour
         {
             case (0):
                 GameObject questFetch = Instantiate(wizardFetchPrefab, position, Quaternion.Euler(0, 0, 0), NPCs.transform);
-                questFetch.name = "Wizard";
+                questFetch.name = "WizardFetch";
                 break;
             case (1):
                 GameObject questDefeat = Instantiate(wizardDefeatPrefab, position, Quaternion.Euler(0, 0, 0), NPCs.transform);
                 GameObject obj = PlaceEnemy(dungeon,difficulty);
-                questDefeat.name = "Wizard";
+                questDefeat.name = "WizardDefeat";
                 questDefeat.GetComponent<QuestDefeat>().obj = obj;
                 break;
             case (2):
@@ -168,7 +167,7 @@ public class DungeonManager : MonoBehaviour
                 GameObject obj1 = PlaceEnemy(dungeon,difficulty);
                 GameObject obj2 = PlaceEnemy(dungeon,difficulty);
                 GameObject obj3 = PlaceEnemy(dungeon,difficulty);
-                questRescue.name = "Wizard";
+                questRescue.name = "WizardRescue";
                 questRescue.GetComponent<QuestRescue>().obj1 = obj1;
                 questRescue.GetComponent<QuestRescue>().obj2 = obj2;
                 questRescue.GetComponent<QuestRescue>().obj3 = obj3;

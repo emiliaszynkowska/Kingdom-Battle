@@ -21,6 +21,7 @@
           <e p="Quest.cs" t="Include" />
           <e p="QuestDefeat.cs" t="Include" />
           <e p="QuestFetch.cs" t="Include" />
+          <e p="QuestManager.cs" t="Include" />
           <e p="QuestRescue.cs" t="Include" />
           <e p="ScoreManager.cs" t="Include" />
           <e p="SoundManager.cs" t="Include" />

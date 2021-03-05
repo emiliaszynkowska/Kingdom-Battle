@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using Assets.Scripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -32,12 +30,14 @@ public class UIManager : MonoBehaviour
     public Text npcName;
     public Text message;
     public GameObject menu;
+    public GameObject quests;
     public GameObject scores;
     public GameObject disciplines;
     public GameObject level;
     public GameObject next;
     public GameObject gameOver;
     public Text powerup;
+    public Text notification;
     public GameObject upgrade;
     public GameObject invFull;
     public Image equipment;
@@ -90,10 +90,6 @@ public class UIManager : MonoBehaviour
     {
         ScoreManager.Reset();
         ResetCamera();
-        if (!bossFight)
-            StartCoroutine(Timer());
-        else
-            Powerup("", Color.white);
     }
 
     // Player Information
@@ -308,6 +304,17 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void RemoveItem(int index)
+    {
+        activeItem = index;
+        for (int i=activeItem; i < 7; i++)
+        {
+            Image j = items.transform.GetChild(i + 1).gameObject.GetComponent<Image>();
+            items.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = j.sprite;
+            j.sprite = null;
+        }
+    }
+
     public void DisableItem(int index)
     {
         items.transform.GetChild(index).gameObject.SetActive(false);
@@ -454,9 +461,30 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public IEnumerator Notification(string s)
+    {
+        notification.text = s;
+        yield return new WaitForSeconds(3);
+        notification.text = "";
+    }
+
     public void Quests()
     {
-        
+        PauseGame();
+        soundManager.PauseMusic();
+        quests.SetActive(true);
+    }
+
+    public void ExitQuests()
+    {
+        ResumeGame();
+        soundManager.ResumeMusic();
+        quests.SetActive(false);
+    }
+
+    public bool IsQuests()
+    {
+        return quests.activeSelf;
     }
 
     public void Menu()
@@ -720,25 +748,25 @@ public class UIManager : MonoBehaviour
         LevelNext();
     }
 
-    IEnumerator Timer()
-    {
-        while (time > 0)
-        {
-            yield return new WaitForSeconds(1);
-            time--;
-            if (powerup.color == Color.white && time >= 10)
-            {
-                powerup.text = "0:" + time;
-                powerup.fontSize = 150;
-            }
-            else if (powerup.color == Color.white && time < 10)
-            {
-                powerup.text = "0:0" + time;
-                powerup.fontSize = 150;
-            }
-        }
-        StartCoroutine(Scores(ScoreManager.GetScores()));
-    }
+    // IEnumerator Timer()
+    // {
+    //     while (time > 0)
+    //     {
+    //         yield return new WaitForSeconds(1);
+    //         time--;
+    //         if (powerup.color == Color.white && time >= 10)
+    //         {
+    //             powerup.text = "0:" + time;
+    //             powerup.fontSize = 150;
+    //         }
+    //         else if (powerup.color == Color.white && time < 10)
+    //         {
+    //             powerup.text = "0:0" + time;
+    //             powerup.fontSize = 150;
+    //         }
+    //     }
+    //     StartCoroutine(Scores(ScoreManager.GetScores()));
+    // }
     
     public void PauseGame()
     {

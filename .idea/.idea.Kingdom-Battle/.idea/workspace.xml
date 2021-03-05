@@ -20,37 +20,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fb908a5d-7f25-43bd-83e6-6bbe1bb1358f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/QuestManager.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/QuestManager.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Kingdom-Battle/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Elite Knight.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Elite Knight.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Golem.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Golem.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Royal Guardian.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Royal Guardian.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/WizardDefeat.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/WizardDefeat.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/WizardFetch.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/WizardFetch.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/WizardRescue.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/WizardRescue.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Main.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Main.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Title.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Title.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/DenController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DenController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/DoorController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DoorController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/DungeonGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DungeonGenerator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/DungeonManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DungeonManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/EnemyController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/EnemyController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/MerchantController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/MerchantController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Projectile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Projectile.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Quest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Quest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/QuestDefeat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/QuestDefeat.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/QuestFetch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/QuestFetch.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/QuestRescue.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/QuestRescue.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ScoreManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ScoreManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/SoundManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/SoundManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/SoundManager.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/SoundManager.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TitleManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TitleManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/UIManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UIManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sounds/damage.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sounds/damage.wav.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sounds/die.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sounds/die.mp3.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sounds/door-chest.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sounds/door-chest.wav.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sounds/error.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sounds/error.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sounds/monster.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sounds/monster.wav.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sounds/speech.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sounds/speech.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/WiggController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/WiggController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/menu.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UI/menu.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Web/Build.zip" beforeDir="false" afterPath="$PROJECT_DIR$/Web/Build.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Web/Build/Web.data.unityweb" beforeDir="false" afterPath="$PROJECT_DIR$/Web/Build/Web.data.unityweb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Web/Build/Web.wasm.code.unityweb" beforeDir="false" afterPath="$PROJECT_DIR$/Web/Build/Web.wasm.code.unityweb" afterDir="false" />
@@ -67,6 +56,7 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/MerchantController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/TitleManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/QuestManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Projectile.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/EnemyController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/WiggController.cs" root0="FORCE_HIGHLIGHTING" />
@@ -91,23 +81,24 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/Assets/Scripts/PlayerData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/TitleManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/ChestController.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/MerchantController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/ScoreManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/EnemyController.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/QuestFetch.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/QuestDefeat.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/QuestRescue.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Quest.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Projectile.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/DoorController.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/DenController.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/SoundManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/TitleManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/DungeonManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/DungeonGenerator.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/SoundManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/QuestFetch.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/DenController.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Quest.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/MerchantController.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UIManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/EnemyController.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/QuestManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" />
       </list>
     </option>
   </component>
@@ -165,6 +156,9 @@
       <workItem from="1613995799083" duration="10861000" />
       <workItem from="1614009022438" duration="4889000" />
       <workItem from="1614014001050" duration="173000" />
+      <workItem from="1614024840418" duration="249000" />
+      <workItem from="1614778846222" duration="13061000" />
+      <workItem from="1614886330013" duration="11059000" />
     </task>
     <servers />
   </component>
@@ -193,9 +187,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="160" key="#Plugins/0.0.1920.1040@0.0.1920.1040" timestamp="1613909303129" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1614012675402">
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1614779422078">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1614012675402" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1614779422078" />
   </component>
 </project>

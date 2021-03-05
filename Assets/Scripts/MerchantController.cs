@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -10,6 +9,7 @@ public class MerchantController : MonoBehaviour
 {
     public GameObject player;
     public PlayerController playerController;
+    public QuestManager questManager;
     public SoundManager soundManager;
     public UIManager uiManager;
     public GameObject items;
@@ -48,6 +48,7 @@ public class MerchantController : MonoBehaviour
         player = GameObject.Find("Player");
         playerController = player.GetComponent<PlayerController>();
         uiManager = GameObject.Find("UI").GetComponent<UIManager>();
+        questManager = GameObject.Find("UI").GetComponent<QuestManager>();
         soundManager = GameObject.Find("Main Camera").GetComponent<SoundManager>();
         SetItems();
     }
@@ -143,6 +144,7 @@ public class MerchantController : MonoBehaviour
             playerController.Spend(price);
             uiManager.AddItem(itemName, playerController.GetInventory().Count);
             playerController.AddItem(itemName);
+            questManager.Event($"Buy {itemName}");
             DisableItem();
             uiManager.StartSpeak(npcName, "Here you go.");
         }
