@@ -445,7 +445,6 @@ GameObject:
   - component: {fileID: 2257543521791972723}
   - component: {fileID: 2257543521791972725}
   - component: {fileID: 2257543521791972722}
-  - component: {fileID: 2257543521791972727}
   - component: {fileID: 395163507072413545}
   m_Layer: 8
   m_Name: Merchant
@@ -585,22 +584,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 1}
   m_EdgeRadius: 0
---- !u!58 &2257543521791972727
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2257543521791972745}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 2.5, y: 0.8}
-  serializedVersion: 2
-  m_Radius: 4
 --- !u!114 &395163507072413545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1315,7 +1298,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: -879713707
+  m_SortingLayerID: -1081677195
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &7202133586003013923

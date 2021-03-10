@@ -141,12 +141,14 @@ public class EnemyController : MonoBehaviour
     IEnumerator Die()
     {
         // Prepare for Respawn
-        name = "Respawn";
         soundManager.PlaySound(soundManager.monsterDie);
-        questManager.Event($"Defeat 1 {name}                        0/1", 0);
-        questManager.Event(name, "Defeat");
+        questManager.Event($"Defeat 1 {name}                        0/1", 0, true);
+        questManager.Event(name, "Defeat", true);
+        if (questManager.Event("monster", "Defeat", false))
+            questManager.AddMainQuest("Return to Wigg");
         yield return new WaitForSeconds(0.5f);
         // Disable Enemy
+        name = "Respawn";
         enemyRenderer.enabled = false;
         magicAttack = false;
         groundPoundAttack = false;
@@ -211,7 +213,7 @@ public class EnemyController : MonoBehaviour
 
     public IEnumerator PoisonDamage()
     {
-        questManager.Event("Poison an enemy", 0);
+        questManager.Event("Poison an enemy", 0, true);
         isPoisoned = true;
         yield return new WaitForSeconds(1);
         health -= 1;

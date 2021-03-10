@@ -45,7 +45,6 @@ public class UIManager : MonoBehaviour
     public Image background;
     public Image fade;
     // Variables
-    public int time;
     public bool isPowerup;
     public bool isError;
     public int levelNum;
@@ -89,7 +88,12 @@ public class UIManager : MonoBehaviour
         
     public void Start()
     {
-        ScoreManager.Reset();
+        if (!bossFight)
+        {
+            ScoreManager.Reset();
+            ScoreManager.active = true;
+        }
+
         ResetCamera();
     }
 
@@ -342,7 +346,6 @@ public class UIManager : MonoBehaviour
     {
         if (!IsError())
         {
-            Debug.Log("Error");
             isError = true;
             soundManager.PlaySound(soundManager.error);
             yield return new WaitForSecondsRealtime(1);
@@ -523,6 +526,16 @@ public class UIManager : MonoBehaviour
         options.SetActive(true);
         optionsShop.SetActive(false);
     }
+
+    public IEnumerator Speak(string npc, string text)
+    {
+        npcName.text = npc;
+        message.text = text;
+        dialog.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
+        dialog.SetActive(false);
+    }
     
     public void StartSpeak(string npc, string text)
     {
@@ -622,6 +635,13 @@ public class UIManager : MonoBehaviour
     public bool IsLevel()
     {
         return level.activeSelf;
+    }
+
+    public void Boss()
+    {
+        playerController.SaveData(true, false);
+        StartCoroutine(FadeIn());
+        SceneManager.LoadScene("Main");
     }
 
     public void ResetCamera()
@@ -757,29 +777,9 @@ public class UIManager : MonoBehaviour
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
         soundManager.PlaySound(soundManager.clickButton);
         disciplines.SetActive(false);
-        playerController.SaveData(d, t, true);
+        playerController.SaveData(d, t, false);
         LevelNext();
     }
-
-    // IEnumerator Timer()
-    // {
-    //     while (time > 0)
-    //     {
-    //         yield return new WaitForSeconds(1);
-    //         time--;
-    //         if (powerup.color == Color.white && time >= 10)
-    //         {
-    //             powerup.text = "0:" + time;
-    //             powerup.fontSize = 150;
-    //         }
-    //         else if (powerup.color == Color.white && time < 10)
-    //         {
-    //             powerup.text = "0:0" + time;
-    //             powerup.fontSize = 150;
-    //         }
-    //     }
-    //     StartCoroutine(Scores(ScoreManager.GetScores()));
-    // }
     
     public void PauseGame()
     {

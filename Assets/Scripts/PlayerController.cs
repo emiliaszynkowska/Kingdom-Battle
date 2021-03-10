@@ -173,7 +173,12 @@ public class PlayerController : MonoBehaviour
     public void AddItem(string item)
     {
         inventory.Add(item);
-        questManager.Event($"Find {item}", 0);
+        questManager.Event($"Find {item}", 0, true);
+    }
+
+    public void RemoveItem(string item)
+    {
+        inventory.Remove("Scroll");
     }
     
 // ---------------------------------------------------------------------------------------------------------------------
@@ -306,6 +311,7 @@ public class PlayerController : MonoBehaviour
             // Stop Attacking
             isAttacking = false;
             timers.transform.GetChild(2).gameObject.GetComponent<TimerController>().Reset();
+            questManager.Event("Spin Attack", "Use", true);
         }
     }
     
@@ -346,6 +352,7 @@ public class PlayerController : MonoBehaviour
             shadow.SetActive(false);
             isAttacking = false;
             timers.transform.GetChild(3).gameObject.GetComponent<TimerController>().Reset();
+            questManager.Event("Ground Pound", "Use", true);
         }
     }
     
@@ -387,7 +394,7 @@ public class PlayerController : MonoBehaviour
         {
             StartCoroutine(uiManager.Interact(0, 0, 0));
             Collider2D[] results = new Collider2D[8];
-            groundPoundCollider.OverlapCollider(contactFilter, results);
+            spinAttackCollider.OverlapCollider(contactFilter, results);
             foreach (Collider2D col in results)
             {
                 if (col != null && col.CompareTag("NPC"))
@@ -395,12 +402,17 @@ public class PlayerController : MonoBehaviour
                     if (col.name.Contains("Wizard"))
                     {
                         StartCoroutine(col.GetComponent<Quest>().Talk());
-                        questManager.Event($"Talk to {col.GetComponent<Quest>().npcName}", 0);
+                        questManager.Event($"Talk to {col.GetComponent<Quest>().npcName}", 0, true);
                     }
                     else if (col.name.Equals("Merchant"))
                     {
                         col.GetComponent<MerchantController>().Talk();
-                        questManager.Event("Talk to Merchant", 0);
+                        questManager.Event("Talk to Merchant", 0, true);
+                    }
+                    else if (col.name.Equals("Wigg"))
+                    {
+                        StartCoroutine(col.GetComponent<WiggController>().Talk());
+                        questManager.Event("Talk to Wigg", 0, false);
                     }
                 }
                 else if (col != null && col.CompareTag("Chest") && inventory.Contains("Key"))
@@ -432,6 +444,10 @@ public class PlayerController : MonoBehaviour
                         uiManager.UseItem();
                         uiManager.DisableItem(inventory.Count);
                     }
+                }
+                else if (col != null && col.CompareTag("Door") && col.GetComponent<DoorController>().special)
+                {
+                    col.GetComponent<DoorController>().Boss();
                 }
             }
         }
@@ -513,13 +529,13 @@ public class PlayerController : MonoBehaviour
 
     public bool UseItem(int index)
     {
-        questManager.Event($"Use {inventory[index]}", 0);
+        questManager.Event($"Use {inventory[index]}", 0, true);
         switch (inventory[index])
         {
             // Key
             case "Key":
                 Collider2D[] results1 = new Collider2D[8];
-                groundPoundCollider.OverlapCollider(contactFilter, results1);
+                spinAttackCollider.OverlapCollider(contactFilter, results1);
                 foreach (Collider2D col in results1)
                 {
                     if (col != null && col.CompareTag("Chest") && inventory.Contains("Key"))
@@ -527,19 +543,27 @@ public class PlayerController : MonoBehaviour
                         if (col.GetComponent<ChestController>().Open())
                         {
                             inventory.RemoveAt(index);
-                            questManager.Event("Open a chest", 0);
-                            questManager.Event("chest", "Open");
+                            questManager.Event("Open a chest", 0, true);
+                            questManager.Event("chest", "Open", true);
                             return true;
                         }
                     }
                     else if (col != null && col.CompareTag("Door") && inventory.Contains("Key"))
                     {
-                        if (!col.GetComponent<DoorController>().boss && col.GetComponent<DoorController>().Open())
+                        if (!col.GetComponent<DoorController>().boss && !col.GetComponent<DoorController>().special && col.GetComponent<DoorController>().Open())
                         {
                             inventory.RemoveAt(index);
-                            questManager.Event("Open a door", 0);
-                            questManager.Event("door", "Open");
+                            questManager.Event("Open a door", 0, true);
+                            questManager.Event("door", "Open", true);
                             return true;
+                        }
+                        else if (col.GetComponent<DoorController>().special)
+                        {
+                            if (col.GetComponent<DoorController>().Boss())
+                            {
+                                inventory.RemoveAt(index);
+                                return true;
+                            }
                         }
                     }
                 }
@@ -547,7 +571,7 @@ public class PlayerController : MonoBehaviour
             // Boss Key
             case "Boss Key":
                 Collider2D[] results2 = new Collider2D[8];
-                groundPoundCollider.OverlapCollider(contactFilter, results2);
+                spinAttackCollider.OverlapCollider(contactFilter, results2);
                 foreach (Collider2D col in results2)
                 {
                     if (col != null && col.CompareTag("Door") && inventory.Contains("Boss Key"))
@@ -560,10 +584,6 @@ public class PlayerController : MonoBehaviour
                     }
                 }
                 return false;
-            // Scroll
-            case "Scroll":
-                inventory.RemoveAt(index);
-                return true;
             // Potion
             case "Wigg's Brew":
                 StartCoroutine(WiggsBrew());
@@ -599,7 +619,7 @@ public class PlayerController : MonoBehaviour
     {
         ScoreManager.AddDefensive(5);
         soundManager.PlaySound(soundManager.lifeup);
-        questManager.Event("Restore some health", 0);
+        questManager.Event("Restore some health", 0, true);
         uiManager.Powerup("Wigg's Brew: +1 Health", Color.red);
         lifeup.SetActive(true);
         yield return new WaitForSeconds(3);
@@ -612,7 +632,7 @@ public class PlayerController : MonoBehaviour
     {
         ScoreManager.AddAggressive(1);
         soundManager.PlaySound(soundManager.powerup);
-        questManager.Event("Gain an attack boost", 0);
+        questManager.Event("Gain an attack boost", 0, true);
         uiManager.Powerup("Liquid Luck: +1 Attack", new Color(1,0.9f,0));
         GetComponent<SpriteRenderer>().color = new Color(1,0.9f,0);
         shine.SetActive(true);
@@ -643,14 +663,14 @@ public class PlayerController : MonoBehaviour
     {
         ScoreManager.AddExploration(1);
         soundManager.PlaySound(soundManager.powerup);
-        questManager.Event("Gain a speed boost", 0);
+        questManager.Event("Gain a speed boost", 0, true);
         uiManager.Powerup("Elixir of Speed: +5 Speed", new Color(0,0.4f,1));
         GetComponent<SpriteRenderer>().color = new Color(0,0.4f,1);
-        speed *= 1.5f;
+        speed = 0.15f;
         yield return new WaitForSeconds(15);
         uiManager.Powerup("", Color.white);
         GetComponent<SpriteRenderer>().color = Color.white;
-        speed /= 1.5f;
+        speed = 0.1f;
     }
 
     public bool IsOgreStrength()
@@ -697,7 +717,19 @@ public class PlayerController : MonoBehaviour
                     Destroy(other.gameObject);
                     playerCoins++;
                     uiManager.SetCoins(playerCoins);
-                    questManager.Event("coin", "Collect");
+                    questManager.Event("coin", "Collect", true);
+                    break;
+                // Scroll
+                case "Scroll":
+                    if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines.Contains("Collection")))
+                    {
+                        soundManager.PlaySound(soundManager.item);
+                        Destroy(other.gameObject);
+                        uiManager.AddItem("Scroll", inventory.Count);
+                        AddItem("Scroll");
+                        if (questManager.Event("Find the scroll", 0, false))
+                            questManager.AddMainQuest("Return to Wigg");
+                    }
                     break;
                 // Key
                 case "Key":
@@ -726,16 +758,6 @@ public class PlayerController : MonoBehaviour
                         Destroy(other.gameObject);
                         uiManager.AddItem("Boss Key", inventory.Count);
                         AddItem("Boss Key");
-                    }
-                    break;
-                // Scroll
-                case "Scroll":
-                    if (inventory.Count < 6 || (inventory.Count < 8 && playerDisciplines.Contains("Collection")))
-                    {
-                        soundManager.PlaySound(soundManager.item);
-                        Destroy(other.gameObject);
-                        uiManager.AddItem("Scroll", inventory.Count);
-                        AddItem("Scroll");
                     }
                     break;
                 // Potion
@@ -810,7 +832,7 @@ public class PlayerController : MonoBehaviour
         else if (other.gameObject.CompareTag("Collider") && GetComponent<BoxCollider2D>().IsTouching(other))
         {
             ScoreManager.AddExploration(1);
-            questManager.Event("room", "Explore");
+            questManager.Event("room", "Explore", true);
             Destroy(other.gameObject);
         }
     }
@@ -836,6 +858,7 @@ public class PlayerController : MonoBehaviour
         PlayerData.Health = health;
         PlayerData.Name = playerName;
         PlayerData.Coins = playerCoins;
+        PlayerData.Inventory = inventory;
         if (increment)
             PlayerData.Level = uiManager.levelNum + 1;
         else
@@ -852,7 +875,7 @@ public class PlayerController : MonoBehaviour
         PlayerData.Name = playerName;
         PlayerData.Coins = playerCoins;
         PlayerData.Inventory = inventory;
-        PlayerData.Level = uiManager.levelNum;
+        PlayerData.Level = uiManager.levelNum + 1;
         PlayerData.Boss = boss;
         PlayerData.Disciplines = d;
         PlayerData.Titles = t;

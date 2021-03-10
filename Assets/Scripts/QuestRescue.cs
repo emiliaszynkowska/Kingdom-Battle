@@ -18,8 +18,8 @@ public class QuestRescue : Quest
             "Young elf, please defeat these monsters!"
         };
         message = messages[Random.Range(0, 4)];
-        message2 = "Thank you for killing those monsters. Here, take this *.";
-        message2 = message2.Replace("*", reward);
+        message2 = "Hello young elf, where did you come from?";
+        message3 = $"Thank you for killing those monsters. Here, take this {reward}.";
     }
     
     void Update()

@@ -154,7 +154,7 @@ public class MerchantController : MonoBehaviour
             playerController.Spend(price);
             uiManager.AddItem(itemName, playerController.GetInventory().Count);
             playerController.AddItem(itemName);
-            questManager.Event($"Buy {itemName}", 0);
+            questManager.Event($"Buy {itemName}", 0, true);
             DisableItem();
             uiManager.StartSpeak(npcName, "Here you go.");
         }

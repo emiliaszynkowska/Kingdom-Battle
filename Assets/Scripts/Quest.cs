@@ -14,9 +14,11 @@ public class Quest : MonoBehaviour
     public string npcName;
     public string message;
     public string message2;
+    public string message3;
     public string reward;
     public bool complete;
     public bool talking;
+    public bool talkedTo;
     
     List<string> npcNames = new List<string>() {"Rhys", "Samuel", "Lucius", "Jedediah", "Matthew", "David"};
     List<string> rewards = new List<string>() {"Key", "Wigg's Brew", "Liquid Luck", "Ogre's Strength", "Elixir of Speed"};
@@ -54,29 +56,28 @@ public class Quest : MonoBehaviour
                 talking = true;
                 uiManager.AddItem(reward, playerController.GetInventory().Count);
                 playerController.AddItem(reward);
-                uiManager.StartSpeak(npcName, message2);
-                yield return new WaitForSeconds(0.1f);
-                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
-                uiManager.StopSpeak();
+                if (!talkedTo)
+                    yield return uiManager.Speak(npcName, message2);
+                yield return uiManager.Speak(npcName, message3);
                 soundManager.PlaySound(soundManager.complete);
-                ScoreManager.AddPuzzleSolving(3);
+                ScoreManager.AddPuzzleSolving(5);
                 if (this is QuestFetch)
                 {
-                    questManager.AddQuest($"Bring {npcName} {GetComponent<QuestFetch>().item}");
-                    questManager.Event("Complete a fetch quest", 0);
-                    questManager.Event($"Bring {npcName} {GetComponent<QuestFetch>().item}", 1);
+                    questManager.AddSideQuest($"Bring {npcName} {GetComponent<QuestFetch>().item}");
+                    questManager.Event("Complete a fetch quest", 0, true);
+                    questManager.Event($"Bring {npcName} {GetComponent<QuestFetch>().item}", 1, true);
                 }
                 else if (this is QuestDefeat)
                 {
-                    questManager.AddQuest($"Save {npcName} from the {GetComponent<QuestDefeat>().enemy}");
-                    questManager.Event("Complete a defeat quest", 0);
-                    questManager.Event($"Save {npcName} from the {GetComponent<QuestDefeat>().enemy}", 1);
+                    questManager.AddSideQuest($"Save {npcName} from the {GetComponent<QuestDefeat>().enemy}");
+                    questManager.Event("Complete a defeat quest", 0, true);
+                    questManager.Event($"Save {npcName} from the {GetComponent<QuestDefeat>().enemy}", 1, true);
                 }
                 else if (this is QuestRescue)
                 {
-                    questManager.AddQuest($"Rescue {npcName}");
-                    questManager.Event("Complete a rescue quest", 0);
-                    questManager.Event($"Rescue {npcName}", 1);
+                    questManager.AddSideQuest($"Rescue {npcName}");
+                    questManager.Event("Complete a rescue quest", 0, true);
+                    questManager.Event($"Rescue {npcName}", 1, true);
                 }
 
                 StartCoroutine(Disappear());
@@ -84,16 +85,14 @@ public class Quest : MonoBehaviour
             else
             {
                 talking = true;
-                uiManager.StartSpeak(npcName, message);
-                yield return new WaitForSeconds(0.1f);
-                yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
+                talkedTo = true;
+                yield return uiManager.Speak(npcName, message);
                 if (this is QuestFetch)
-                    questManager.AddQuest($"Bring {npcName} {GetComponent<QuestFetch>().item}");
+                    questManager.AddSideQuest($"Bring {npcName} {GetComponent<QuestFetch>().item}");
                 else if (this is QuestDefeat)
-                    questManager.AddQuest($"Save {npcName} from the {GetComponent<QuestDefeat>().enemy}");
+                    questManager.AddSideQuest($"Save {npcName} from the {GetComponent<QuestDefeat>().enemy}");
                 else if (this is QuestRescue)
-                    questManager.AddQuest($"Rescue {npcName}");
-                uiManager.StopSpeak();
+                    questManager.AddSideQuest($"Rescue {npcName}");
                 talking = false;
             }
         }

@@ -11,6 +11,7 @@ public class DungeonManager : MonoBehaviour
     public GameObject items;
     public GameObject objects;
     public GameObject colliders;
+    public Vector3 campfirePos;
     public Rect playerRoom;
     // Enemies
     public GameObject impPrefab;
@@ -27,6 +28,7 @@ public class DungeonManager : MonoBehaviour
     public GameObject golemPrefab;
     public GameObject trollPrefab;
     // NPCs
+    public GameObject wiggPrefab;
     public GameObject merchantPrefab;
     public GameObject wizardFetchPrefab;
     public GameObject wizardDefeatPrefab;
@@ -47,20 +49,27 @@ public class DungeonManager : MonoBehaviour
     public GameObject spikesPrefab;
     public GameObject shinePrefab;
     public GameObject campfirePrefab;
+    // Variables
+    public int chestsGenerated;
+    public int doorsGenerated;
 
     void Start()
     {
         StartCoroutine(uiManager.FadeOut());
     }
 
-    public Vector2 RandomPosition(Rect room)
+    public Vector2 RandomPosition(Rect room, bool check)
     {
         Vector2 position = new Vector2((int) Random.Range(room.xMin + 1, room.xMax - 1),
             (int) Random.Range(room.yMin + 1, room.yMax - 1));
-        if (Mathf.Abs(player.transform.position.magnitude - position.magnitude) > 1)
-            return position;
-        else
-            return RandomPosition(room);
+        if (check)
+        {
+            if (Mathf.Abs(player.transform.position.magnitude - position.magnitude) > 1)
+                return position;
+            else
+                return RandomPosition(room, true);
+        }
+        return position;
     }
 
     public void PlacePlayer(Rect room)
@@ -68,6 +77,7 @@ public class DungeonManager : MonoBehaviour
         playerRoom = room;
         player.transform.position = room.center;
         GameObject campfire = Instantiate(campfirePrefab, new Vector3(room.center.x - 1, room.center.y - 1, -3), Quaternion.Euler(0, 0, 0), objects.transform);
+        campfirePos = campfire.transform.position;
         campfire.name = "Campfire";
     }
     
@@ -82,6 +92,7 @@ public class DungeonManager : MonoBehaviour
         {
             GameObject door = Instantiate(doorPrefab, position, Quaternion.Euler(0, 0, 0), objects.transform);
             door.name = "Door";
+            doorsGenerated++;
         }
     }
     
@@ -94,21 +105,27 @@ public class DungeonManager : MonoBehaviour
         shine.name = "Shine";
     }
     
-    public void PlaceChest(Vector3 position)
+    public GameObject PlaceSpecialDoor(Vector3 position)
     {
-        position.x += 0.5f;
-        position.y += 0.6f;
-        GameObject chest = Instantiate(chestPrefab, position, Quaternion.Euler(0, 0, 0), objects.transform);
-        chest.name = "Chest";
+        GameObject door = Instantiate(doorPrefab, position, Quaternion.Euler(0, 0, 0), objects.transform);
+        door.name = "Special Door";
+        door.GetComponent<DoorController>().special = true;
+        GameObject shine = Instantiate(shinePrefab, position, Quaternion.Euler(0, 0, 0), objects.transform);
+        shine.name = "Shine";
+        return door;
     }
-    
+
     public void PlaceChest(Dungeon dungeon)
     {
-        Vector3 position = RandomPosition(dungeon.room);
+        Vector3 position = RandomPosition(dungeon.room, false);
         position.x += 0.5f;
         position.y += 0.6f;
-        GameObject chest = Instantiate(chestPrefab, position, Quaternion.Euler(0, 0, 0), objects.transform);
-        chest.name = "Chest";
+        if (Mathf.Abs((position - campfirePos).magnitude) > 1)
+        {
+            GameObject chest = Instantiate(chestPrefab, position, Quaternion.Euler(0, 0, 0), objects.transform);
+            chest.name = "Chest";
+            chestsGenerated++;
+        }
     }
     
     public void PlaceSpikes(Vector3 position)
@@ -121,7 +138,7 @@ public class DungeonManager : MonoBehaviour
 
     public void PlaceSpikes(Dungeon dungeon)
     {
-        Vector3 position = RandomPosition(dungeon.room);
+        Vector3 position = RandomPosition(dungeon.room, false);
         if (position != Vector3.zero)
         {
             position.x += 0.5f;
@@ -138,11 +155,16 @@ public class DungeonManager : MonoBehaviour
             if (dungeon.room.width >= 10 && dungeon.room.height >= 4 &&
                 dungeon.room.center != (Vector2) player.transform.position)
             {
-                GameObject merchant = Instantiate(merchantPrefab, dungeon.room.center, Quaternion.Euler(0, 0, 0),
-                    NPCs.transform);
+                GameObject merchant = Instantiate(merchantPrefab, dungeon.room.center, Quaternion.Euler(0, 0, 0), NPCs.transform);
                 merchant.name = "Merchant";
             }
         }
+    }
+
+    public void PlaceWigg(Dungeon dungeon)
+    {
+        GameObject wigg = Instantiate(wiggPrefab, RandomPosition(dungeon.room, false), Quaternion.Euler(0, 0, 0), NPCs.transform);
+        wigg.name = "Wigg";
     }
 
     public void PlaceWizard(Vector3 position, int difficulty)
@@ -162,6 +184,7 @@ public class DungeonManager : MonoBehaviour
                 questDefeat.name = "WizardDefeat";
                 questDefeat.GetComponent<QuestDefeat>().obj = obj;
                 questDefeat.GetComponent<QuestDefeat>().enemy = obj.name;
+                questDefeat.GetComponent<QuestDefeat>().Set();
                 break;
             case (2):
                 GameObject questRescue = Instantiate(wizardRescuePrefab, position, Quaternion.Euler(0, 0, 0), NPCs.transform);
@@ -194,7 +217,7 @@ public class DungeonManager : MonoBehaviour
     
     public GameObject PlaceEnemyVeryEasy(Dungeon dungeon)
     {
-        GameObject enemy = Instantiate(impPrefab, RandomPosition(dungeon.room), Quaternion.Euler(0, 0, 0), enemies.transform);
+        GameObject enemy = Instantiate(impPrefab, RandomPosition(dungeon.room, true), Quaternion.Euler(0, 0, 0), enemies.transform);
         enemy.GetComponent<EnemyController>().SetDungeon(dungeon);
         enemy.name = enemy.name.Replace("(Clone)", "");
         return enemy;
@@ -213,7 +236,7 @@ public class DungeonManager : MonoBehaviour
                 prefab = goblinPrefab;
                 break;
         }
-        GameObject enemy = Instantiate(prefab, RandomPosition(dungeon.room), Quaternion.Euler(0, 0, 0), enemies.transform);
+        GameObject enemy = Instantiate(prefab, RandomPosition(dungeon.room, true), Quaternion.Euler(0, 0, 0), enemies.transform);
         enemy.GetComponent<EnemyController>().SetDungeon(dungeon);
         enemy.name = enemy.name.Replace("(Clone)", "");
         return enemy;
@@ -244,7 +267,7 @@ public class DungeonManager : MonoBehaviour
                 prefab = necromancerPrefab;
                 break;
         }
-        GameObject enemy = Instantiate(prefab, RandomPosition(dungeon.room), Quaternion.Euler(0, 0, 0), enemies.transform);
+        GameObject enemy = Instantiate(prefab, RandomPosition(dungeon.room, true), Quaternion.Euler(0, 0, 0), enemies.transform);
         enemy.GetComponent<EnemyController>().SetDungeon(dungeon);
         enemy.name = enemy.name.Replace("(Clone)", "");
         return enemy;
@@ -281,7 +304,7 @@ public class DungeonManager : MonoBehaviour
                 prefab = ogrePrefab;
                 break;
         }
-        GameObject enemy = Instantiate(prefab, RandomPosition(dungeon.room), Quaternion.Euler(0, 0, 0), enemies.transform);
+        GameObject enemy = Instantiate(prefab, RandomPosition(dungeon.room, true), Quaternion.Euler(0, 0, 0), enemies.transform);
         enemy.GetComponent<EnemyController>().SetDungeon(dungeon);
         enemy.name = enemy.name.Replace("(Clone)", "");
         return enemy;
@@ -354,15 +377,13 @@ public class DungeonManager : MonoBehaviour
             case(1):
                 boss.GetComponent<EnemyController>().SetUpgrade("Jagged Blade");
                 break;
-            // Boss 4 - Warped Edge & Blue Robe
+            // Boss 4 - Warped Edge
             case(4):
                 boss.GetComponent<EnemyController>().SetUpgrade("Warped Edge");
-                boss.GetComponent<EnemyController>().SetUpgrade("Blue Robe");
                 break;
-            // Boss 7 - Knight's Sword & Red Robe
+            // Boss 7 - Knight's Sword
             case(7):
                 boss.GetComponent<EnemyController>().SetUpgrade("Knight's Sword");
-                boss.GetComponent<EnemyController>().SetUpgrade("Red Robe");
                 break;
             // Boss 10 - Kingsbane
             case(10):

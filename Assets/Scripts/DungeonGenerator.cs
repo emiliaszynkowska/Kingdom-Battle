@@ -30,6 +30,7 @@ public class DungeonGenerator : MonoBehaviour
     public bool generated;
     private List<Dungeon> dungeons = new List<Dungeon>();
     public DungeonManager dungeonManager;
+    public QuestManager questManager;
     public GameObject dungeonColliders;
     public GameObject dungeonCollider;
 
@@ -41,6 +42,11 @@ public class DungeonGenerator : MonoBehaviour
     public List<Dungeon> GetDungeons()
     {
         return dungeons;
+    }
+
+    public Dungeon RandomDungeon()
+    {
+        return dungeons[Random.Range(0, dungeons.Count)];
     }
 
     void Start()
@@ -99,7 +105,7 @@ public class DungeonGenerator : MonoBehaviour
             level = PlayerData.Level;
         }
         else
-            level = 1;
+            level = 3;
         // Set Difficulty
         if (level == 1)
             difficulty = 10;
@@ -315,6 +321,7 @@ public class DungeonGenerator : MonoBehaviour
 
     private void FillDoorways()
     {
+        var special = false;
         BoundsInt bounds = groundMap.cellBounds;
         for (int xMap = bounds.xMin - 10; xMap <= bounds.xMax + 10; xMap++)
         {
@@ -336,14 +343,23 @@ public class DungeonGenerator : MonoBehaviour
                     outerWallMap.GetTile(posLeft) != null && outerWallMap.GetTile(posRight) != null
                     && outerWallMap.GetTile(posLeftLeft) != null & outerWallMap.GetTile(posRightRight) != null)
                 {
-                    var choice = Random.Range(0, 2);
-                    // Place a door or wizard
-                    if (Random.Range(0, 100) < Mathf.Clamp(difficulty + 25, 0, 100))
+                    if (!special)
                     {
-                        if (choice == 0)
-                            dungeonManager.PlaceDoor(posUpperRight);
-                        else if (choice == 1)
-                            dungeonManager.PlaceWizard(posUpperRight, difficulty);
+                        var door = dungeonManager.PlaceSpecialDoor(posUpperRight);
+                        questManager.specialDoor = door;
+                        special = true;
+                    }
+                    else
+                    {
+                        var choice = Random.Range(0, 2);
+                        // Place a door or wizard
+                        if (Random.Range(0, 100) < Mathf.Clamp(difficulty + 25, 0, 100))
+                        {
+                            if (choice == 0)
+                                dungeonManager.PlaceDoor(posUpperRight);
+                            else if (choice == 1)
+                                dungeonManager.PlaceWizard(posUpperRight, difficulty);
+                        }
                     }
                 }
             }
@@ -415,14 +431,14 @@ public class DungeonGenerator : MonoBehaviour
             {
                 if (!key && Random.Range(0, 100) > difficulty + 15)
                 {
-                    dungeonManager.PlaceItem("Key", dungeonManager.RandomPosition(dungeon.room));
+                    dungeonManager.PlaceItem("Key", dungeonManager.RandomPosition(dungeon.room, false));
                     key = true;
                 }
             }
             for (int i = 0; i < 5; i++)
             {
-                if (Random.Range(0,100) > difficulty)
-                    dungeonManager.PlaceItem("Coin", dungeonManager.RandomPosition(dungeon.room));
+                if (Random.Range(0, 100) > difficulty)
+                    dungeonManager.PlaceItem("Coin", dungeonManager.RandomPosition(dungeon.room, false));
             }
         }
     }

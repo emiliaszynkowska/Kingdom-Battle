@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -11,10 +12,12 @@ public class QuestManager : MonoBehaviour
 {
     // Game Objects
     public DungeonGenerator dungeonGenerator;
+    public DungeonManager dungeonManager;
     public SoundManager soundManager;
     public UIManager uiManager;
     public GameObject NPCs;
     public GameObject quests;
+    public GameObject specialDoor;
     public GameObject mainQuests;
     public GameObject sideQuests;
     // Variables
@@ -27,18 +30,22 @@ public class QuestManager : MonoBehaviour
     {
         if (!PlayerData.Boss)
         {
-            // Gain ability
-            // Use ability
-            // Find armour
+            // Set max quests
             var difficulty = dungeonGenerator.difficulty;
             if (difficulty >= 75)
-                maxQuests = 9;
-            if (difficulty >= 50)
                 maxQuests = 7;
+            if (difficulty >= 50)
+                maxQuests = 6;
             if (difficulty >= 25)
                 maxQuests = 5;
             else
                 maxQuests = 3;
+            // Add static quests
+            if (PlayerData.Level == 3 | PlayerData.Level == 5 | PlayerData.Level == 6 | PlayerData.Level == 8)
+            {
+                listMainQuests.Add("Talk to Wigg");
+                dungeonManager.PlaceWigg(dungeonGenerator.RandomDungeon());
+            }
             StartCoroutine(Wait());
         }
     }
@@ -60,8 +67,7 @@ public class QuestManager : MonoBehaviour
     public void Generate()
     {
         int n;
-        var generatedQuests = 0;
-        while (generatedQuests < maxQuests)
+        while (listMainQuests.Count < maxQuests)
         {
             var questChoice = Random.Range(0, 14);
             switch (questChoice)
@@ -76,31 +82,30 @@ public class QuestManager : MonoBehaviour
                         if (npcName.Contains("Wizard"))
                             npcName = npcObject.GetComponent<Quest>().GetName();
                         listMainQuests.Add($"Talk to {npcName}");
-                        generatedQuests++;
                     }
                     break;
                 // Open chest
                 case 1:
                     if (GameObject.Find("Chest") != null && listMainQuests.FirstOrDefault(x => x.Contains("chest")) == null)
                     {
-                        n = Random.Range(1, 4);
+                        n = Random.Range(1, dungeonManager.chestsGenerated);
+                        n = Mathf.Clamp(n, 0, 5);
                         if (n == 1)
                             listMainQuests.Add("Open a chest");
                         else
                             listMainQuests.Add($"Open {n} chests                       0/{n}");
-                        generatedQuests++;
                     }
                     break;
                 // Open door
                 case 2:
                     if (GameObject.Find("Door") != null && listMainQuests.FirstOrDefault(x => x.Contains("door")) == null)
                     {
-                        n = Random.Range(1, 4);
+                        n = Random.Range(1, dungeonManager.doorsGenerated);
+                        n = Mathf.Clamp(n, 0, 5);
                         if (n == 1)
                             listMainQuests.Add("Open a door");
                         else
                             listMainQuests.Add($"Open {n} doors                        0/{n}");
-                        generatedQuests++;
                     }
                     break;
                 // Find coins
@@ -109,7 +114,6 @@ public class QuestManager : MonoBehaviour
                     {
                         n = Random.Range(5, 30);
                         listMainQuests.Add($"Collect {n} coins                  0/{n}");
-                        generatedQuests++;
                     }
                     break;
                 // Find item
@@ -122,7 +126,6 @@ public class QuestManager : MonoBehaviour
                     if (!listMainQuests.Contains($"Find {item}"))
                     {
                         listMainQuests.Add($"Find {item}");
-                        generatedQuests++;
                     }
                     break;
                 // Buy item
@@ -137,7 +140,6 @@ public class QuestManager : MonoBehaviour
                         if (!listMainQuests.Contains($"Buy {buy}"))
                         {
                             listMainQuests.Add($"Buy {buy}");
-                            generatedQuests++;
                         }
                     }
                     break;
@@ -151,7 +153,6 @@ public class QuestManager : MonoBehaviour
                     if (!listMainQuests.Contains($"Use {use}"))
                     {
                         listMainQuests.Add($"Use {use}");
-                        generatedQuests++;
                     }
                     break;
                 // Use powerup
@@ -163,16 +164,14 @@ public class QuestManager : MonoBehaviour
                     if (!listMainQuests.Contains(powerup))
                     {
                         listMainQuests.Add(powerup);
-                        generatedQuests++;
                     }
                     break;
                 // Locate room
                 case 8:
                     if (listMainQuests.FirstOrDefault(x => x.Contains("rooms")) == null)
                     {
-                        n = Mathf.Clamp(Random.Range(3, dungeonGenerator.GetDungeons().Count), 3, 30);
+                        n = Mathf.Clamp(Random.Range(3, dungeonGenerator.GetDungeons().Count/2), 3, 15);
                         listMainQuests.Add($"Explore {n} rooms                 0/{n}");
-                        generatedQuests++;
                     }
                     break;
                 // Fetch quest/Give item/Trade item
@@ -182,7 +181,6 @@ public class QuestManager : MonoBehaviour
                         if (!listMainQuests.Contains("Complete a fetch quest"))
                         {
                             listMainQuests.Add("Complete a fetch quest");
-                            generatedQuests++;
                         }
                     }
                     break;
@@ -191,7 +189,6 @@ public class QuestManager : MonoBehaviour
                     if (GameObject.Find("WizardRescue") != null && !listMainQuests.Contains("Complete a defeat quest"))
                     {
                         listMainQuests.Add("Complete a defeat quest");
-                        generatedQuests++;
                     }
                     break;
                 // Rescue quest
@@ -199,7 +196,6 @@ public class QuestManager : MonoBehaviour
                     if (GameObject.Find("WizardDefeat") != null && !listMainQuests.Contains("Complete a rescue quest"))
                     {
                         listMainQuests.Add("Complete a rescue quest");
-                        generatedQuests++;
                     }
                     break;
                 // Defeat enemy
@@ -227,7 +223,6 @@ public class QuestManager : MonoBehaviour
                             listMainQuests.Add($"Defeat 1 {enemy}                        0/1");
                         else
                             listMainQuests.Add($"Defeat {n} {enemy}s                     0/{n}");
-                        generatedQuests++; 
                     }
                     break;
                 // Infiltrate den
@@ -235,14 +230,31 @@ public class QuestManager : MonoBehaviour
                     if (GameObject.Find("Den") != null && !listMainQuests.Contains("Infiltrate a monster den"))
                     {
                         listMainQuests.Add("Infiltrate a monster den");
-                        generatedQuests++;
                     }
                     break;
             }
         }
     }
+    
+    public List<string> GetQuests()
+    {
+        return listMainQuests;
+    }
 
-    public void AddQuest(string q)
+    public bool AddMainQuest(string q)
+    {
+        if (!listMainQuests.Contains(q))
+        {
+            mainQuests.transform.GetChild(listMainQuests.Count).GetComponent<Text>().text = q;
+            mainQuests.transform.GetChild(listMainQuests.Count).GetComponent<Text>().color = Color.white;
+            StartCoroutine(uiManager.Notification($"Quest Started: {q}", Color.white));
+            soundManager.PlaySound(soundManager.item);
+            return true;
+        }
+        return false;
+    }
+    
+    public bool AddSideQuest(string q)
     {
         if (!listSideQuests.Contains(q))
         {
@@ -250,37 +262,47 @@ public class QuestManager : MonoBehaviour
             sideQuests.transform.GetChild(listSideQuests.Count).GetComponent<Text>().text = q;
             StartCoroutine(uiManager.Notification($"Quest Started: {q}", Color.white));
             soundManager.PlaySound(soundManager.item);
+            return true;
         }
+        return false;
     }
 
     public void CheckQuests()
     {
-        if (complete == maxQuests && !uiManager.bossFight)
+        if (complete == maxQuests && !specialDoor.GetComponent<DoorController>().opened)
         {
-            uiManager.LevelComplete();
+            soundManager.PlaySound(soundManager.open);
+            StartCoroutine(uiManager.Speak("", "You heard a noise..."));
+            specialDoor.GetComponent<DoorController>().opened = true;
         }
     }
 
-    public void Event(string e, int type)
+    public bool Event(string e, int t, bool c)
     {
-        List<string> lst = type == 0 ? listMainQuests : listSideQuests;
-        GameObject obj = type == 0 ? mainQuests : sideQuests;
+        List<string> lst = t == 0 ? listMainQuests : listSideQuests;
+        GameObject obj = t == 0 ? mainQuests : sideQuests;
         try
         {
             var index = lst.FindIndex(x => x.Equals(e)) + 1;
             if (index != 0 && obj.transform.GetChild(index).GetComponent<Text>().color != new Color(0, 0.85f, 0))
             {
+                var text = obj.transform.GetChild(index).GetComponent<Text>().text;
+                obj.transform.GetChild(index).GetComponent<Text>().text = text.Replace("0/1", "1/1");
                 obj.transform.GetChild(index).GetComponent<Text>().color = new Color(0, 0.85f, 0);
-                StartCoroutine(uiManager.Notification($"Quest Complete: {e}", new Color(0, 0.85f, 0)));
+                StartCoroutine(uiManager.Notification($"Quest Complete: {text}", new Color(0, 0.85f, 0)));
                 soundManager.PlaySound(soundManager.complete);
-                complete++;
+                if (t == 0)
+                    complete++;
+                if (c)
+                    CheckQuests();
+                return true;
             }
-            CheckQuests();
         }
         catch {}
+        return false;
     }
 
-    public void Event(string e, string s)
+    public bool Event(string e, string s, bool c)
     {
         try
         {
@@ -303,11 +325,14 @@ public class QuestManager : MonoBehaviour
                         StartCoroutine(uiManager.Notification($"Quest Complete: {s} {digits[1]} {e}s", new Color(0, 0.85f, 0)));
                     soundManager.PlaySound(soundManager.complete);
                     complete++;
+                    if (c)
+                        CheckQuests();
+                    return true;
                 }
             }
-            CheckQuests();
         }
         catch {}
+        return false;
     }
 
 }

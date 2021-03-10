@@ -420,7 +420,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.8125}
   serializedVersion: 2
-  m_Radius: 3
+  m_Radius: 1.5
 --- !u!114 &1368707855245765929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,10 +441,11 @@ MonoBehaviour:
   npcName: 
   message: 
   message2: 
+  message3: 
   reward: 
-  active: 0
   complete: 0
   talking: 0
+  talkedTo: 0
   alert: {fileID: 2749960831194729336}
   obj1: {fileID: 0}
   obj2: {fileID: 0}

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7024877438953963859}
   - component: {fileID: 7024877438953963860}
   - component: {fileID: 7024877438953963857}
+  - component: {fileID: -4951927981301087303}
   m_Layer: 9
   m_Name: Wigg
   m_TagString: NPC
@@ -167,4 +168,26 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.8125}
   serializedVersion: 2
-  m_Radius: 3
+  m_Radius: 1.5
+--- !u!114 &-4951927981301087303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7024877438953963951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 087a14636570434dbf3f01a9fbf09df6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  playerController: {fileID: 0}
+  dungeonGenerator: {fileID: 0}
+  dungeonManager: {fileID: 0}
+  questManager: {fileID: 0}
+  soundManager: {fileID: 0}
+  uiManager: {fileID: 0}
+  npcName: Wigg
+  talking: 0
+  active: 0

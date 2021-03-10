@@ -1825,6 +1825,7 @@ MonoBehaviour:
   items: {fileID: 1007970828}
   objects: {fileID: 1900677917}
   colliders: {fileID: 587249132}
+  campfirePos: {x: 0, y: 0, z: 0}
   playerRoom:
     serializedVersion: 2
     x: 0
@@ -1854,6 +1855,8 @@ MonoBehaviour:
   golemPrefab: {fileID: 7320705704700570165, guid: d3f24a7901983314ca9aaa00e44feb45,
     type: 3}
   trollPrefab: {fileID: 1521752918231582455, guid: 090bce405ac2adb4994e27f837c2c2c2,
+    type: 3}
+  wiggPrefab: {fileID: 7024877438953963951, guid: 2b3b9523c56206145919d7706e7bb18e,
     type: 3}
   merchantPrefab: {fileID: 2257543521791972745, guid: d3848c67614856748ae2c0054cc5804f,
     type: 3}
@@ -1891,6 +1894,8 @@ MonoBehaviour:
     type: 3}
   campfirePrefab: {fileID: 5862317721963052724, guid: f86960a3b55469e41a6aad2d5d72ac0f,
     type: 3}
+  chestsGenerated: 0
+  doorsGenerated: 0
 --- !u!114 &187748901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1925,6 +1930,7 @@ MonoBehaviour:
   level: 0
   generated: 0
   dungeonManager: {fileID: 187748900}
+  questManager: {fileID: 1498644905}
   dungeonColliders: {fileID: 587249132}
   dungeonCollider: {fileID: 805043618572453964, guid: 489044136387337458063faabbcf7c59,
     type: 3}
@@ -4931,8 +4937,8 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1012739443
-  m_SortingLayer: 0
+  m_SortingLayerID: -1611157445
+  m_SortingLayer: 2
   m_SortingOrder: 2
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -6720,8 +6726,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -879713707
-  m_SortingLayer: 0
+  m_SortingLayerID: -1081677195
+  m_SortingLayer: 3
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 25c3114a4dda26d4888f4a83941669e5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -8558,8 +8564,8 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1012739443
-  m_SortingLayer: 0
+  m_SortingLayerID: -1611157445
+  m_SortingLayer: 2
   m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -13129,7 +13135,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -50, y: -155}
+  m_AnchoredPosition: {x: -50, y: -157}
   m_SizeDelta: {x: 100, y: 372.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1369841397
@@ -13163,7 +13169,7 @@ MonoBehaviour:
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 1.2
+    m_LineSpacing: 1.15
   m_Text: 'E
 
     I
@@ -13958,8 +13964,8 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1012739443
-  m_SortingLayer: 0
+  m_SortingLayerID: -1611157445
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -14392,8 +14398,8 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1012739443
-  m_SortingLayer: 0
+  m_SortingLayerID: -1611157445
+  m_SortingLayer: 2
   m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -14875,7 +14881,6 @@ MonoBehaviour:
   equipment: {fileID: 1595493557}
   background: {fileID: 517274431}
   fade: {fileID: 2076032324}
-  time: 60
   isPowerup: 0
   isError: 0
   levelNum: 0
@@ -14980,10 +14985,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dungeonGenerator: {fileID: 187748901}
+  dungeonManager: {fileID: 187748900}
   soundManager: {fileID: 1388717415}
   uiManager: {fileID: 1498644901}
   NPCs: {fileID: 1466594773}
   quests: {fileID: 613141001}
+  specialDoor: {fileID: 0}
   mainQuests: {fileID: 923102484}
   sideQuests: {fileID: 1106554921}
   complete: 0

@@ -6,21 +6,18 @@ public class DoorController : MonoBehaviour
     public UIManager uiManager;
     public SoundManager soundManager;
     public BoxCollider2D boxCollider;
-    public CapsuleCollider2D capsuleCollider;
     public SpriteRenderer doorRenderer;
     public Sprite closedDoor;
     public Sprite openDoor;
     public bool opened;
     public bool boss;
+    public bool special;
 
     void Start()
     {
         player = GameObject.Find("Player");
         uiManager = GameObject.Find("UI").GetComponent<UIManager>();
         soundManager = GameObject.Find("Main Camera").GetComponent<SoundManager>();
-        boxCollider = GetComponent<BoxCollider2D>();
-        capsuleCollider = GetComponent<CapsuleCollider2D>();
-        doorRenderer = GetComponent<SpriteRenderer>();
     }
     
     public bool Open()
@@ -30,12 +27,25 @@ public class DoorController : MonoBehaviour
             opened = true;
             doorRenderer.sprite = openDoor;
             boxCollider.enabled = false;
-            capsuleCollider.enabled = false;
             soundManager.PlaySound(soundManager.open);
             ScoreManager.AddExploration(1);
             if (boss)
-                uiManager.LevelNext();
+                StartCoroutine(uiManager.Scores(ScoreManager.GetScores()));
             return true;
+        }
+        return false;
+    }
+
+    public bool Boss()
+    {
+        if (opened && special)
+        {
+            uiManager.Boss();
+            return true;
+        }
+        else if (!opened && special)
+        {
+            StartCoroutine(uiManager.Speak("", "It's locked."));
         }
         return false;
     }

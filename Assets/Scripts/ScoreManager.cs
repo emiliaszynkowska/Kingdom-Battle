@@ -8,6 +8,7 @@ public class ScoreManager : MonoBehaviour
     // Game Objects
     public static UIManager uiManager;
     // Variables
+    public static bool active = false;
     public static int aggressive;
     public static int defensive;
     public static int exploration;
@@ -34,27 +35,32 @@ public class ScoreManager : MonoBehaviour
 
     public static void AddAggressive(int score)
     {
-        aggressive += score;
+        if (active)
+            aggressive += score;
     }
     
     public static void AddDefensive(int score)
     {
-        defensive += score;
+        if (active)
+            defensive += score;
     }
     
     public static void AddExploration(int score)
     {
-        exploration += score;
+        if (active)
+            exploration += score;
     }
 
     public static void AddCollection(int score)
     {
-        collection += score;
+        if (active)
+            collection += score;
     }
     
     public static void AddPuzzleSolving(int score)
     {
-        puzzlesolving += score;
+        if (active)
+            puzzlesolving += score;
     }
 
     public static int[] GetScores()
