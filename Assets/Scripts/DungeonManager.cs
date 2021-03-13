@@ -101,7 +101,7 @@ public class DungeonManager : MonoBehaviour
         GameObject door = Instantiate(doorPrefab, position, Quaternion.Euler(0, 0, 0), objects.transform);
         door.name = "Boss Door";
         door.GetComponent<DoorController>().boss = true;
-        GameObject shine = Instantiate(shinePrefab, position, Quaternion.Euler(0, 0, 0), objects.transform);
+        GameObject shine = Instantiate(shinePrefab, position, Quaternion.Euler(0, 0, 0), door.transform);
         shine.name = "Shine";
     }
     
@@ -110,7 +110,7 @@ public class DungeonManager : MonoBehaviour
         GameObject door = Instantiate(doorPrefab, position, Quaternion.Euler(0, 0, 0), objects.transform);
         door.name = "Special Door";
         door.GetComponent<DoorController>().special = true;
-        GameObject shine = Instantiate(shinePrefab, position, Quaternion.Euler(0, 0, 0), objects.transform);
+        GameObject shine = Instantiate(shinePrefab, position, Quaternion.Euler(0, 0, 0), door.transform);
         shine.name = "Shine";
         return door;
     }

@@ -105,7 +105,7 @@ public class DungeonGenerator : MonoBehaviour
             level = PlayerData.Level;
         }
         else
-            level = 3;
+            level = 1;
         // Set Difficulty
         if (level == 1)
             difficulty = 10;
