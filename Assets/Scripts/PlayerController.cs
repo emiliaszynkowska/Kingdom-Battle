@@ -196,6 +196,7 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(1);
             playerRenderer.color = Color.white;
             isHurt = false;
+            PlayerData.Hits += 1;
         }
         if (health <= 0 && !uiManager.IsGameOver())
         {
@@ -206,8 +207,11 @@ public class PlayerController : MonoBehaviour
             death.SetActive(true);
             playerRenderer.enabled = false;
             weapon.SetActive(false);
-            yield return new WaitForSecondsRealtime(1);
+            yield return new WaitForSecondsRealtime(0.5f);
             uiManager.GameOver();
+            PlayerData.Losses += 1;
+            PlayerData.Level = 0;
+            PlayerData.Boss = false;
         }
     }
 
@@ -249,6 +253,7 @@ public class PlayerController : MonoBehaviour
         if (timers.transform.GetChild(1).gameObject.GetComponent<TimerController>().CanAttack())
         {
             // Start Attacking
+            timers.transform.GetChild(1).gameObject.GetComponent<TimerController>().Reset();
             isAttacking = true;
             // Animate Attack
             soundManager.PlaySound(soundManager.swordAttack);
@@ -275,7 +280,6 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             // Stop Attacking
             isAttacking = false;
-            timers.transform.GetChild(1).gameObject.GetComponent<TimerController>().Reset();
         }
     }
     
@@ -284,6 +288,7 @@ public class PlayerController : MonoBehaviour
         if (timers.transform.GetChild(2).gameObject.GetComponent<TimerController>().CanAttack())
         {
             // Start Attacking
+            timers.transform.GetChild(2).gameObject.GetComponent<TimerController>().Reset();
             isAttacking = true;
             // Animate Spin Attack
             soundManager.PlaySound(soundManager.spinAttack);
@@ -310,7 +315,6 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             // Stop Attacking
             isAttacking = false;
-            timers.transform.GetChild(2).gameObject.GetComponent<TimerController>().Reset();
             questManager.Event("Spin Attack", "Use", true);
         }
     }
@@ -320,6 +324,7 @@ public class PlayerController : MonoBehaviour
         if (timers.transform.GetChild(3).gameObject.GetComponent<TimerController>().CanAttack())
         {
             // Start Attacking
+            timers.transform.GetChild(3).gameObject.GetComponent<TimerController>().Reset();
             isAttacking = true;
             // Animate Jump
             soundManager.PlaySound(soundManager.jump);
@@ -351,7 +356,6 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(1);
             shadow.SetActive(false);
             isAttacking = false;
-            timers.transform.GetChild(3).gameObject.GetComponent<TimerController>().Reset();
             questManager.Event("Ground Pound", "Use", true);
         }
     }

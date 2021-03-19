@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class DungeonManager : MonoBehaviour
@@ -60,16 +61,24 @@ public class DungeonManager : MonoBehaviour
 
     public Vector2 RandomPosition(Rect room, bool check)
     {
-        Vector2 position = new Vector2((int) Random.Range(room.xMin + 1, room.xMax - 1),
-            (int) Random.Range(room.yMin + 1, room.yMax - 1));
-        if (check)
+        try
         {
-            if (Mathf.Abs(player.transform.position.magnitude - position.magnitude) > 1)
-                return position;
-            else
-                return RandomPosition(room, true);
+            Vector2 position = new Vector2((int) Random.Range(room.xMin + 1, room.xMax - 1),
+                (int) Random.Range(room.yMin + 1, room.yMax - 1));
+            if (check)
+            {
+                if (Mathf.Abs(player.transform.position.magnitude - position.magnitude) > 1)
+                    return position;
+                else
+                    return RandomPosition(room, true);
+            }
+            return position;
         }
-        return position;
+        catch (StackOverflowException e)
+        {
+            uiManager.Restart();
+        }
+        return Vector2.zero;
     }
 
     public void PlacePlayer(Rect room)
@@ -368,7 +377,6 @@ public class DungeonManager : MonoBehaviour
         GameObject boss = Instantiate(prefab, position, Quaternion.Euler(0, 0, 0), enemies.transform);
         boss.name = boss.name.Replace("(Clone)", "");
         boss.GetComponent<EnemyController>().SetBoss();
-        boss.GetComponent<EnemyController>().SetDifficulty(difficulty);
         boss.GetComponent<EnemyController>().health = (difficulty <= 10 ? 10 : difficulty <= 25 ? 25 : difficulty <= 50 ? 50 : difficulty <= 75 ? 75 : 100);
         boss.GetComponent<EnemyController>().attack = (difficulty <= 10 ? 1 : difficulty <= 25 ? 2 : difficulty <= 50 ? 3 : difficulty <= 75 ? 4 : 5);
         switch (level)

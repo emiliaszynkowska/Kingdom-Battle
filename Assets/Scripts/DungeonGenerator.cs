@@ -10,6 +10,7 @@ public class DungeonGenerator : MonoBehaviour
     public Tile edgeTile;
     public Tile leftEdgeTile;
     public Tile rightEdgeTile;
+    public Tile bothEdgeTile;
     public Tile leftCornerTile;
     public Tile rightCornerTile;
     public Tile leftPointTile;
@@ -49,6 +50,29 @@ public class DungeonGenerator : MonoBehaviour
         return dungeons[Random.Range(0, dungeons.Count)];
     }
 
+    public void AddDifficulty()
+    {
+        difficulty += 5;
+        PlayerData.Difficulty = difficulty;
+        Debug.Log("Difficulty +5");
+        Debug.Log("Difficulty " + difficulty);
+        Debug.Log("Wins " + PlayerData.Wins);
+        Debug.Log("Losses " + PlayerData.Losses);
+        Debug.Log("Kills " + PlayerData.Kills);
+        Debug.Log("Hits " + PlayerData.Hits);
+    }
+
+    public void SubtractDifficulty()
+    {
+        difficulty -= 5;
+        PlayerData.Difficulty = difficulty;
+        Debug.Log("Difficulty -5");
+        Debug.Log("Wins " + PlayerData.Wins);
+        Debug.Log("Losses " + PlayerData.Losses);
+        Debug.Log("Kills " + PlayerData.Kills);
+        Debug.Log("Hits " + PlayerData.Hits);
+    }
+
     void Start()
     {
         // Generate 
@@ -57,17 +81,17 @@ public class DungeonGenerator : MonoBehaviour
             GenerateBossRoom();
         else
         {
-            if (level < 2)
+            if (difficulty < 25)
             {
                 width = 50; 
                 height = 50;
             }
-            if (level < 5)
+            if (difficulty < 50)
             {
                 width = 75; 
                 height = 75;
             }
-            else if (level < 8)
+            else if (difficulty < 75)
             {
                 width = 100; 
                 height = 100;
@@ -107,16 +131,16 @@ public class DungeonGenerator : MonoBehaviour
         else
             level = 1;
         // Set Difficulty
+        difficulty = PlayerData.Difficulty;
         if (level == 1)
             difficulty = 10;
-        else if (level < 5)
-            difficulty = 25;
-        else if (level < 8)
-            difficulty = 50;
-        else if (level < 11)
-            difficulty = 75;
-        else if (level == 11)
-            difficulty = 100;
+        else if (level == 2)
+            difficulty += 25;
+        else if (level == 5)
+            difficulty += 25;
+        else if (level == 8)
+            difficulty += 25;
+        difficulty = Mathf.Clamp(difficulty, 0, 100);
     }
 
     void Generate(Dungeon dungeon)
@@ -314,6 +338,13 @@ public class DungeonGenerator : MonoBehaviour
                     {
                         innerWallMap.SetTile(posRight,rightWallTile);
                     }
+                    //If a wall is opposite another wall
+                    if (groundMap.GetTile(pos) != null && groundMap.GetTile(posRight) == null &&
+                        groundMap.GetTile(posLeft) == null && outerWallMap.GetTile(posRight) == null &&
+                        outerWallMap.GetTile(posLeft) == null)
+                    {
+                        outerWallMap.SetTile(pos, bothEdgeTile);
+                    }
                 }
             }
         }
@@ -330,12 +361,15 @@ public class DungeonGenerator : MonoBehaviour
                 // Get Tiles
                 Vector3Int pos1 = new Vector3Int(xMap, yMap, 0);
                 Vector3Int pos2 = new Vector3Int(xMap + 1, yMap, 0);
+                Vector3Int posLower = new Vector3Int(xMap, yMap - 1, 0);
+                Vector3Int posLowerLower = new Vector3Int(xMap, yMap - 2, 0);
                 Vector3Int posUpperLeft = new Vector3Int(xMap, yMap + 1, 0);
                 Vector3Int posUpperRight = new Vector3Int(xMap + 1, yMap + 1, 0);
+                Vector3Int posUpperRightRight = new Vector3Int(xMap + 4, yMap + 1, 0);
                 Vector3Int posLeft = new Vector3Int(xMap - 1, yMap, 0);
                 Vector3Int posRight = new Vector3Int(xMap + 2, yMap, 0);
                 Vector3Int posLeftLeft = new Vector3Int(xMap - 2, yMap, 0);
-                Vector3Int posRightRight = new Vector3Int(xMap + 3, yMap, 0);
+                Vector3Int posRightRight = new Vector3Int(xMap + 4, yMap, 0);
 
                 // If a doorway exists
                 if (groundMap.GetTile(pos1) != null && groundMap.GetTile(pos2) != null &&
@@ -345,9 +379,18 @@ public class DungeonGenerator : MonoBehaviour
                 {
                     if (!special)
                     {
-                        var door = dungeonManager.PlaceSpecialDoor(posUpperRight);
-                        questManager.specialDoor = door;
-                        special = true;
+                        if (outerWallMap.GetTile(posRightRight) != null && groundMap.GetTile(posLowerLower) != null)
+                        {
+                            var door = dungeonManager.PlaceSpecialDoor(posUpperRightRight);
+                            questManager.specialDoor = door;
+                            special = true;
+                        }
+                        else if (outerWallMap.GetTile(posLeftLeft) != null && groundMap.GetTile(posLowerLower) != null)
+                        {
+                            var door = dungeonManager.PlaceSpecialDoor(posUpperLeft);
+                            questManager.specialDoor = door;
+                            special = true;
+                        }
                     }
                     else
                     {
@@ -459,7 +502,6 @@ public class DungeonGenerator : MonoBehaviour
         // Place Door
         dungeonManager.PlaceBossDoor(new Vector3(8, 17, 0));
         // Set UI
-        dungeonManager.uiManager.difficulty = difficulty;
         dungeonManager.uiManager.levelNum = level;
         dungeonManager.uiManager.bossFight = true;
     }

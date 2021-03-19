@@ -49,7 +49,6 @@ public class UIManager : MonoBehaviour
     public bool isError;
     public int levelNum;
     public bool bossFight;
-    public int difficulty;
     public int activeItem;
     // Assets
     public Sprite fullLife;
@@ -532,7 +531,7 @@ public class UIManager : MonoBehaviour
         npcName.text = npc;
         message.text = text;
         dialog.SetActive(true);
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSecondsRealtime(0.1f);
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
         dialog.SetActive(false);
     }
@@ -564,7 +563,6 @@ public class UIManager : MonoBehaviour
     {
         ResetCamera();
         levelNum = n;
-        difficulty = d;
         PauseGame();
         level.transform.GetChild(1).GetComponent<Text>().text = "Level " + n.ToString();
         menu.SetActive(false);
@@ -698,7 +696,7 @@ public class UIManager : MonoBehaviour
         switch (strPrimary)
         {
             case "Aggressive":
-                string titleAggressive = ScoreManager.TitleAggressive(difficulty);
+                string titleAggressive = ScoreManager.TitleAggressive(PlayerData.Difficulty);
                 primary.GetComponent<Image>().sprite = spriteAggressive;
                 primary.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.red;
                 primary.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = Color.red;
@@ -708,7 +706,7 @@ public class UIManager : MonoBehaviour
                 t.Add(titleAggressive);
                 break;
             case "Defensive":
-                string titleDefensive = ScoreManager.TitleDefensive(difficulty);
+                string titleDefensive = ScoreManager.TitleDefensive(PlayerData.Difficulty);
                 primary.GetComponent<Image>().sprite = spriteDefensive;
                 primary.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(0, 0.7f, 1);
                 primary.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = new Color(0, 0.7f, 1);
@@ -721,7 +719,7 @@ public class UIManager : MonoBehaviour
         switch (strSecondary)
         {
             case "Exploration":
-                string titleExploration = ScoreManager.TitleExploration(difficulty);
+                string titleExploration = ScoreManager.TitleExploration(PlayerData.Difficulty);
                 secondary.GetComponent<Image>().sprite = spriteExploration;
                 secondary.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(0.1f, 0.8f, 0);
                 secondary.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = new Color(0.1f, 0.8f, 0);
@@ -731,7 +729,7 @@ public class UIManager : MonoBehaviour
                 t.Add(titleExploration);
                 break;
             case "Collection":
-                string titleCollection = ScoreManager.TitleCollection(difficulty);
+                string titleCollection = ScoreManager.TitleCollection(PlayerData.Difficulty);
                 secondary.GetComponent<Image>().sprite = spriteCollection;
                 secondary.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(1, 0.75f, 0);
                 secondary.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = new Color(1, 0.75f, 0);
@@ -741,7 +739,7 @@ public class UIManager : MonoBehaviour
                 t.Add(titleCollection);
                 break;
             case "Puzzle Solving":
-                string titlePuzzleSolving = ScoreManager.TitlePuzzleSolving(difficulty);
+                string titlePuzzleSolving = ScoreManager.TitlePuzzleSolving(PlayerData.Difficulty);
                 secondary.GetComponent<Image>().sprite = spritePuzzleSolving;
                 secondary.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = new Color(0.7f, 0.2f, 1);
                 secondary.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = new Color(0.7f, 0.2f, 1);
@@ -777,6 +775,7 @@ public class UIManager : MonoBehaviour
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
         soundManager.PlaySound(soundManager.clickButton);
         disciplines.SetActive(false);
+        PlayerData.Wins += 1;
         playerController.SaveData(d, t, false);
         LevelNext();
     }

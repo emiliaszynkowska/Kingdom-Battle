@@ -39,6 +39,7 @@ public class WiggController : MonoBehaviour
         if (!talking && !active)
         {
             talking = true;
+            uiManager.PauseGame();
             switch (PlayerData.Level)
             {
                 // Spin Attack
@@ -77,10 +78,13 @@ public class WiggController : MonoBehaviour
             }
             talking = false;
             active = true;
+            uiManager.ResumeGame();
         }
         // Quest Complete
         else if (active)
         {
+            talking = true;
+            uiManager.PauseGame();
             if (PlayerData.Level == 3 && playerController.GetInventory().Contains("Scroll"))
             {
                 yield return uiManager.Speak(npcName, "Well done, you found the scroll.");
@@ -92,6 +96,7 @@ public class WiggController : MonoBehaviour
                 uiManager.DisableItem(playerController.GetInventory().Count);
                 yield return uiManager.Speak(npcName, "This scroll speaks of an ancient technique, the Spin Attack...");
                 yield return uiManager.FadeIn();
+                yield return new WaitForSecondsRealtime(1);
                 soundManager.PlaySound(soundManager.powerup);
                 uiManager.SetAttacks(2);
                 yield return uiManager.FadeOut();
@@ -114,6 +119,7 @@ public class WiggController : MonoBehaviour
                 playerController.RemoveItem("Scroll");
                 yield return uiManager.Speak(npcName, "This scroll speaks of an ancient technique, the Ground Pound...");
                 yield return uiManager.FadeIn();
+                yield return new WaitForSecondsRealtime(1);
                 soundManager.PlaySound(soundManager.powerup);
                 uiManager.SetAttacks(3);
                 yield return uiManager.FadeOut();
@@ -138,6 +144,8 @@ public class WiggController : MonoBehaviour
                 else if (PlayerData.Level == 8)
                     yield return uiManager.Speak(npcName, "Return when you have found all four potions.");
             }
+            uiManager.ResumeGame();
+            talking = false;
             yield return new WaitForSeconds(3);
             questManager.CheckQuests();
         }

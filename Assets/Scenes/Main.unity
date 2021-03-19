@@ -1799,6 +1799,7 @@ GameObject:
   - component: {fileID: 187748902}
   - component: {fileID: 187748901}
   - component: {fileID: 187748900}
+  - component: {fileID: 187748904}
   m_Layer: 12
   m_Name: Map
   m_TagString: Map
@@ -1913,6 +1914,7 @@ MonoBehaviour:
   edgeTile: {fileID: 11400000, guid: c8fc78f05ad1da54aaf28465f6498730, type: 2}
   leftEdgeTile: {fileID: 11400000, guid: de1390a54c943a441ae0cb7cdb87c16e, type: 2}
   rightEdgeTile: {fileID: 11400000, guid: be0da2e0898a14a43a2706af050d77c7, type: 2}
+  bothEdgeTile: {fileID: 0}
   leftCornerTile: {fileID: 11400000, guid: 62fa29315ca4d8d46b835e04d78a59a9, type: 2}
   rightCornerTile: {fileID: 11400000, guid: 024b28424c8add24ebc935fd3a6ef1d5, type: 2}
   leftPointTile: {fileID: 11400000, guid: b27cc0fede01bfe4a912be2c5a9ca14e, type: 2}
@@ -1965,6 +1967,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &187748904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 187748899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3950ec8c8f28460c8816afdc8c124985, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dungeonGenerator: {fileID: 187748901}
+  totalTime: 30
 --- !u!1 &190597159
 GameObject:
   m_ObjectHideFlags: 0
@@ -14885,7 +14901,6 @@ MonoBehaviour:
   isError: 0
   levelNum: 0
   bossFight: 0
-  difficulty: 0
   activeItem: 0
   fullLife: {fileID: 7069302953715104483, guid: 4ed51b82cf164104bbd48e94f6825e45,
     type: 3}
@@ -20002,7 +20017,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2076032324
 MonoBehaviour:
   m_ObjectHideFlags: 0

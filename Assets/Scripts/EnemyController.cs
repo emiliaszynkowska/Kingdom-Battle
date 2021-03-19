@@ -19,7 +19,6 @@ public class EnemyController : MonoBehaviour
     public bool groundPoundAttack;
     public bool magicAttack;
     public bool spawnEnemies;
-    public int difficulty;
     public int groundPoundTime;
     public int magicTime;
     public int spawnTime;
@@ -92,7 +91,7 @@ public class EnemyController : MonoBehaviour
             isMoving = true;
             body.MovePosition(Vector2.MoveTowards(body.position, target, speed / 10 * Time.fixedDeltaTime));
         }
-        else if (Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 5)
+        else if (Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 10)
         {
             isMoving = true;
             body.MovePosition(Vector2.MoveTowards(body.position, target, speed / 10 * Time.fixedDeltaTime));
@@ -113,11 +112,6 @@ public class EnemyController : MonoBehaviour
     public void SetBoss()
     {
         boss = true;
-    }
-
-    public void SetDifficulty(int d)
-    {
-        difficulty = d;
     }
 
     public void SetUpgrade(string u)
@@ -156,6 +150,7 @@ public class EnemyController : MonoBehaviour
         healthText.enabled = false;
         GetComponent<Collider2D>().enabled = false;
         // Add Aggressive Score
+        PlayerData.Kills += 1;
         ScoreManager.AddAggressive(1);
         DungeonGenerator dungeonGenerator = GameObject.Find("Map").GetComponent<DungeonGenerator>();
         DungeonManager dungeonManager = dungeonGenerator.dungeonManager;
@@ -300,14 +295,14 @@ public class EnemyController : MonoBehaviour
                 if (name.Equals("Elite Knight") || name.Equals("Royal Guardian"))
                 {
                     GameObject knight = Instantiate(knightPrefab, transform.position, transform.rotation, enemies.transform);
-                    knight.GetComponent<EnemyController>().health = (difficulty <= 10 ? 1 : difficulty <= 25 ? 2 : difficulty <= 50 ? 3 : difficulty <= 75 ? 4 : 5);
-                    knight.GetComponent<EnemyController>().attack = (difficulty <= 25 ? 1 : difficulty <= 50 ? 2 : 3);
+                    knight.GetComponent<EnemyController>().health = (PlayerData.Difficulty <= 10 ? 1 : PlayerData.Difficulty <= 25 ? 2 : PlayerData.Difficulty <= 50 ? 3 : PlayerData.Difficulty <= 75 ? 4 : 5);
+                    knight.GetComponent<EnemyController>().attack = (PlayerData.Difficulty <= 25 ? 1 : PlayerData.Difficulty <= 50 ? 2 : 3);
                 }
                 else if (name.Equals("Troll"))
                 {
                     GameObject goblin = Instantiate(goblinPrefab, transform.position, transform.rotation, enemies.transform);
-                    goblin.GetComponent<EnemyController>().health = (difficulty <= 10 ? 1 : difficulty <= 25 ? 2 : difficulty <= 50 ? 3 : difficulty <= 75 ? 4 : 5);
-                    goblin.GetComponent<EnemyController>().attack = (difficulty <= 25 ? 1 : difficulty <= 50 ? 2 : 3);
+                    goblin.GetComponent<EnemyController>().health = (PlayerData.Difficulty <= 10 ? 1 : PlayerData.Difficulty <= 25 ? 2 : PlayerData.Difficulty <= 50 ? 3 : PlayerData.Difficulty <= 75 ? 4 : 5);
+                    goblin.GetComponent<EnemyController>().attack = (PlayerData.Difficulty <= 25 ? 1 : PlayerData.Difficulty <= 50 ? 2 : 3);
                 }
             }
             yield return new WaitForSeconds(spawnTime);
