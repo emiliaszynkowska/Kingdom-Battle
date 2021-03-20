@@ -30,8 +30,9 @@ public class DungeonGenerator : MonoBehaviour
     public int level;
     public bool generated;
     private List<Dungeon> dungeons = new List<Dungeon>();
-    public DungeonManager dungeonManager;
+    public UIManager uiManager;
     public QuestManager questManager;
+    public DungeonManager dungeonManager;
     public GameObject dungeonColliders;
     public GameObject dungeonCollider;
 
@@ -48,29 +49,6 @@ public class DungeonGenerator : MonoBehaviour
     public Dungeon RandomDungeon()
     {
         return dungeons[Random.Range(0, dungeons.Count)];
-    }
-
-    public void AddDifficulty()
-    {
-        difficulty += 5;
-        PlayerData.Difficulty = difficulty;
-        Debug.Log("Difficulty +5");
-        Debug.Log("Difficulty " + difficulty);
-        Debug.Log("Wins " + PlayerData.Wins);
-        Debug.Log("Losses " + PlayerData.Losses);
-        Debug.Log("Kills " + PlayerData.Kills);
-        Debug.Log("Hits " + PlayerData.Hits);
-    }
-
-    public void SubtractDifficulty()
-    {
-        difficulty -= 5;
-        PlayerData.Difficulty = difficulty;
-        Debug.Log("Difficulty -5");
-        Debug.Log("Wins " + PlayerData.Wins);
-        Debug.Log("Losses " + PlayerData.Losses);
-        Debug.Log("Kills " + PlayerData.Kills);
-        Debug.Log("Hits " + PlayerData.Hits);
     }
 
     void Start()
@@ -116,7 +94,7 @@ public class DungeonGenerator : MonoBehaviour
             // Place Entities
             PlaceEntities();
             // Start Level
-            dungeonManager.uiManager.Level(level, difficulty);
+            uiManager.Level(level, difficulty);
             generated = true;
         }
     }
@@ -141,6 +119,7 @@ public class DungeonGenerator : MonoBehaviour
         else if (level == 8)
             difficulty += 25;
         difficulty = Mathf.Clamp(difficulty, 0, 100);
+		uiManager.SetDifficulty(difficulty);
     }
 
     void Generate(Dungeon dungeon)
@@ -383,6 +362,7 @@ public class DungeonGenerator : MonoBehaviour
                         {
                             var door = dungeonManager.PlaceSpecialDoor(posUpperRightRight);
                             questManager.specialDoor = door;
+                            questManager.specialDoorPos = door.transform.position;
                             special = true;
                         }
                         else if (outerWallMap.GetTile(posLeftLeft) != null && groundMap.GetTile(posLowerLower) != null)
@@ -407,6 +387,38 @@ public class DungeonGenerator : MonoBehaviour
                 }
             }
         }
+    }
+
+    public bool PlaceDoor()
+    {
+        BoundsInt bounds = groundMap.cellBounds;
+        for (int xMap = bounds.xMin - 10; xMap <= bounds.xMax + 10; xMap++)
+        {
+            for (int yMap = bounds.yMin - 10; yMap <= bounds.yMax + 10; yMap++)
+            {
+                // Get Tiles
+                Vector3Int pos1 = new Vector3Int(xMap, yMap, 0);
+                Vector3Int pos2 = new Vector3Int(xMap + 1, yMap, 0);
+                Vector3Int posUpperLeft = new Vector3Int(xMap, yMap + 1, 0);
+                Vector3Int posUpperRight = new Vector3Int(xMap + 1, yMap + 1, 0);
+                Vector3Int posLeft = new Vector3Int(xMap - 1, yMap, 0);
+                Vector3Int posRight = new Vector3Int(xMap + 2, yMap, 0);
+                Vector3Int posLeftLeft = new Vector3Int(xMap - 2, yMap, 0);
+                Vector3Int posRightRight = new Vector3Int(xMap + 4, yMap, 0);
+
+                // If a doorway exists
+                if (groundMap.GetTile(pos1) != null && groundMap.GetTile(pos2) != null &&
+                    groundMap.GetTile(posUpperLeft) != null && groundMap.GetTile(posUpperRight) != null &&
+                    outerWallMap.GetTile(posLeft) != null && outerWallMap.GetTile(posRight) != null
+                    && outerWallMap.GetTile(posLeftLeft) != null & outerWallMap.GetTile(posRightRight) != null)
+                {
+                    // Place a door 
+                    dungeonManager.PlaceDoor(posUpperRight);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void PlaceColliders()
@@ -502,8 +514,8 @@ public class DungeonGenerator : MonoBehaviour
         // Place Door
         dungeonManager.PlaceBossDoor(new Vector3(8, 17, 0));
         // Set UI
-        dungeonManager.uiManager.levelNum = level;
-        dungeonManager.uiManager.bossFight = true;
+        uiManager.levelNum = level;
+        uiManager.bossFight = true;
     }
 
 }

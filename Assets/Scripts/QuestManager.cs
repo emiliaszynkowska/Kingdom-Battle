@@ -18,6 +18,7 @@ public class QuestManager : MonoBehaviour
     public GameObject NPCs;
     public GameObject quests;
     public GameObject specialDoor;
+    public Vector2 specialDoorPos;
     public GameObject mainQuests;
     public GameObject sideQuests;
     // Variables

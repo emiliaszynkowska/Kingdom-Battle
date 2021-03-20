@@ -15,8 +15,8 @@ public static class PlayerData
     // Difficulty
     public static int Wins;
     public static int Losses;
-    public static int Kills; 
+    public static int Kills;
     public static int Hits;
-    public static float AvgTime;
+    public static float PreviousScore = 0.5f;
     public static int Difficulty;
 }

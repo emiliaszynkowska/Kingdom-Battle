@@ -41,6 +41,7 @@ public class UIManager : MonoBehaviour
     public Text notification;
     public GameObject upgrade;
     public GameObject invFull;
+    public Image difficulty;
     public Image equipment;
     public Image background;
     public Image fade;
@@ -212,6 +213,11 @@ public class UIManager : MonoBehaviour
                 timers.transform.GetChild(3).localPosition = new Vector3(410, 50, 0);
                 break;
         }
+    }
+
+    public void SetDifficulty(float d)
+    {
+        difficulty.fillAmount = d/100;
     }
 
     // Inventory
