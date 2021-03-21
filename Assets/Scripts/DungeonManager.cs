@@ -74,7 +74,7 @@ public class DungeonManager : MonoBehaviour
             }
             return position;
         }
-        catch (StackOverflowException e)
+        catch (StackOverflowException)
         {
             uiManager.Restart();
         }

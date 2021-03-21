@@ -91,7 +91,7 @@ public class EnemyController : MonoBehaviour
             isMoving = true;
             body.MovePosition(Vector2.MoveTowards(body.position, target, speed / 10 * Time.fixedDeltaTime));
         }
-        else if (Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 10)
+        else if (Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 5)
         {
             isMoving = true;
             body.MovePosition(Vector2.MoveTowards(body.position, target, speed / 10 * Time.fixedDeltaTime));
@@ -239,7 +239,7 @@ public class EnemyController : MonoBehaviour
                 p.transform.SetParent(transform);
                 p.tag = "Projectile";
             }
-            else if (magicAttack && Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 2)
+            else if (magicAttack && isMoving)
             {
                 soundManager.PlaySound(soundManager.magicAttack);
                 GameObject p = Instantiate(projectilePrefab, transform.position, transform.rotation);

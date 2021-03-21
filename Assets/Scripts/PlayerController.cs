@@ -210,6 +210,8 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSecondsRealtime(0.5f);
             uiManager.GameOver();
             PlayerData.Losses += 1;
+            PlayerData.Kills = 0;
+            PlayerData.Hits = 0;
             PlayerData.Level = 0;
             PlayerData.Boss = false;
         }

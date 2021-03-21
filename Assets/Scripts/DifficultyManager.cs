@@ -43,17 +43,32 @@ public class DifficultyManager : MonoBehaviour
         float totalDist = Math.Abs(questManager.specialDoorPos.magnitude - dungeonManager.campfirePos.magnitude);
         // Calculate Total Score
         float[] scores = new float[6];
-        scores[0] = (PlayerData.Wins / PlayerData.Losses) / 2; // Success
-        scores[1] = (PlayerData.Kills / PlayerData.Hits) / 2; // Damage
-        scores[2] = PlayerData.PreviousScore; // Previous Score
-        scores[3] = questManager.complete / questManager.maxQuests; // Quests
-        scores[4] = playerController.health / playerController.livesActive; // Health
-        scores[5] = (dungeonGenerator.GetDungeons().Count - dungeonGenerator.dungeonColliders.transform.childCount) / 
-                    dungeonGenerator.GetDungeons().Count; // Rooms
+        if (PlayerData.Wins == PlayerData.Losses)
+            scores[0] = 0.5f;
+        else
+            scores[0] = ((float) PlayerData.Wins / (float) PlayerData.Losses) / 2; // Success
+        if (PlayerData.Kills == PlayerData.Hits)
+            scores[1] = 0.5f;
+        else if (PlayerData.Kills < PlayerData.Hits)
+        {
+            scores[1] = ((float) PlayerData.Kills / (float) PlayerData.Hits); // Damage
+        }
+        else if (PlayerData.Hits < PlayerData.Kills)
+        {
+            scores[1] = 1 - ((float) PlayerData.Hits / (float) PlayerData.Kills); // Damage
+        }
+        scores[2] = (float) PlayerData.PreviousScore; // Previous Score
+        scores[3] = (float) questManager.complete / (float) questManager.maxQuests; // Quests
+        scores[4] = (float) playerController.health / (float) playerController.livesActive; // Health
+        scores[5] = (float) (dungeonGenerator.GetDungeons().Count - dungeonGenerator.dungeonColliders.transform.childCount) / 
+                    (float) dungeonGenerator.GetDungeons().Count; // Rooms
         float totalScore = (3 * scores[0] + 3 * scores[1] + 2 * scores[2] + 2 * scores[3] + scores[4] + scores[5])/ 12;
         PlayerData.PreviousScore = totalScore;
+        Debug.Log($"Success: {scores[0]}, Kills: {PlayerData.Kills}, Hits: {PlayerData.Hits}, Damage: {scores[1]}, " +
+                  $"Previous: {scores[2]}, Quests: {scores[3]}, Health: {scores[4]}, Rooms: {scores[5]}");
+        Debug.Log($"Total: {totalScore}");
         // Select Chromosome
-        if (totalScore <= 0.5f)
+        if (totalScore > 0.6f)
         {
             // Win 
             for (int i = 0; i < 6; i++)
@@ -64,7 +79,7 @@ public class DifficultyManager : MonoBehaviour
                 }
             }
         }
-        else if (totalScore > 0.5f)
+        else if (totalScore < 0.4f)
         {
            // Lose
            for (int i = 0; i < 6; i++)
@@ -75,6 +90,7 @@ public class DifficultyManager : MonoBehaviour
                }
            }
         }
+        Reset();
     }
 
     void Adjust(int behaviour, int sign)
@@ -83,56 +99,60 @@ public class DifficultyManager : MonoBehaviour
         { 
             // Difficulty
             case 0:
-                if (dungeonGenerator.difficulty >= 5 && dungeonGenerator.difficulty <= 95) 
-                    dungeonGenerator.difficulty += sign * learningRate * 5; // difficulty +/- 5
-                if (Random.Range(0,100) < mutationRate && dungeonGenerator.difficulty >= 5 && dungeonGenerator.difficulty <= 95) 
+                dungeonGenerator.difficulty += sign * learningRate * 5; // difficulty +/- 5
+                if (Random.Range(0,100) < mutationRate) 
                     dungeonGenerator.difficulty += sign * learningRate * 5; // mutation difficulty +/- 5
+                dungeonGenerator.difficulty = Mathf.Clamp(dungeonGenerator.difficulty, 0, 100);
                 uiManager.SetDifficulty(dungeonGenerator.difficulty);
                 PlayerData.Difficulty = dungeonGenerator.difficulty;
+                Debug.Log($"Difficulty {sign * 5}");
                 break;
             // Enemy Speed
             case 1:
                 for (int i = 0; i < enemies.transform.childCount; i++)
                 {
                     EnemyController c = enemies.transform.GetChild(i).GetComponent<EnemyController>();
-                    if (c.speed > 5 && c.speed <= 25) 
-                        c.speed += sign * learningRate * 5; // enemy speed +/- 5
-                    if (Random.Range(0,100) < mutationRate && c.speed > 5 && c.speed <= 25)
+                    c.speed += sign * learningRate * 5; // enemy speed +/- 5
+                    if (Random.Range(0,100) < mutationRate)
                         c.speed += sign * learningRate * 5; // mutation enemy speed +/- 5
+                    c.speed = Mathf.Clamp(c.speed, 10, 30);
                 }
+                Debug.Log($"Enemy Speed {sign * 5}");
                 break;
-            // Enemy Attacks
+            // Enemy Attack Time
             case 2:
                 for (int i = 0; i < enemies.transform.childCount; i++)
                 {
                     // Magic Time
                     EnemyController c = enemies.transform.GetChild(i).GetComponent<EnemyController>();
-                    if (c.magicTime > 0 && c.magicTime < 10)
-                        c.magicTime += sign * learningRate; // magic time +/- 1
-                    if (Random.Range(0,100) < mutationRate && c.magicTime > 0 && c.magicTime < 10)
+                    c.magicTime += sign * learningRate; // magic time +/- 1
+                    if (Random.Range(0,100) < mutationRate)
                         c.magicTime += sign * learningRate; // mutation magic time +/- 1
+                    c.magicTime = Mathf.Clamp(c.magicTime, 1, 10);
                     // Spawn Time
-                    if (c.spawnTime > 0 && c.spawnTime < 10)
-                        c.spawnTime += sign * learningRate; // spawn time +/- 1
-                    if (Random.Range(0,100) < mutationRate && c.spawnTime > 0 && c.spawnTime < 10)
+                    c.spawnTime += sign * learningRate; // spawn time +/- 1
+                    if (Random.Range(0,100) < mutationRate)
                         c.spawnTime += sign * learningRate; // mutation spawn time +/- 1
+                    c.spawnTime = Mathf.Clamp(c.spawnTime, 1, 10);
                     // Ground Pound Time
-                    if (c.groundPoundTime > 0 && c.groundPoundTime < 10)
-                        c.groundPoundTime += sign * learningRate; // ground pound time +/- 1
-                    if (Random.Range(0,100) < mutationRate && c.groundPoundTime > 0 && c.groundPoundTime < 10)
+                    c.groundPoundTime += sign * learningRate; // ground pound time +/- 1
+                    if (Random.Range(0,100) < mutationRate)
                         c.groundPoundTime += sign * learningRate; // mutation ground pound time +/- 1
+                    c.groundPoundTime = Mathf.Clamp(c.groundPoundTime, 1, 10);
                 }
+                Debug.Log($"Enemy Attack Time {sign}");
                 break;
             // Enemy Health
             case 3:
                 for (int i = 0; i < enemies.transform.childCount; i++)
                 {
                     EnemyController c = enemies.transform.GetChild(i).GetComponent<EnemyController>();
-                    if (c.health > 1 && c.health < 30)
-                        c.health += sign * learningRate; // enemy health +/- 1
-                    if (Random.Range(0,100) < mutationRate && c.health > 1 && c.health < 30)
-                        c.speed += sign * learningRate; // mutation enemy health +/- 1
+                    c.health += sign * learningRate; // enemy health +/- 1
+                    if (Random.Range(0,100) < mutationRate)
+                        c.health += sign * learningRate; // mutation enemy health +/- 1
+                    c.health = Mathf.Clamp(c.health, 1, 15);
                 }
+                Debug.Log($"Enemy Health {sign}");
                 break;    
             // NPCs
             case 4:
@@ -169,12 +189,13 @@ public class DifficultyManager : MonoBehaviour
                             }
                             else if (j != npcIndex && NPCs.transform.GetChild(j).name.Equals(npcName))
                             {
-                                Destroy(NPCs.transform.GetChild(npcIndex)); // NPCs - 1
+                                Destroy(NPCs.transform.GetChild(npcIndex).gameObject); // NPCs - 1
                                 break;
                             }
                         }
                     }
                 }
+                Debug.Log($"NPCs {sign}");
                 break;
             // Objects
             case 5:
@@ -196,7 +217,7 @@ public class DifficultyManager : MonoBehaviour
                             }
                             else if (j != objIndex && objects.transform.GetChild(j).name.Equals(objName))
                             {
-                                Destroy(objects.transform.GetChild(objIndex)); // objects - 1
+                                Destroy(objects.transform.GetChild(objIndex).gameObject); // objects - 1
                                 break;
                             }
                         }
@@ -216,16 +237,15 @@ public class DifficultyManager : MonoBehaviour
                         }
                     }
                 }
+                Debug.Log($"Objects {sign}");
                 break;
         }
     }
 
     void Reset()
     {
-        PlayerData.Kills = 0;
-        PlayerData.Hits = 0;
         time = totalTime;
         StartCoroutine(Collect());
     }
-    
+
 }

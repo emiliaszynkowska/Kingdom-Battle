@@ -12,6 +12,7 @@ public static class PlayerData
     public static bool Boss;
     public static List<string> Disciplines;
     public static List<string> Titles;
+    public static List<bool> Levels;
     // Difficulty
     public static int Wins;
     public static int Losses;

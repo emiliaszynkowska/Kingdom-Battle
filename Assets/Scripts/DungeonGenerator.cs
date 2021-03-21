@@ -102,21 +102,24 @@ public class DungeonGenerator : MonoBehaviour
     void LoadData()
     {
         // Load Data
+        if (PlayerData.Levels == null)
+            PlayerData.Levels = new List<bool>() {false, false, false, false, false, false, false, false, false, false};
         if (PlayerData.Level != 0)
         {
             level = PlayerData.Level;
+            PlayerData.Levels[level - 1] = true;
         }
         else
             level = 1;
         // Set Difficulty
         difficulty = PlayerData.Difficulty;
-        if (level == 1)
+        if (level == 1 && PlayerData.Levels[0] == false)
             difficulty = 10;
-        else if (level == 2)
+        else if (level == 2 && PlayerData.Levels[1] == false)
             difficulty += 25;
-        else if (level == 5)
+        else if (level == 5 && PlayerData.Levels[4] == false)
             difficulty += 25;
-        else if (level == 8)
+        else if (level == 8 && PlayerData.Levels[7] == false)
             difficulty += 25;
         difficulty = Mathf.Clamp(difficulty, 0, 100);
 		uiManager.SetDifficulty(difficulty);
@@ -404,7 +407,7 @@ public class DungeonGenerator : MonoBehaviour
                 Vector3Int posLeft = new Vector3Int(xMap - 1, yMap, 0);
                 Vector3Int posRight = new Vector3Int(xMap + 2, yMap, 0);
                 Vector3Int posLeftLeft = new Vector3Int(xMap - 2, yMap, 0);
-                Vector3Int posRightRight = new Vector3Int(xMap + 4, yMap, 0);
+                Vector3Int posRightRight = new Vector3Int(xMap + 5, yMap, 0);
 
                 // If a doorway exists
                 if (groundMap.GetTile(pos1) != null && groundMap.GetTile(pos2) != null &&
