@@ -56,7 +56,7 @@ public class WiggController : MonoBehaviour
                     yield return uiManager.Speak(npcName, "Ah, we meet again. How is your journey?");
                     yield return uiManager.Speak(npcName, "I have something that may help you. But first, you must prove your skill.");
                     yield return  uiManager.Speak(npcName, "If you can defeat 5 monsters I will grant you this power.");
-                    questManager.AddMainQuest("Defeat 5 monsters                     0/5");
+                    questManager.AddMainQuest("Defeat 5 monsters             0/5");
                     break;
                 // Ground Pound
                 case 6:
@@ -73,7 +73,7 @@ public class WiggController : MonoBehaviour
                     yield return uiManager.Speak(npcName, "I have one final quest for you. Do this for me and I will award you this final power.");
                     yield return uiManager.Speak(npcName, "When four potions come together in unison, an incredible power is made.");
                     yield return uiManager.Speak(npcName, "You must find all four potions and bring them to me.");
-                    questManager.AddMainQuest("Bring all four potions to Wigg");
+                    questManager.AddMainQuest("Collect all four potions");
                     break;
             }
             talking = false;
@@ -96,12 +96,12 @@ public class WiggController : MonoBehaviour
                 uiManager.DisableItem(playerController.GetInventory().Count);
                 yield return uiManager.Speak(npcName, "This scroll speaks of an ancient technique, the Spin Attack...");
                 yield return uiManager.FadeIn();
-                yield return new WaitForSecondsRealtime(1);
                 soundManager.PlaySound(soundManager.powerup);
+                yield return new WaitForSecondsRealtime(1);
                 uiManager.SetAttacks(2);
                 yield return uiManager.FadeOut();
                 yield return uiManager.Speak(npcName, "You have learned the Spin Attack. Good luck.");
-                questManager.AddMainQuest("Use 3 Spin Attacks              0/3");
+                questManager.AddMainQuest("Use 3 Spin Attacks         0/3");
                 StartCoroutine(Disappear());
             }
             else if (PlayerData.Level == 5 && questManager.GetQuests().Contains("Return to Wigg"))
@@ -119,12 +119,12 @@ public class WiggController : MonoBehaviour
                 playerController.RemoveItem("Scroll");
                 yield return uiManager.Speak(npcName, "This scroll speaks of an ancient technique, the Ground Pound...");
                 yield return uiManager.FadeIn();
-                yield return new WaitForSecondsRealtime(1);
                 soundManager.PlaySound(soundManager.powerup);
+                yield return new WaitForSecondsRealtime(1);
                 uiManager.SetAttacks(3);
                 yield return uiManager.FadeOut();
                 yield return uiManager.Speak(npcName, "You have learned the Ground Pound. Good luck.");
-                questManager.AddMainQuest("Use 3 Ground Pounds             0/3");
+                questManager.AddMainQuest("Use 3 Ground Pounds         0/3");
                 StartCoroutine(Disappear());
             }
             else if (PlayerData.Level == 8 && questManager.GetQuests().Contains("Return to Wigg"))

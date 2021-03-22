@@ -21,7 +21,7 @@ public class TimerController : MonoBehaviour {
     {
         canAttack = false;
         timeText.text = time.ToString();
-        totalTime += time;
+        totalTime = time;
         icon.canvasRenderer.SetAlpha(0.5f);
         StartCoroutine(Second());
     }

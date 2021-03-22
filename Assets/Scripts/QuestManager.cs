@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -24,7 +26,7 @@ public class QuestManager : MonoBehaviour
     // Variables
     public int complete;
     public int maxQuests;
-    private List<string> listMainQuests = new List<string>();
+    public List<string> listMainQuests = new List<string>();
     private List<string> listSideQuests = new List<string>();
 
     public void Start()
@@ -94,7 +96,7 @@ public class QuestManager : MonoBehaviour
                         if (n == 1)
                             listMainQuests.Add("Open a chest");
                         else
-                            listMainQuests.Add($"Open {n} chests                       0/{n}");
+                            listMainQuests.Add($"Open {n} chests                    0/{n}");
                     }
                     break;
                 // Open door
@@ -106,7 +108,7 @@ public class QuestManager : MonoBehaviour
                         if (n == 1)
                             listMainQuests.Add("Open a door");
                         else
-                            listMainQuests.Add($"Open {n} doors                        0/{n}");
+                            listMainQuests.Add($"Open {n} doors                     0/{n}");
                     }
                     break;
                 // Find coins
@@ -114,7 +116,7 @@ public class QuestManager : MonoBehaviour
                     if (listMainQuests.FirstOrDefault(x => x.Contains("coins")) == null)
                     {
                         n = Random.Range(5, 30);
-                        listMainQuests.Add($"Collect {n} coins                  0/{n}");
+                        listMainQuests.Add($"Collect {n} coins               0/{n}");
                     }
                     break;
                 // Find item
@@ -172,7 +174,7 @@ public class QuestManager : MonoBehaviour
                     if (listMainQuests.FirstOrDefault(x => x.Contains("rooms")) == null)
                     {
                         n = Mathf.Clamp(Random.Range(3, dungeonGenerator.GetDungeons().Count/2), 3, 15);
-                        listMainQuests.Add($"Explore {n} rooms                 0/{n}");
+                        listMainQuests.Add($"Explore {n} rooms              0/{n}");
                     }
                     break;
                 // Fetch quest/Give item/Trade item
@@ -221,9 +223,9 @@ public class QuestManager : MonoBehaviour
                     {
                         n = Random.Range(1, 6);
                         if (n == 1) 
-                            listMainQuests.Add($"Defeat 1 {enemy}                        0/1");
+                            listMainQuests.Add($"Defeat 1 {enemy}                     0/1");
                         else
-                            listMainQuests.Add($"Defeat {n} {enemy}s                     0/{n}");
+                            listMainQuests.Add($"Defeat {n} {enemy}s                  0/{n}");
                     }
                     break;
                 // Infiltrate den
@@ -246,6 +248,7 @@ public class QuestManager : MonoBehaviour
     {
         if (!listMainQuests.Contains(q))
         {
+            listMainQuests.Add(q);
             mainQuests.transform.GetChild(listMainQuests.Count).GetComponent<Text>().text = q;
             mainQuests.transform.GetChild(listMainQuests.Count).GetComponent<Text>().color = Color.white;
             StartCoroutine(uiManager.Notification($"Quest Started: {q}", Color.white));
@@ -270,7 +273,7 @@ public class QuestManager : MonoBehaviour
 
     public void CheckQuests()
     {
-        if (complete == maxQuests && !specialDoor.GetComponent<DoorController>().opened)
+        if (complete == listMainQuests.Count + 1 && !specialDoor.GetComponent<DoorController>().opened)
         {
             soundManager.PlaySound(soundManager.open);
             StartCoroutine(uiManager.Speak("", "You heard a noise..."));
@@ -282,57 +285,50 @@ public class QuestManager : MonoBehaviour
     {
         List<string> lst = t == 0 ? listMainQuests : listSideQuests;
         GameObject obj = t == 0 ? mainQuests : sideQuests;
-        try
+        var index = lst.FindIndex(x => x.Equals(e)) + 1;
+        if (index != 0 && obj.transform.GetChild(index).GetComponent<Text>().color != new Color(0, 0.85f, 0))
         {
-            var index = lst.FindIndex(x => x.Equals(e)) + 1;
-            if (index != 0 && obj.transform.GetChild(index).GetComponent<Text>().color != new Color(0, 0.85f, 0))
-            {
-                var text = obj.transform.GetChild(index).GetComponent<Text>().text;
-                obj.transform.GetChild(index).GetComponent<Text>().text = text.Replace("0/1", "1/1");
-                obj.transform.GetChild(index).GetComponent<Text>().color = new Color(0, 0.85f, 0);
-                StartCoroutine(uiManager.Notification($"Quest Complete: {text}", new Color(0, 0.85f, 0)));
-                soundManager.PlaySound(soundManager.complete);
-                if (t == 0)
-                    complete++;
-                if (c)
-                    CheckQuests();
-                return true;
-            }
+            var text = obj.transform.GetChild(index).GetComponent<Text>().text;
+            obj.transform.GetChild(index).GetComponent<Text>().text = text.Replace("0/1", "1/1");
+            obj.transform.GetChild(index).GetComponent<Text>().color = new Color(0, 0.85f, 0);
+            StartCoroutine(uiManager.Notification($"Quest Complete: {text}", new Color(0, 0.85f, 0)));
+            soundManager.PlaySound(soundManager.complete);
+            if (t == 0)
+                complete++;
+            if (c)
+                CheckQuests();
+            return true;
         }
-        catch {}
         return false;
     }
 
     public bool Event(string e, string s, bool c)
     {
-        try
+        var index = listMainQuests.FindIndex(x => x.Contains($"{e}s")) + 1;
+        if (index != 0)
         {
-            var index = listMainQuests.FindIndex(x => x.Contains($"{e}s")) + 1;
-            if (index != 0)
+            var text = mainQuests.transform.GetChild(index).GetComponent<Text>().text;
+            var count = Regex.Match(text, "(?:\\d+/\\d+)").Value;
+            var digits = count.Split('/');
+            if (int.Parse(digits[0]) < int.Parse(digits[1]))
+                mainQuests.transform.GetChild(index).GetComponent<Text>().text = text.Replace(
+                    $"{digits[0]}/{digits[1]}", $"{(int.Parse(digits[0]) + 1).ToString()}/{digits[1]}");
+            if (int.Parse(digits[0]) + 1 >= int.Parse(digits[1]))
             {
-                var text = mainQuests.transform.GetChild(index).GetComponent<Text>().text;
-                var count = Regex.Match(text, "(?:\\d+/\\d+)").Value;
-                var digits = count.Split('/');
-                if (int.Parse(digits[0]) < int.Parse(digits[1]))
-                {
-                    mainQuests.transform.GetChild(index).GetComponent<Text>().text = text.Replace($"{digits[0]}/{digits[1]}", $"{(int.Parse(digits[0]) + 1).ToString()}/{digits[1]}");
-                }
-                if (int.Parse(digits[0]) + 1 == int.Parse(digits[1]))
-                {
-                    mainQuests.transform.GetChild(index).GetComponent<Text>().color = new Color(0, 0.85f, 0);
-                    if (int.Parse(digits[1]) == 1)
-                        StartCoroutine(uiManager.Notification($"Quest Complete: {s} {digits[1]} {e}", new Color(0, 0.85f, 0)));
-                    else
-                        StartCoroutine(uiManager.Notification($"Quest Complete: {s} {digits[1]} {e}s", new Color(0, 0.85f, 0)));
-                    soundManager.PlaySound(soundManager.complete);
-                    complete++;
-                    if (c)
-                        CheckQuests();
-                    return true;
-                }
+                mainQuests.transform.GetChild(index).GetComponent<Text>().color = new Color(0, 0.85f, 0);
+                if (int.Parse(digits[1]) == 1)
+                    StartCoroutine(uiManager.Notification($"Quest Complete: {s} {digits[1]} {e}",
+                        new Color(0, 0.85f, 0)));
+                else
+                    StartCoroutine(uiManager.Notification($"Quest Complete: {s} {digits[1]} {e}s",
+                        new Color(0, 0.85f, 0)));
+                soundManager.PlaySound(soundManager.complete);
+                complete++;
+                if (c)
+                    CheckQuests();
             }
+            return true;
         }
-        catch {}
         return false;
     }
 

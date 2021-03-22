@@ -110,17 +110,18 @@ public class DungeonGenerator : MonoBehaviour
             PlayerData.Levels[level - 1] = true;
         }
         else
-            level = 1;
+            level = 8;
         // Set Difficulty
         difficulty = PlayerData.Difficulty;
         if (level == 1 && PlayerData.Levels[0] == false)
             difficulty = 10;
         else if (level == 2 && PlayerData.Levels[1] == false)
-            difficulty += 25;
+            difficulty += 15;
         else if (level == 5 && PlayerData.Levels[4] == false)
             difficulty += 25;
         else if (level == 8 && PlayerData.Levels[7] == false)
             difficulty += 25;
+        difficulty = 0;
         difficulty = Mathf.Clamp(difficulty, 0, 100);
 		uiManager.SetDifficulty(difficulty);
     }

@@ -17,13 +17,14 @@ public class DifficultyManager : MonoBehaviour
     public GameObject NPCs;
     // Variables
     public int learningRate = 1;
-    public int mutationRate = 10;
-    public int totalTime = 10;
+    public int mutationRate = 5;
+    public int totalTime = 15;
     public int time;
 
     void Start()
     {
-        Reset();
+        if (!PlayerData.Boss)
+            Reset();
     }
 
     IEnumerator Collect()
@@ -43,7 +44,7 @@ public class DifficultyManager : MonoBehaviour
         float totalDist = Math.Abs(questManager.specialDoorPos.magnitude - dungeonManager.campfirePos.magnitude);
         // Calculate Total Score
         float[] scores = new float[6];
-        if (PlayerData.Wins == PlayerData.Losses)
+        if (PlayerData.Wins == PlayerData.Losses | PlayerData.Losses == 0)
             scores[0] = 0.5f;
         else
             scores[0] = ((float) PlayerData.Wins / (float) PlayerData.Losses) / 2; // Success
@@ -57,15 +58,14 @@ public class DifficultyManager : MonoBehaviour
         {
             scores[1] = 1 - ((float) PlayerData.Hits / (float) PlayerData.Kills); // Damage
         }
-        scores[2] = (float) PlayerData.PreviousScore; // Previous Score
+        scores[2] = 1 - (float) PlayerData.PreviousScore; // Previous Score
         scores[3] = (float) questManager.complete / (float) questManager.maxQuests; // Quests
         scores[4] = (float) playerController.health / (float) playerController.livesActive; // Health
         scores[5] = (float) (dungeonGenerator.GetDungeons().Count - dungeonGenerator.dungeonColliders.transform.childCount) / 
                     (float) dungeonGenerator.GetDungeons().Count; // Rooms
-        float totalScore = (3 * scores[0] + 3 * scores[1] + 2 * scores[2] + 2 * scores[3] + scores[4] + scores[5])/ 12;
+        float totalScore = (3 * scores[0] + 2 * scores[1] + 2 * scores[2] + 2 * scores[3] + scores[4] + scores[5])/ 12;
         PlayerData.PreviousScore = totalScore;
-        Debug.Log($"Success: {scores[0]}, Kills: {PlayerData.Kills}, Hits: {PlayerData.Hits}, Damage: {scores[1]}, " +
-                  $"Previous: {scores[2]}, Quests: {scores[3]}, Health: {scores[4]}, Rooms: {scores[5]}");
+        Debug.Log($"Success: {scores[0]}, Damage: {scores[1]}, Previous: {scores[2]}, Quests: {scores[3]}, Health: {scores[4]}, Rooms: {scores[5]}");
         Debug.Log($"Total: {totalScore}");
         // Select Chromosome
         if (totalScore > 0.6f)
@@ -112,12 +112,12 @@ public class DifficultyManager : MonoBehaviour
                 for (int i = 0; i < enemies.transform.childCount; i++)
                 {
                     EnemyController c = enemies.transform.GetChild(i).GetComponent<EnemyController>();
-                    c.speed += sign * learningRate * 5; // enemy speed +/- 5
+                    c.speed += sign * learningRate; // enemy speed +/- 1
                     if (Random.Range(0,100) < mutationRate)
-                        c.speed += sign * learningRate * 5; // mutation enemy speed +/- 5
+                        c.speed += sign * learningRate; // mutation enemy speed +/- 1
                     c.speed = Mathf.Clamp(c.speed, 10, 30);
                 }
-                Debug.Log($"Enemy Speed {sign * 5}");
+                Debug.Log($"Enemy Speed {sign}");
                 break;
             // Enemy Attack Time
             case 2:
@@ -150,7 +150,8 @@ public class DifficultyManager : MonoBehaviour
                     c.health += sign * learningRate; // enemy health +/- 1
                     if (Random.Range(0,100) < mutationRate)
                         c.health += sign * learningRate; // mutation enemy health +/- 1
-                    c.health = Mathf.Clamp(c.health, 1, 15);
+                    var max = PlayerData.Difficulty >= 75 ? 20 : PlayerData.Difficulty >= 50 ? 10 : PlayerData.Difficulty >= 25 ? 5 : 3;
+                    c.health = Mathf.Clamp(c.health, 1, max);
                 }
                 Debug.Log($"Enemy Health {sign}");
                 break;    

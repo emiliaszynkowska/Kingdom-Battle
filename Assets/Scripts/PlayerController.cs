@@ -316,8 +316,8 @@ public class PlayerController : MonoBehaviour
             }
             yield return new WaitForSeconds(0.5f);
             // Stop Attacking
-            isAttacking = false;
             questManager.Event("Spin Attack", "Use", true);
+            isAttacking = false;
         }
     }
     
@@ -355,10 +355,10 @@ public class PlayerController : MonoBehaviour
                 }
             }
             // Stop Attacking
+            questManager.Event("Ground Pound", "Use", true);
             yield return new WaitForSeconds(1);
             shadow.SetActive(false);
             isAttacking = false;
-            questManager.Event("Ground Pound", "Use", true);
         }
     }
     
@@ -774,6 +774,10 @@ public class PlayerController : MonoBehaviour
                         Destroy(other.gameObject);
                         uiManager.AddItem("Wigg's Brew", inventory.Count);
                         AddItem("Wigg's Brew");
+                        if (inventory.Contains("Wigg's Brew") && inventory.Contains("Liquid Luck") &&
+                            inventory.Contains("Ogre's Strength") && inventory.Contains("Elixir of Speed") && 
+                            questManager.Event("Bring all four potions to Wigg", 0, false))
+                            questManager.AddMainQuest("Return to Wigg");
                     }
                     break;
                 case "Liquid Luck":
@@ -783,6 +787,10 @@ public class PlayerController : MonoBehaviour
                         Destroy(other.gameObject);
                         uiManager.AddItem("Liquid Luck", inventory.Count);
                         AddItem("Liquid Luck");
+                        if (inventory.Contains("Wigg's Brew") && inventory.Contains("Liquid Luck") &&
+                            inventory.Contains("Ogre's Strength") && inventory.Contains("Elixir of Speed") && 
+                            questManager.Event("Bring all four potions to Wigg", 0, false))
+                            questManager.AddMainQuest("Return to Wigg");
                     }
                     break;
                 case "Ogre's Strength":
@@ -792,6 +800,10 @@ public class PlayerController : MonoBehaviour
                         Destroy(other.gameObject);
                         uiManager.AddItem("Ogre's Strength", inventory.Count);
                         AddItem("Ogre's Strength");
+                        if (inventory.Contains("Wigg's Brew") && inventory.Contains("Liquid Luck") &&
+                            inventory.Contains("Ogre's Strength") && inventory.Contains("Elixir of Speed") && 
+                            questManager.Event("Bring all four potions to Wigg", 0, false))
+                            questManager.AddMainQuest("Return to Wigg");
                     }
                     break;
                 case "Elixir of Speed":
@@ -801,6 +813,10 @@ public class PlayerController : MonoBehaviour
                         Destroy(other.gameObject);
                         uiManager.AddItem("Elixir of Speed", inventory.Count);
                         AddItem("Elixir of Speed");
+                        if (inventory.Contains("Wigg's Brew") && inventory.Contains("Liquid Luck") &&
+                            inventory.Contains("Ogre's Strength") && inventory.Contains("Elixir of Speed") && 
+                            questManager.Event("Collect all four potions", 0, false))
+                            questManager.AddMainQuest("Return to Wigg");
                     }
                     break;
             }
