@@ -34,6 +34,7 @@ public class SoundManager : MonoBehaviour
     public AudioClip elfDie;
     public AudioClip monsterDamage;
     public AudioClip monsterDie;
+    public AudioClip portal;
     public AudioClip win;
     public AudioClip jump;
     public AudioClip coin;

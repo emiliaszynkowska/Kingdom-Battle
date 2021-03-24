@@ -23,9 +23,9 @@ public class PrologueManager : MonoBehaviour
         dialog.GetComponent<Image>().CrossFadeAlpha(0, 0, true);
         message.CrossFadeAlpha(0, 0, true);
         text.CrossFadeAlpha(0, 0, true);
-        yield return new WaitForSeconds(2);
-        dialog.GetComponent<Image>().CrossFadeAlpha(0.4f, 2, true);
-        message.CrossFadeAlpha(0.8f, 2, true);
+        yield return new WaitForSecondsRealtime(3);
+        dialog.GetComponent<Image>().CrossFadeAlpha(0.4f, 3, true);
+        message.CrossFadeAlpha(0.8f, 3, true);
         StartCoroutine(FadeText());
         yield return Speak("Our story begins in the mighty kingdom of Astreron...");
         yield return Speak("This glorious nation was home to the strongest warriors, sharpest minds, and most dazzling beauties across all the dimensions.");
@@ -47,6 +47,7 @@ public class PrologueManager : MonoBehaviour
     
     public IEnumerator FadeText()
     {
+        yield return new WaitForSecondsRealtime(1);
         while (true)
         {
             text.CrossFadeColor(new Color(1, 1, 1, 0), 1, true, true);
@@ -58,13 +59,13 @@ public class PrologueManager : MonoBehaviour
     
     public IEnumerator FadeIn()
     {
-        fade.CrossFadeAlpha(1.0f, 1, true);
+        fade.CrossFadeAlpha(1.0f, 3, true);
         yield return new WaitForSecondsRealtime(1);
     }
     
     public IEnumerator FadeOut()
     {
-        fade.CrossFadeAlpha(0.0f, 1, true);
+        fade.CrossFadeAlpha(0.0f, 3, true);
         yield return new WaitForSecondsRealtime(1);
     }
 }

@@ -20,15 +20,25 @@ public class TitleManager : MonoBehaviour
 
     public void StartGame()
     {
+        StartCoroutine(StartFade());
+    }
+
+    public IEnumerator StartFade()
+    {
         soundManager.PlaySound(soundManager.play);
-        StartCoroutine(FadeIn());
-        SceneManager.LoadScene("Main");
+        yield return FadeIn();
+        SceneManager.LoadScene("Prologue");
     }
 
     public void Quit()
     {
+        StartCoroutine(QuitFade());
+    }
+
+    public IEnumerator QuitFade()
+    {
         soundManager.PlaySound(soundManager.clickButton);
-        StartCoroutine(FadeOut());
+        yield return FadeOut();
         Application.Quit();
     }
 
