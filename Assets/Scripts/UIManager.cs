@@ -29,6 +29,7 @@ public class UIManager : MonoBehaviour
     public GameObject dialog;
     public Text npcName;
     public Text message;
+    public Text prompt;
     public GameObject menu;
     public GameObject quests;
     public GameObject complete;
@@ -540,6 +541,17 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.1f);
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
         dialog.SetActive(false);
+    }
+
+    public IEnumerator FadeText()
+    {
+        while (true)
+        {
+            prompt.CrossFadeColor(new Color(1, 1, 1, 0), 1, true, true);
+            yield return new WaitForSeconds(1);
+            prompt.CrossFadeColor(Color.white, 1, true, true);
+            yield return new WaitForSeconds(1);
+        }
     }
     
     public void StartSpeak(string npc, string text)

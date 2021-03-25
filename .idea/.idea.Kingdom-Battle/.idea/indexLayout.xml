@@ -21,6 +21,7 @@
       <Path>Library</Path>
       <Path>Logs</Path>
       <Path>PC</Path>
+      <Path>Temp</Path>
       <Path>UserSettings</Path>
       <Path>Web</Path>
       <Path>build</Path>

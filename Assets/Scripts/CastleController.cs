@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -10,8 +11,6 @@ public class CastleController : MonoBehaviour
     // Game Objects
     public SoundManager soundManager;
     public PlayerMinimal player;
-    public Tilemap tileMap;
-    public Tile emptyTile;
     public GameObject portal;
     public Image transition;
     public Image fade;
@@ -88,7 +87,7 @@ public class CastleController : MonoBehaviour
         transition.CrossFadeAlpha(0, 0, true);
         transition.CrossFadeAlpha(1, 5, true);
         yield return new WaitForSeconds(5);
-        // SceneManager.LoadScene("Tutorial");
+        SceneManager.LoadScene("Tutorial");
     }
     
     public IEnumerator FadeIn()
