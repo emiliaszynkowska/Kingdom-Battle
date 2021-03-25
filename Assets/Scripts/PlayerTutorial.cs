@@ -31,7 +31,6 @@ public class PlayerTutorial : MonoBehaviour
     public GameObject shield;
     public UIManager uiManager;
     public SoundManager soundManager;
-    public QuestManager questManager;
     public GameObject lifeup;
     public GameObject shine;
     public GameObject timers;
@@ -137,7 +136,6 @@ public class PlayerTutorial : MonoBehaviour
     public void AddItem(string item)
     {
         inventory.Add(item);
-        questManager.Event($"Find {item}", 0, true);
     }
 
     public void RemoveItem(string item)
@@ -361,7 +359,6 @@ public class PlayerTutorial : MonoBehaviour
 
     public bool UseItem(int index)
     {
-        questManager.Event($"Use {inventory[index]}", 0, true);
         switch (inventory[index])
         {
             // Key
@@ -375,8 +372,6 @@ public class PlayerTutorial : MonoBehaviour
                         if (col.GetComponent<ChestController>().Open())
                         {
                             inventory.RemoveAt(index);
-                            questManager.Event("Open a chest", 0, true);
-                            questManager.Event("chest", "Open", true);
                             return true;
                         }
                     }
@@ -385,8 +380,6 @@ public class PlayerTutorial : MonoBehaviour
                         if (!col.GetComponent<DoorController>().boss && !col.GetComponent<DoorController>().special && col.GetComponent<DoorController>().Open())
                         {
                             inventory.RemoveAt(index);
-                            questManager.Event("Open a door", 0, true);
-                            questManager.Event("door", "Open", true);
                             return true;
                         }
                         else if (col.GetComponent<DoorController>().special)
@@ -435,7 +428,6 @@ public class PlayerTutorial : MonoBehaviour
     {
         ScoreManager.AddDefensive(5);
         soundManager.PlaySound(soundManager.lifeup);
-        questManager.Event("Restore some health", 0, true);
         uiManager.Powerup("Wigg's Brew: +1 Health", Color.red);
         lifeup.SetActive(true);
         yield return new WaitForSeconds(3);
@@ -448,7 +440,6 @@ public class PlayerTutorial : MonoBehaviour
     {
         ScoreManager.AddAggressive(1);
         soundManager.PlaySound(soundManager.powerup);
-        questManager.Event("Gain an attack boost", 0, true);
         uiManager.Powerup("Liquid Luck: +1 Attack", new Color(1,0.9f,0));
         GetComponent<SpriteRenderer>().color = new Color(1,0.9f,0);
         shine.SetActive(true);
@@ -479,7 +470,6 @@ public class PlayerTutorial : MonoBehaviour
     {
         ScoreManager.AddExploration(1);
         soundManager.PlaySound(soundManager.powerup);
-        questManager.Event("Gain a speed boost", 0, true);
         uiManager.Powerup("Elixir of Speed: +5 Speed", new Color(0,0.4f,1));
         GetComponent<SpriteRenderer>().color = new Color(0,0.4f,1);
         speed = 0.15f;

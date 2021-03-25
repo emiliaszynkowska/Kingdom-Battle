@@ -10,6 +10,7 @@ public static class PlayerData
     public static List<string> Inventory;
     public static int Level;
     public static bool Boss;
+    public static bool Tutorial;
     public static List<string> Disciplines;
     public static List<string> Titles;
     public static List<bool> Levels;

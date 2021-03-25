@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -31,7 +32,7 @@ public class QuestManager : MonoBehaviour
 
     public void Start()
     {
-        if (!PlayerData.Boss)
+        if (!PlayerData.Boss && !PlayerData.Tutorial)
         {
             // Set max quests
             var difficulty = dungeonGenerator.difficulty;

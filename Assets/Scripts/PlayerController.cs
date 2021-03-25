@@ -941,6 +941,7 @@ public class PlayerController : MonoBehaviour
             attack = 1;
             playerDisciplines = new List<string>() {"Initial", null, null};
             playerTitles = new List<string>() {ScoreManager.TitleInitial(), null, null};
+            PlayerData.Tutorial = false;
         }
     }
 

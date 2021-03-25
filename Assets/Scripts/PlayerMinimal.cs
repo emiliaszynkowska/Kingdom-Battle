@@ -9,7 +9,7 @@ public class PlayerMinimal : MonoBehaviour
     // Movement
     private Vector2 movement;
     public float speed = 0.1f;
-    public bool active = true;
+    public bool canMove = true;
     // Objects
     public Rigidbody2D body;
     public SpriteRenderer playerRenderer;
@@ -40,7 +40,7 @@ public class PlayerMinimal : MonoBehaviour
     
     private void FixedUpdate()
     {
-        if (active)
+        if (canMove)
             transform.Translate(movement.x * speed, movement.y * speed, 0, Space.Self);
     }
 

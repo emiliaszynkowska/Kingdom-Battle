@@ -5366,7 +5366,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.5882353}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5449,7 +5449,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: -535572051
+  m_SortingLayerID: 1146438929
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!1 &529231289
@@ -13741,6 +13741,7 @@ MonoBehaviour:
   elfDie: {fileID: 8300000, guid: 705f5a1ba9c66aa4c811891be9d92449, type: 3}
   monsterDamage: {fileID: 8300000, guid: ba1314e9bbe08fc4cab78ca7df39ec6a, type: 3}
   monsterDie: {fileID: 8300000, guid: f69d624d89cad3746bdef0e326fa0fcb, type: 3}
+  portal: {fileID: 0}
   win: {fileID: 8300000, guid: ba824f5229fbc0b419b8f04be12d63c0, type: 3}
   jump: {fileID: 8300000, guid: 257067d3a2ad49145896dce385eb0a33, type: 3}
   coin: {fileID: 8300000, guid: d7a07d6a81ca50c42b4ee805c6e7344c, type: 3}
@@ -15311,6 +15312,9 @@ MonoBehaviour:
   dialog: {fileID: 1134794409}
   npcName: {fileID: 1417227113}
   message: {fileID: 1569630752}
+  prompt: {fileID: 0}
+  nameInput: {fileID: 0}
+  inputField: {fileID: 0}
   menu: {fileID: 1150251853}
   quests: {fileID: 613141001}
   complete: {fileID: 1050577909}
@@ -20662,7 +20666,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2076032324
 MonoBehaviour:
   m_ObjectHideFlags: 0

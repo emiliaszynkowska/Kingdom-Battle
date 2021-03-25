@@ -30,6 +30,8 @@ public class UIManager : MonoBehaviour
     public Text npcName;
     public Text message;
     public Text prompt;
+    public GameObject nameInput;
+    public InputField inputField;
     public GameObject menu;
     public GameObject quests;
     public GameObject complete;
@@ -136,6 +138,11 @@ public class UIManager : MonoBehaviour
         {
             title3.SetActive(false);
         }
+    }
+
+    public void SetName(string n)
+    {
+        info.transform.GetChild(0).gameObject.GetComponentInChildren<Text>().text = n;
     }
 
     public void SetCoins(int coins)
@@ -543,17 +550,6 @@ public class UIManager : MonoBehaviour
         dialog.SetActive(false);
     }
 
-    public IEnumerator FadeText()
-    {
-        while (true)
-        {
-            prompt.CrossFadeColor(new Color(1, 1, 1, 0), 1, true, true);
-            yield return new WaitForSeconds(1);
-            prompt.CrossFadeColor(Color.white, 1, true, true);
-            yield return new WaitForSeconds(1);
-        }
-    }
-    
     public void StartSpeak(string npc, string text)
     {
         npcName.text = npc;
@@ -564,6 +560,26 @@ public class UIManager : MonoBehaviour
     public void StopSpeak()
     {
         dialog.SetActive(false);
+    }
+
+    public IEnumerator NameInput()
+    {
+        nameInput.SetActive(true);
+        yield return new WaitUntil(() => !inputField.text.Equals(". . .") && !inputField.text.Equals(""));
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
+        playerController.playerName = inputField.text;
+        nameInput.SetActive(false);
+    }
+    
+    public IEnumerator FadeText()
+    {
+        while (true)
+        {
+            prompt.CrossFadeColor(new Color(1, 1, 1, 0), 1, true, true);
+            yield return new WaitForSeconds(1);
+            prompt.CrossFadeColor(Color.white, 1, true, true);
+            yield return new WaitForSeconds(1);
+        }
     }
 
     public void GameOver()
