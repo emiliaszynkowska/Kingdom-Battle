@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
 {
     // Objects
     public PlayerController playerController;
+    public PlayerTutorial playerTutorial;
     public SoundManager soundManager;
     public Camera mainCamera;
     public GameObject map;
@@ -96,8 +97,8 @@ public class UIManager : MonoBehaviour
             ScoreManager.Reset();
             ScoreManager.active = true;
         }
-
         ResetCamera();
+        StartCoroutine(FadeText());
     }
 
     // Player Information
@@ -247,6 +248,12 @@ public class UIManager : MonoBehaviour
             inactive1.SetActive(true);
             inactive2.SetActive(true);
         }
+
+        if (playerTutorial != null)
+        {
+            inactive1.SetActive(false);
+            inactive2.SetActive(false);
+        }
     }
 
     public void ExitInventory()
@@ -297,13 +304,26 @@ public class UIManager : MonoBehaviour
         soundManager.PlaySound(soundManager.changeItem);
         activeItem = index;
         active.transform.position = items.transform.GetChild(activeItem).position;
-        if (playerController.GetInventory().Count > 0)
+        if (playerController != null)
         {
-            ChangeDescription(playerController.GetInventory()[activeItem]);
-            description.SetActive(true);
+            if (playerController.GetInventory().Count > 0)
+            {
+                ChangeDescription(playerController.GetInventory()[activeItem]);
+                description.SetActive(true);
+            }
+            else
+                description.SetActive(false);
         }
-        else
-            description.SetActive(false);
+        else if (playerTutorial != null)
+        {
+            if (playerTutorial.GetInventory().Count > 0)
+            {
+                ChangeDescription(playerController.GetInventory()[activeItem]);
+                description.SetActive(true);
+            }
+            else
+                description.SetActive(false);
+        }
     }
 
     public void ChangeDescription(string item)
@@ -423,10 +443,6 @@ public class UIManager : MonoBehaviour
                 playerController.playerAnimator.runtimeAnimatorController =
                     Instantiate(playerController.playerR, playerController.transform);
                 break;
-            case("Rusty Sword"):
-                playerController.weaponAnimator.runtimeAnimatorController = Instantiate(playerController.rustySword,
-                    playerController.weapon.transform);
-                break;
             case("Jagged Blade"):
                 playerController.weaponAnimator.runtimeAnimatorController = Instantiate(playerController.jaggedBlade,
                     playerController.weapon.transform);
@@ -542,12 +558,14 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator Speak(string npc, string text)
     {
+        PauseGame();
         npcName.text = npc;
         message.text = text;
         dialog.SetActive(true);
         yield return new WaitForSecondsRealtime(0.1f);
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
         dialog.SetActive(false);
+        ResumeGame();
     }
 
     public void StartSpeak(string npc, string text)
@@ -564,11 +582,14 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator NameInput()
     {
+        PauseGame();
         nameInput.SetActive(true);
-        yield return new WaitUntil(() => !inputField.text.Equals(". . .") && !inputField.text.Equals(""));
-        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
-        playerController.playerName = inputField.text;
+        inputField.ActivateInputField();
+        yield return new WaitUntil(() => !inputField.text.Equals(""));
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Return));
+        playerTutorial.playerName = inputField.text;
         nameInput.SetActive(false);
+        ResumeGame();
     }
     
     public IEnumerator FadeText()
@@ -576,9 +597,9 @@ public class UIManager : MonoBehaviour
         while (true)
         {
             prompt.CrossFadeColor(new Color(1, 1, 1, 0), 1, true, true);
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSecondsRealtime(1);
             prompt.CrossFadeColor(Color.white, 1, true, true);
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSecondsRealtime(1);
         }
     }
 

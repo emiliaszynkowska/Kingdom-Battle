@@ -31,6 +31,7 @@ public class PlayerTutorial : MonoBehaviour
     public GameObject shield;
     public UIManager uiManager;
     public SoundManager soundManager;
+    public QuestManager questManager;
     public GameObject lifeup;
     public GameObject shine;
     public GameObject timers;
@@ -148,9 +149,11 @@ public class PlayerTutorial : MonoBehaviour
 
     IEnumerator TakeDamage(int damage)
     {
-        if (!IsHurt() && !IsAttacking() && !IsBlocking())
+        if (health > 1 && !IsHurt() && !IsAttacking() && !IsBlocking())
         {
             isHurt = true;
+            health -= damage;
+            uiManager.SetLives(health);
             soundManager.PlaySound(soundManager.elfDamage);
             playerRenderer.color = new Color(0.8f, 0.22f, 0.2f);
             yield return new WaitForSeconds(1);
@@ -187,8 +190,8 @@ public class PlayerTutorial : MonoBehaviour
             shield.SetActive(false);
             weapon.SetActive(true);
             isBlocking = false;
-            ScoreManager.AddDefensive(1);
             timers.transform.GetChild(0).gameObject.GetComponent<TimerController>().Reset();
+            questManager.Event("Sword Attack", "Use", false);
         }
     }
 
@@ -233,13 +236,13 @@ public class PlayerTutorial : MonoBehaviour
     void CheckCombat()
     {
         // Block
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift) && timers.activeSelf)
         {
             StartBlock();
             timers.transform.GetChild(0).GetComponent<TimerController>().Reset();
         }
         // Attack
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && timers.activeSelf)
         {
             StartAttack();
             timers.transform.GetChild(1).GetComponent<TimerController>().Reset();
@@ -258,7 +261,7 @@ public class PlayerTutorial : MonoBehaviour
             {
                 if (col != null && col.name.Equals("Wigg"))
                 {
-                    StartCoroutine(col.GetComponent<WiggController>().Talk());
+                    StartCoroutine(col.GetComponent<WiggTutorial>().Talk());
                 }
                 else if (col != null && col.CompareTag("Chest") && inventory.Contains("Key"))
                 {

@@ -32,7 +32,7 @@ public class QuestManager : MonoBehaviour
 
     public void Start()
     {
-        if (!PlayerData.Boss && !PlayerData.Tutorial)
+        if (!PlayerData.Boss && !SceneManager.GetActiveScene().name.Equals("Tutorial"))
         {
             // Set max quests
             var difficulty = dungeonGenerator.difficulty;
