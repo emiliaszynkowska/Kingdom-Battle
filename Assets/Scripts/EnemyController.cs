@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
@@ -23,6 +24,7 @@ public class EnemyController : MonoBehaviour
     public int magicTime;
     public int spawnTime;
     // Objects
+    public DungeonManager dungeonManager;
     public QuestManager questManager;
     public SoundManager soundManager;
     public UIManager uiManager;
@@ -57,9 +59,10 @@ public class EnemyController : MonoBehaviour
         enemyRenderer = GetComponent<SpriteRenderer>();
         healthText = GetComponentInChildren<Canvas>().GetComponentInChildren<Text>();
         healthText.text = health.ToString();
-        uiManager = GameObject.Find("UI").GetComponent<UIManager>();
+        dungeonManager = GameObject.Find("Map").GetComponent<DungeonManager>();
         questManager = GameObject.Find("UI").GetComponent<QuestManager>();
         soundManager = GameObject.Find("Main Camera").GetComponent<SoundManager>();
+        uiManager = GameObject.Find("UI").GetComponent<UIManager>();
         enemies = GameObject.Find("Enemies");
         if (groundPoundAttack)
             StartCoroutine(GroundPound());
@@ -136,11 +139,6 @@ public class EnemyController : MonoBehaviour
     {
         // Prepare for Respawn
         soundManager.PlaySound(soundManager.monsterDie);
-        questManager.Event($"Defeat 1 {name}                        0/1", 0, true);
-        questManager.Event(name, "Defeat", true);
-        questManager.Event("monster", "Defeat", true);
-        if (questManager.Event("monster", "Defeat", false))
-            questManager.AddMainQuest("Return to Wigg");
         yield return new WaitForSeconds(0.5f);
         // Disable Enemy
         name = "Respawn";
@@ -153,8 +151,6 @@ public class EnemyController : MonoBehaviour
         // Add Aggressive Score
         PlayerData.Kills += 1;
         ScoreManager.AddAggressive(1);
-        DungeonGenerator dungeonGenerator = GameObject.Find("Map").GetComponent<DungeonGenerator>();
-        DungeonManager dungeonManager = dungeonGenerator.dungeonManager;
         if (boss)
         {
             soundManager.PauseMusic();
@@ -179,16 +175,24 @@ public class EnemyController : MonoBehaviour
         else
         {
             // Create Drops
-            dungeonManager.PlaceItem(drops[Random.Range(0, 12)], transform.position);
+            if (!SceneManager.GetActiveScene().name.Equals("Tutorial"))
+                dungeonManager.PlaceItem(drops[Random.Range(0, 12)], transform.position);
             // Respawn Enemy
             if (dungeon != null && !den)
             {
                 yield return new WaitForSeconds(10);
-                dungeonManager.PlaceEnemy(dungeon, dungeonGenerator.difficulty);
+                dungeonManager.PlaceEnemy(dungeon, PlayerData.Difficulty);
             }
         }
         // Destroy Enemy
         Destroy(gameObject);
+        questManager.Event($"Defeat 1 {name}                        0/1", 0, true);
+        questManager.Event(name, "Defeat", true);
+        questManager.Event("Defeat the monster", 0, false);
+        if (name.Equals("Goblin"))
+            questManager.Event("Defeat the monsters", 0, false);
+        if (questManager.Event("monster", "Defeat", false))
+            questManager.AddMainQuest("Return to Wigg");
     }
 
     public IEnumerator TakeDamage(int playerAttack)

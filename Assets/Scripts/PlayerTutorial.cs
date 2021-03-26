@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerTutorial : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class PlayerTutorial : MonoBehaviour
     // Variables
     public List<string> inventory = new List<string>();
     // Objects
+    public Text prompt;
     public Rigidbody2D body;
     public SpriteRenderer playerRenderer;
     public Animator playerAnimator;
@@ -32,6 +34,7 @@ public class PlayerTutorial : MonoBehaviour
     public UIManager uiManager;
     public SoundManager soundManager;
     public QuestManager questManager;
+    public WiggTutorial wiggTutorial;
     public GameObject lifeup;
     public GameObject shine;
     public GameObject timers;
@@ -59,6 +62,11 @@ public class PlayerTutorial : MonoBehaviour
     {
         if (!isBouncing)
             transform.Translate(movement.x * speed, movement.y * speed, 0, Space.Self);
+    }
+
+    public void SetPrompt(string s)
+    {
+        prompt.text = s;
     }
     
     public int GetCoins()
@@ -186,12 +194,12 @@ public class PlayerTutorial : MonoBehaviour
             weapon.SetActive(false);
             shield.SetActive(true);
             yield return new WaitForSeconds(2);
+            timers.transform.GetChild(0).gameObject.GetComponent<TimerController>().Reset();
             // Stop Blocking
             shield.SetActive(false);
             weapon.SetActive(true);
             isBlocking = false;
-            timers.transform.GetChild(0).gameObject.GetComponent<TimerController>().Reset();
-            questManager.Event("Sword Attack", "Use", false);
+            questManager.Event("block", "Use", false);
         }
     }
 
@@ -227,6 +235,7 @@ public class PlayerTutorial : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             // Stop Attacking
             isAttacking = false;
+            questManager.Event("attack", "Use", false);
         }
     }
     
@@ -271,6 +280,7 @@ public class PlayerTutorial : MonoBehaviour
                         uiManager.activeItem = index;
                         uiManager.UseItem();
                         uiManager.DisableItem(inventory.Count);
+                        SetPrompt("");
                     }
                 }
                 else if (col != null && col.CompareTag("Door") && inventory.Contains("Key"))
@@ -281,6 +291,7 @@ public class PlayerTutorial : MonoBehaviour
                         uiManager.activeItem = index;
                         uiManager.UseItem();
                         uiManager.DisableItem(inventory.Count);
+                        SetPrompt("");
                     }
                 }
                 else if (col != null && col.CompareTag("Door") && col.GetComponent<DoorController>().special)
@@ -543,6 +554,7 @@ public class PlayerTutorial : MonoBehaviour
                         Destroy(other.gameObject);
                         uiManager.AddItem("Wigg's Brew", inventory.Count);
                         AddItem("Wigg's Brew");
+                        StartCoroutine(wiggTutorial.WiggsBrew());
                     }
                     break;
                 case "Liquid Luck":
@@ -552,6 +564,7 @@ public class PlayerTutorial : MonoBehaviour
                         Destroy(other.gameObject);
                         uiManager.AddItem("Liquid Luck", inventory.Count);
                         AddItem("Liquid Luck");
+                        StartCoroutine(wiggTutorial.LiquidLuck());
                     }
                     break;
                 case "Ogre's Strength":
@@ -561,6 +574,7 @@ public class PlayerTutorial : MonoBehaviour
                         Destroy(other.gameObject);
                         uiManager.AddItem("Ogre's Strength", inventory.Count);
                         AddItem("Ogre's Strength");
+                        StartCoroutine(wiggTutorial.OgresStrength());
                     }
                     break;
                 case "Elixir of Speed":
@@ -570,6 +584,7 @@ public class PlayerTutorial : MonoBehaviour
                         Destroy(other.gameObject);
                         uiManager.AddItem("Elixir of Speed", inventory.Count);
                         AddItem("Elixir of Speed");
+                        StartCoroutine(wiggTutorial.ElixirOfSpeed());
                     }
                     break;
             }

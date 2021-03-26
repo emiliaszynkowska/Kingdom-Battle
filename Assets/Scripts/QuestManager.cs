@@ -306,7 +306,7 @@ public class QuestManager : MonoBehaviour
     public bool Event(string e, string s, bool c)
     {
         var index = listMainQuests.FindIndex(x => x.Contains($"{e}s")) + 1;
-        if (index != 0)
+        if (index != 0 && mainQuests.transform.GetChild(index).GetComponent<Text>().color != new Color(0, 0.85f, 0))
         {
             var text = mainQuests.transform.GetChild(index).GetComponent<Text>().text;
             var count = Regex.Match(text, "(?:\\d+/\\d+)").Value;

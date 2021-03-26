@@ -19,15 +19,8 @@ public class ChestController : MonoBehaviour
         uiManager = GameObject.Find("UI").GetComponent<UIManager>();
         soundManager = GameObject.Find("Main Camera").GetComponent<SoundManager>();
         animator = GetComponent<Animator>();
-        SetItem("random");
-    }
-
-    public void SetItem(string i)
-    {
-        if (i.Equals("random"))
+        if (item == null)
             item = items[Random.Range(0, 6)];
-        else
-            item = i;
     }
 
     public bool Open()

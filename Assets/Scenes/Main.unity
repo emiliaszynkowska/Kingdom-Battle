@@ -1997,7 +1997,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 187748899}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3950ec8c8f28460c8816afdc8c124985, type: 3}
   m_Name: 
@@ -15293,6 +15293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerController: {fileID: 740190097}
+  playerTutorial: {fileID: 0}
   soundManager: {fileID: 1388717415}
   mainCamera: {fileID: 1388717412}
   map: {fileID: 187748899}

@@ -148,7 +148,7 @@ public class UIManager : MonoBehaviour
 
     public void SetCoins(int coins)
     {
-        info.transform.GetChild(4).GetComponentInChildren<Text>().text = coins.ToString();
+        info.transform.GetChild(1).GetComponentInChildren<Text>().text = coins.ToString();
     }
 
     void SetMoneyPosition(GameObject money, int y)
@@ -179,14 +179,28 @@ public class UIManager : MonoBehaviour
     
     public void SetLives(int n)
     {
-        for (int i = 0; i < 11; i++)
+        if (playerController != null)
         {
-            if (i < n && playerController.livesActive - i < 3 && playerController.playerDisciplines[0].Equals("Defensive"))
-                lives.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = blueLife;
-            else if (i < n)
-                lives.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = fullLife;
-            else
-                lives.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = emptyLife;
+            for (int i = 0; i < 11; i++)
+            {
+                if (i < n && playerController.livesActive - i < 3 &&
+                    playerController.playerDisciplines[0].Equals("Defensive"))
+                    lives.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = blueLife;
+                else if (i < n)
+                    lives.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = fullLife;
+                else
+                    lives.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = emptyLife;
+            }
+        }
+        else if (playerTutorial != null)
+        {
+            for (int i = 0; i < 11; i++)
+            {
+                if (i < n)
+                    lives.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = fullLife;
+                else
+                    lives.transform.GetChild(i).gameObject.GetComponent<Image>().sprite = emptyLife;
+            } 
         }
     }
 
@@ -238,7 +252,7 @@ public class UIManager : MonoBehaviour
         options.SetActive(false);
         inventory.SetActive(true);
         ChangeItem(0);
-        if (playerController.playerDisciplines[1] != null && playerController.playerDisciplines[1].Equals("Collection"))
+        if (playerController != null && playerController.playerDisciplines[1] != null && playerController.playerDisciplines[1].Equals("Collection"))
         {
             inactive1.SetActive(false);
             inactive2.SetActive(false);
@@ -248,7 +262,6 @@ public class UIManager : MonoBehaviour
             inactive1.SetActive(true);
             inactive2.SetActive(true);
         }
-
         if (playerTutorial != null)
         {
             inactive1.SetActive(false);
@@ -318,7 +331,7 @@ public class UIManager : MonoBehaviour
         {
             if (playerTutorial.GetInventory().Count > 0)
             {
-                ChangeDescription(playerController.GetInventory()[activeItem]);
+                ChangeDescription(playerTutorial.GetInventory()[activeItem]);
                 description.SetActive(true);
             }
             else
@@ -415,6 +428,9 @@ public class UIManager : MonoBehaviour
           case("Red Robe"):
               equipment.sprite = redRobe;
               break;
+          case("Shield"):
+              equipment.sprite = spriteDefensive;
+              break;
           case("Rusty Sword"):
               equipment.sprite = rustySword;
               break;
@@ -431,6 +447,7 @@ public class UIManager : MonoBehaviour
               equipment.sprite = kingsbane;
               break;
         }
+        yield return new WaitForSecondsRealtime(0.1f);
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
         upgrade.SetActive(false);
         switch (e)
@@ -442,6 +459,11 @@ public class UIManager : MonoBehaviour
             case("Red Robe"):
                 playerController.playerAnimator.runtimeAnimatorController =
                     Instantiate(playerController.playerR, playerController.transform);
+                break;
+            case("Rusty Sword"):
+                playerTutorial.weapon.GetComponent<SpriteRenderer>().enabled = true;
+                timers.SetActive(true);
+                SetAttacks(1);
                 break;
             case("Jagged Blade"):
                 playerController.weaponAnimator.runtimeAnimatorController = Instantiate(playerController.jaggedBlade,
@@ -558,6 +580,7 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator Speak(string npc, string text)
     {
+        soundManager.PlaySound(soundManager.clickButton);
         PauseGame();
         npcName.text = npc;
         message.text = text;
@@ -566,6 +589,7 @@ public class UIManager : MonoBehaviour
         yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.E));
         dialog.SetActive(false);
         ResumeGame();
+        soundManager.PlaySound(soundManager.clickButton);
     }
 
     public void StartSpeak(string npc, string text)
@@ -692,7 +716,8 @@ public class UIManager : MonoBehaviour
 
     public void Boss()
     {
-        playerController.SaveData(true, false);
+        if (!SceneManager.GetActiveScene().name.Equals("Tutorial"))
+            playerController.SaveData(true, false);
         StartCoroutine(FadeIn());
         SceneManager.LoadScene("Main");
     }
@@ -854,11 +879,14 @@ public class UIManager : MonoBehaviour
     public void Restart()
     {
         soundManager.PlaySound(soundManager.clickButton);
-        playerController.health = 0;
-        if (bossFight)
-            playerController.SaveData(true, false);
-        else
-            playerController.SaveData(false, false);
+        if (playerController != null)
+        {
+            playerController.health = 0;
+            if (bossFight)
+                playerController.SaveData(true, false);
+            else
+                playerController.SaveData(false, false);
+        }
         SceneManager.LoadScene("Main");
     }
 
