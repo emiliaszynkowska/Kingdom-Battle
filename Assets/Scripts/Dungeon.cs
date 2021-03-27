@@ -8,14 +8,13 @@ public class Dungeon
     {
         public Dungeon left;
         public Dungeon right;
-        public Rect rect;
         public Rect room = new Rect(-1, -1, 0, 0);
         public List<Rect> corridors = new List<Rect>();
         private DungeonGenerator generator;
 
-        public Dungeon(Rect rect)
+        public Dungeon(Rect room)
         {
-            this.rect = rect;
+            this.room = room;
             generator = GameObject.Find("Map").GetComponent<DungeonGenerator>();
         }
 
@@ -30,27 +29,27 @@ public class Dungeon
                 return false;
             
             bool splitH;
-            if (rect.width / rect.height >= 1.25)
+            if (room.width / room.height >= 1.25)
                 splitH = false;
-            else if (rect.height / rect.width >= 1.25)
+            else if (room.height / room.width >= 1.25)
                 splitH = true;
             else
                 splitH = Random.Range(0, 1) > 0.5;
 
-            if (Math.Min(rect.height, rect.width) / 2 < avgRoomSize)
+            if (Math.Min(room.height, room.width) / 2 < avgRoomSize)
                 return false;
 
             if (splitH)
             {
-                int split = Random.Range(avgRoomSize, (int) (rect.width - avgRoomSize));
-                left = new Dungeon(new Rect(rect.x, rect.y, rect.width, split));
-                right = new Dungeon(new Rect(rect.x, rect.y + split, rect.width, rect.height - split));
+                int split = Random.Range(avgRoomSize, (int) (room.width - avgRoomSize));
+                left = new Dungeon(new Rect(room.x, room.y, room.width, split));
+                right = new Dungeon(new Rect(room.x, room.y + split, room.width, room.height - split));
             }
             else
             {
-                int split = Random.Range(avgRoomSize, (int) (rect.height - avgRoomSize));
-                left = new Dungeon(new Rect (rect.x, rect.y, split, rect.height));
-                right = new Dungeon(new Rect (rect.x + split, rect.y, rect.width - split, rect.height));
+                int split = Random.Range(avgRoomSize, (int) (room.height - avgRoomSize));
+                left = new Dungeon(new Rect (room.x, room.y, split, room.height));
+                right = new Dungeon(new Rect (room.x + split, room.y, room.width - split, room.height));
             }
 
             return true;
@@ -66,11 +65,11 @@ public class Dungeon
                 CreateCorridor();
             if (IsLeaf())
             {
-                int width = (int) Random.Range(rect.width / 2, rect.width - 2);
-                int height = (int) Random.Range(rect.height / 2, rect.height - 2);
-                int roomX = (int) Random.Range(1, rect.width - width - 1);
-                int roomY = (int) Random.Range(1, rect.height - height - 1);
-                room = new Rect(rect.x + roomX, rect.y + roomY, width, height);
+                int width = (int) Random.Range(room.width / 2, room.width - 2);
+                int height = (int) Random.Range(room.height / 2, room.height - 2);
+                int roomX = (int) Random.Range(1, room.width - width - 1);
+                int roomY = (int) Random.Range(1, room.height - height - 1);
+                room = new Rect(room.x + roomX, room.y + roomY, width, height);
                 generator.AddDungeon(this);
             }
         }

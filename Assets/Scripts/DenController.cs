@@ -13,6 +13,7 @@ public class DenController : MonoBehaviour
     public GameObject enemy1;
     public GameObject enemy2;
     public GameObject enemy3;
+    public Sprite spikesDown;
     public bool complete;
     public bool active;
 
@@ -30,7 +31,10 @@ public class DenController : MonoBehaviour
         {
             active = false;
             complete = true;
-            spikes.SetActive(false);
+            for (int i = 0; i < 8; i++)
+            {
+                spikes.transform.GetChild(i).GetComponent<SpriteRenderer>().sprite = spikesDown;
+            }
             soundManager.PlaySound(soundManager.complete);
             questManager.Event("Infiltrate a monster den", 0, true);
             ScoreManager.AddPuzzleSolving(5);

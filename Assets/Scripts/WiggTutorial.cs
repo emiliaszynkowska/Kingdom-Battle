@@ -11,6 +11,7 @@ public class WiggTutorial : MonoBehaviour
     public QuestManager questManager;
     public SoundManager soundManager;
     public UIManager uiManager;
+    public Sprite spikesDown;
     public string npcName = "Wigg";
     public bool talking;
     public bool active;
@@ -73,13 +74,13 @@ public class WiggTutorial : MonoBehaviour
 
     public IEnumerator FindWeapons()
     {
-        yield return Appear(new Vector3(80, 27), new Vector3(70, 27), true);
+        yield return Appear(new Vector3(80, 27), new Vector3(73, 27), true);
         talking = true;
         yield return uiManager.Speak(npcName, "Ah, an old sword and shield! These should do nicely.");
         tutorialManager.DisableWeapons();
         yield return uiManager.Upgrade("Rusty Sword");
         yield return uiManager.Upgrade("Shield");
-        yield return uiManager.Speak(npcName, "You should practice before you continue.");
+        yield return uiManager.Speak(npcName, "Why don't you practice before you continue?");
         questManager.AddMainQuest("Use 3 attacks                 0/3");
         playerTutorial.SetPrompt("Use left-click to attack\nUse left-shift to block\n");
         yield return new WaitForSecondsRealtime(3);
@@ -87,12 +88,12 @@ public class WiggTutorial : MonoBehaviour
         talking = false;
         yield return new WaitUntil(() => questManager.complete == 3);
         playerTutorial.SetPrompt("");
-        dungeonManager.PlaceItem("Key", new Vector3(68, 28));
+        dungeonManager.PlaceItem("Key", new Vector3(70, 28));
         soundManager.PlaySound(soundManager.complete);
         talking = true;
         yield return uiManager.Speak(npcName, "Well done, you are skilled with the sword and shield.");
         yield return uiManager.Speak(npcName, "Here, use this key to open the door.");
-        playerTutorial.SetPrompt("Use E to open doors");
+        playerTutorial.SetPrompt("Press E to use keys on doors");
         talking = false;
     }
 
@@ -108,25 +109,25 @@ public class WiggTutorial : MonoBehaviour
         dungeonManager.PlaceItem("Key", new Vector3(5, 48.5f));
         dungeonManager.PlaceItem("Key", new Vector3(1, 44.5f));
         dungeonManager.PlaceItem("Key", new Vector3(5, 44.5f));
-        playerTutorial.SetPrompt("Use E to open chests");
+        playerTutorial.SetPrompt("Press E to use keys on chests");
         talking = false;
         yield return new WaitUntil(() => questManager.complete == 5);
-        yield return new WaitForSecondsRealtime(0.5f);
-        yield return new WaitWhile(() => talking);
-        GameObject.Find("Objects").transform.GetChild(0).gameObject.SetActive(false);
-        GameObject.Find("Objects").transform.GetChild(1).gameObject.SetActive(false);
+        yield return new WaitForSecondsRealtime(2);
+        GameObject.Find("Objects").transform.GetChild(4).GetComponent<SpriteRenderer>().sprite = spikesDown;
+        GameObject.Find("Objects").transform.GetChild(5).GetComponent<SpriteRenderer>().sprite = spikesDown;
         soundManager.PlaySound(soundManager.complete);
         talking = true;
-        yield return uiManager.Speak(npcName, "Use these potions wisely.");
+        yield return uiManager.Speak(npcName, "You can use the inventory button to see your items. Use them wisely.");
         talking = false;
     }
     
     public IEnumerator FindMonster()
     {
+        dungeonManager.PlaceEnemyVeryEasy(new Dungeon(new Rect(74, 60, 12, 3)), false);
         yield return Appear(new Vector3(70, 58, 0), new Vector3(78, 58, 0), false);
         talking = true;
         yield return uiManager.Speak(npcName, "Aha! It's a monster. Use your sword to defeat it!");
-        questManager.AddMainQuest("Defeat the monster");
+        questManager.AddMainQuest("Defeat the monster         0/1");
         talking = false;
         yield return new WaitUntil(() => questManager.complete == 4);
         dungeonManager.PlaceItem("Key", new Vector3(80, 63));
@@ -139,10 +140,12 @@ public class WiggTutorial : MonoBehaviour
     
     public IEnumerator FindMonsters()
     {
-        yield return Appear(new Vector3(70, 58, 0), new Vector3(78, 58, 0), false);
+        dungeonManager.PlaceEnemyEasy(new Dungeon(new Rect(-27, 72, 8, 10)), false);
+        dungeonManager.PlaceEnemyEasy(new Dungeon(new Rect(-27, 72, 8, 10)), false);
+        yield return Appear(new Vector3(-15, 75, 0), new Vector3(-20, 75, 0), true);
         talking = true;
         yield return uiManager.Speak(npcName, $"More monsters? {playerTutorial.playerName}, defeat those weaklings.");
-        questManager.AddMainQuest("Defeat the monsters");
+        questManager.AddMainQuest("Defeat the monsters        0/2");
         talking = false;
         yield return new WaitUntil(() => questManager.complete == 6);
         dungeonManager.PlaceItem("Key", new Vector3(-23, 82));
@@ -150,13 +153,15 @@ public class WiggTutorial : MonoBehaviour
         talking = true;
         yield return uiManager.Speak(npcName, "Excellent. Your skill is improving.");
         yield return uiManager.Speak(npcName, "Here, use this key to open the door.");
-        playerTutorial.SetPrompt("Use E to open doors");
         talking = false;
     }
     
     public IEnumerator FindSpecial()
     {
+        yield return new WaitUntil(() => GameObject.Find("Circle").transform.childCount == 0);
         yield return Appear(new Vector3(15, 89, 0), new Vector3(21, 89, 0), false);
+		GameObject.Find("Door 4").GetComponent<DoorController>().opened = true;
+		soundManager.PlaySound(soundManager.complete);
         talking = true;
         yield return uiManager.Speak(npcName, "Congratulations, you've reached the end of this dungeon."); 
         yield return uiManager.Speak(npcName, "You are ready to continue this journey on your own.");
@@ -186,7 +191,7 @@ public class WiggTutorial : MonoBehaviour
     public IEnumerator ElixirOfSpeed()
     {
         questManager.Event("chest", "Open", false);
-        yield return uiManager.Speak(npcName, "You've found Elixir of Speed. This elixir makes you a lot faster.");
+        yield return uiManager.Speak(npcName, "You've found Elixir of Speed. This elixir greatly increases your movement speed.");
     }
     
     IEnumerator Appear(Vector3 start, Vector3 end, bool dir)
@@ -198,7 +203,7 @@ public class WiggTutorial : MonoBehaviour
             while (transform.position.x > end.x)
             {
                 GetComponent<SpriteRenderer>().flipX = true;
-                transform.Translate(Vector3.left * (Time.unscaledDeltaTime * 5));
+                transform.Translate(Vector3.left * (Time.unscaledDeltaTime * 3));
                 yield return null;
             } 
         }
@@ -207,7 +212,7 @@ public class WiggTutorial : MonoBehaviour
             while (transform.position.x < end.x)
             {
                 GetComponent<SpriteRenderer>().flipX = false;
-                transform.Translate(Vector3.right * (Time.unscaledDeltaTime * 5));
+                transform.Translate(Vector3.right * (Time.unscaledDeltaTime * 3));
                 yield return null;
             } 
         }

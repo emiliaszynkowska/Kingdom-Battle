@@ -589,7 +589,6 @@ public class PlayerTutorial : MonoBehaviour
                     break;
             }
         }
-        
         else if (other.gameObject.CompareTag("Enemy") && other is CircleCollider2D && GetComponent<BoxCollider2D>().IsTouching(other))
         {
             // Take damage
@@ -600,8 +599,7 @@ public class PlayerTutorial : MonoBehaviour
                 StartCoroutine(TakeDamage(enemyAttack));
             }
         }
-
-        else if (other.gameObject.name.Equals("Spikes") && GetComponent<BoxCollider2D>().IsTouching(other))
+        else if (other.gameObject.name.Equals("Spikes") && GetComponent<BoxCollider2D>().IsTouching(other) && !other.gameObject.GetComponent<SpriteRenderer>().sprite.name.Equals("floor_spikes_anim_f0"))
         {
             // Take damage
             if (!IsBouncing())
@@ -611,7 +609,6 @@ public class PlayerTutorial : MonoBehaviour
             isBouncing = true;
             Invoke("StopBounce", 0.2f);
         }
-
         else if (other.gameObject.CompareTag("Projectile") && GetComponent<BoxCollider2D>().IsTouching(other))
         {
             Destroy(other);

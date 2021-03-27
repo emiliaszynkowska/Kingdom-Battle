@@ -87,7 +87,7 @@ public class DungeonGenerator : MonoBehaviour
             FillTiles();
             PlaceColliders();
             // Place Player
-            Rect room = dungeons[Random.Range(0, dungeons.Count)].rect;
+            Rect room = dungeons[Random.Range(0, dungeons.Count)].room;
             dungeonManager.PlacePlayer(room);
             // Place Doors
             FillDoorways();
@@ -110,7 +110,7 @@ public class DungeonGenerator : MonoBehaviour
             PlayerData.Levels[level - 1] = true;
         }
         else
-            level = 8;
+            level = 1;
         // Set Difficulty
         difficulty = PlayerData.Difficulty;
         if (level == 1 && PlayerData.Levels[0] == false)
@@ -121,7 +121,6 @@ public class DungeonGenerator : MonoBehaviour
             difficulty += 25;
         else if (level == 8 && PlayerData.Levels[7] == false)
             difficulty += 25;
-        difficulty = 0;
         difficulty = Mathf.Clamp(difficulty, 0, 100);
 		uiManager.SetDifficulty(difficulty);
     }
@@ -130,7 +129,7 @@ public class DungeonGenerator : MonoBehaviour
     {
         if (dungeon.IsLeaf())
         {
-            if (dungeon.rect.width > avgRoomSize || dungeon.rect.height > avgRoomSize || Random.Range(0, 1) > 0.25)
+            if (dungeon.room.width > avgRoomSize || dungeon.room.height > avgRoomSize || Random.Range(0, 1) > 0.25)
             {
                 if (dungeon.Split(avgRoomSize))
                 {
@@ -472,11 +471,11 @@ public class DungeonGenerator : MonoBehaviour
             }
             // Place Enemies
             if (!merchant && !den)
-                dungeonManager.PlaceEnemy(dungeon, difficulty);
+                dungeonManager.PlaceEnemy(dungeon, difficulty, true);
             for (int i = 0; i < 2; i++)
             {
                 if (!merchant && !den && Random.Range(0,100) < difficulty)
-                    dungeonManager.PlaceEnemy(dungeon, difficulty);
+                    dungeonManager.PlaceEnemy(dungeon, difficulty, true);
             }
             // Place Spikes
             for (int i = 0; i < 3; i++)

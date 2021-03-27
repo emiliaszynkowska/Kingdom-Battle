@@ -312,8 +312,8 @@ public class QuestManager : MonoBehaviour
             var count = Regex.Match(text, "(?:\\d+/\\d+)").Value;
             var digits = count.Split('/');
             if (int.Parse(digits[0]) < int.Parse(digits[1]))
-                mainQuests.transform.GetChild(index).GetComponent<Text>().text = text.Replace(
-                    $"{digits[0]}/{digits[1]}", $"{(int.Parse(digits[0]) + 1).ToString()}/{digits[1]}");
+                    mainQuests.transform.GetChild(index).GetComponent<Text>().text = text.Replace(
+                        $"{digits[0]}/{digits[1]}", $"{(int.Parse(digits[0]) + 1).ToString()}/{digits[1]}");
             if (int.Parse(digits[0]) + 1 >= int.Parse(digits[1]))
             {
                 mainQuests.transform.GetChild(index).GetComponent<Text>().color = new Color(0, 0.85f, 0);

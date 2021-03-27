@@ -159,7 +159,7 @@ public class DungeonManager : MonoBehaviour
 
     public void PlaceMerchant(Dungeon dungeon)
     {
-        if (dungeon.rect != playerRoom)
+        if (dungeon.room != playerRoom)
         {
             if (dungeon.room.width >= 10 && dungeon.room.height >= 4 &&
                 dungeon.room.center != (Vector2) player.transform.position)
@@ -179,7 +179,6 @@ public class DungeonManager : MonoBehaviour
     public void PlaceWizard(Vector3 position, int difficulty)
     {
         Dungeon dungeon = new Dungeon(new Rect(position.x - 1, position.y - 3, 2, 6));
-        dungeon.room = new Rect(position.x - 1, position.y - 3, 2, 6);
         var choice = Random.Range(0, 3);
         switch (choice)
         {
@@ -189,7 +188,7 @@ public class DungeonManager : MonoBehaviour
                 break;
             case (1):
                 GameObject questDefeat = Instantiate(wizardDefeatPrefab, position, Quaternion.Euler(0, 0, 0), NPCs.transform);
-                GameObject obj = PlaceEnemy(dungeon,difficulty);
+                GameObject obj = PlaceEnemy(dungeon,difficulty, true);
                 questDefeat.name = "WizardDefeat";
                 questDefeat.GetComponent<QuestDefeat>().obj = obj;
                 questDefeat.GetComponent<QuestDefeat>().enemy = obj.name;
@@ -197,9 +196,9 @@ public class DungeonManager : MonoBehaviour
                 break;
             case (2):
                 GameObject questRescue = Instantiate(wizardRescuePrefab, position, Quaternion.Euler(0, 0, 0), NPCs.transform);
-                GameObject obj1 = PlaceEnemy(dungeon,difficulty);
-                GameObject obj2 = PlaceEnemy(dungeon,difficulty);
-                GameObject obj3 = PlaceEnemy(dungeon,difficulty);
+                GameObject obj1 = PlaceEnemy(dungeon,difficulty, true);
+                GameObject obj2 = PlaceEnemy(dungeon,difficulty, true);
+                GameObject obj3 = PlaceEnemy(dungeon,difficulty, true);
                 questRescue.name = "WizardRescue";
                 questRescue.GetComponent<QuestRescue>().obj1 = obj1;
                 questRescue.GetComponent<QuestRescue>().obj2 = obj2;
@@ -208,31 +207,31 @@ public class DungeonManager : MonoBehaviour
         }
     }
 
-    public GameObject PlaceEnemy(Dungeon dungeon, int difficulty)
+    public GameObject PlaceEnemy(Dungeon dungeon, int difficulty, bool check)
     {
-        if (uiManager.bossFight || (!uiManager.bossFight && dungeon.rect != playerRoom))
+        if (uiManager.bossFight || (!uiManager.bossFight && dungeon.room != playerRoom))
         {
             if (difficulty >= 75)
-                return PlaceEnemyHard(dungeon);
+                return PlaceEnemyHard(dungeon, check);
             else if (difficulty >= 50)
-                return PlaceEnemyMed(dungeon);
+                return PlaceEnemyMed(dungeon, check);
             else if (difficulty >= 25)
-                return PlaceEnemyEasy(dungeon);
+                return PlaceEnemyEasy(dungeon, check);
             else if (difficulty >= 10)
-                return PlaceEnemyVeryEasy(dungeon);
+                return PlaceEnemyVeryEasy(dungeon, check);
         }
         return null;
     }
     
-    public GameObject PlaceEnemyVeryEasy(Dungeon dungeon)
+    public GameObject PlaceEnemyVeryEasy(Dungeon dungeon, bool check)
     {
-        GameObject enemy = Instantiate(impPrefab, RandomPosition(dungeon.room, true), Quaternion.Euler(0, 0, 0), enemies.transform);
+        GameObject enemy = Instantiate(impPrefab, RandomPosition(dungeon.room, check), Quaternion.Euler(0, 0, 0), enemies.transform);
         enemy.GetComponent<EnemyController>().SetDungeon(dungeon);
         enemy.name = enemy.name.Replace("(Clone)", "");
         return enemy;
     }
     
-    public GameObject PlaceEnemyEasy(Dungeon dungeon)
+    public GameObject PlaceEnemyEasy(Dungeon dungeon, bool check)
     {
         var choice1 = Random.Range(0, 2);
         GameObject prefab = null;
@@ -245,13 +244,13 @@ public class DungeonManager : MonoBehaviour
                 prefab = goblinPrefab;
                 break;
         }
-        GameObject enemy = Instantiate(prefab, RandomPosition(dungeon.room, true), Quaternion.Euler(0, 0, 0), enemies.transform);
+        GameObject enemy = Instantiate(prefab, RandomPosition(dungeon.room, check), Quaternion.Euler(0, 0, 0), enemies.transform);
         enemy.GetComponent<EnemyController>().SetDungeon(dungeon);
         enemy.name = enemy.name.Replace("(Clone)", "");
         return enemy;
     }
     
-    public GameObject PlaceEnemyMed(Dungeon dungeon)
+    public GameObject PlaceEnemyMed(Dungeon dungeon, bool check)
     {
         var choice = Random.Range(0, 6);
         GameObject prefab = null;
@@ -276,13 +275,13 @@ public class DungeonManager : MonoBehaviour
                 prefab = necromancerPrefab;
                 break;
         }
-        GameObject enemy = Instantiate(prefab, RandomPosition(dungeon.room, true), Quaternion.Euler(0, 0, 0), enemies.transform);
+        GameObject enemy = Instantiate(prefab, RandomPosition(dungeon.room, check), Quaternion.Euler(0, 0, 0), enemies.transform);
         enemy.GetComponent<EnemyController>().SetDungeon(dungeon);
         enemy.name = enemy.name.Replace("(Clone)", "");
         return enemy;
     }
     
-    public GameObject PlaceEnemyHard(Dungeon dungeon)
+    public GameObject PlaceEnemyHard(Dungeon dungeon, bool check)
     {
         var choice = Random.Range(0, 8);
         GameObject prefab = null;
@@ -313,7 +312,7 @@ public class DungeonManager : MonoBehaviour
                 prefab = ogrePrefab;
                 break;
         }
-        GameObject enemy = Instantiate(prefab, RandomPosition(dungeon.room, true), Quaternion.Euler(0, 0, 0), enemies.transform);
+        GameObject enemy = Instantiate(prefab, RandomPosition(dungeon.room, check), Quaternion.Euler(0, 0, 0), enemies.transform);
         enemy.GetComponent<EnemyController>().SetDungeon(dungeon);
         enemy.name = enemy.name.Replace("(Clone)", "");
         return enemy;
@@ -321,7 +320,7 @@ public class DungeonManager : MonoBehaviour
     
     public void PlaceDen(Dungeon dungeon, int difficulty)
     {
-        if (dungeon.rect != playerRoom)
+        if (dungeon.room != playerRoom)
         {
             Vector2 position = dungeon.room.center;
             if (position != (Vector2) player.transform.position)
@@ -331,21 +330,21 @@ public class DungeonManager : MonoBehaviour
                 den.name = "Den";
                 if (difficulty >= 75)
                 {
-                    den.GetComponent<DenController>().enemy1 = PlaceEnemyHard(dungeon);
-                    den.GetComponent<DenController>().enemy2 = PlaceEnemyHard(dungeon);
-                    den.GetComponent<DenController>().enemy3 = PlaceEnemyHard(dungeon); 
+                    den.GetComponent<DenController>().enemy1 = PlaceEnemyHard(dungeon, true);
+                    den.GetComponent<DenController>().enemy2 = PlaceEnemyHard(dungeon, true);
+                    den.GetComponent<DenController>().enemy3 = PlaceEnemyHard(dungeon, true); 
                 }
                 else if (difficulty >= 50)
                 {
-                    den.GetComponent<DenController>().enemy1 = PlaceEnemyMed(dungeon);
-                    den.GetComponent<DenController>().enemy2 = PlaceEnemyMed(dungeon);
-                    den.GetComponent<DenController>().enemy3 = PlaceEnemyMed(dungeon);
+                    den.GetComponent<DenController>().enemy1 = PlaceEnemyMed(dungeon, true);
+                    den.GetComponent<DenController>().enemy2 = PlaceEnemyMed(dungeon, true);
+                    den.GetComponent<DenController>().enemy3 = PlaceEnemyMed(dungeon, true);
                 }
                 else if (difficulty >= 10)
                 {
-                    den.GetComponent<DenController>().enemy1 = PlaceEnemyEasy(dungeon);
-                    den.GetComponent<DenController>().enemy2 = PlaceEnemyEasy(dungeon);
-                    den.GetComponent<DenController>().enemy3 = PlaceEnemyEasy(dungeon);
+                    den.GetComponent<DenController>().enemy1 = PlaceEnemyEasy(dungeon, true);
+                    den.GetComponent<DenController>().enemy2 = PlaceEnemyEasy(dungeon, true);
+                    den.GetComponent<DenController>().enemy3 = PlaceEnemyEasy(dungeon, true);
                 }
                 den.GetComponent<DenController>().enemy1.GetComponent<EnemyController>().den = true;
                 den.GetComponent<DenController>().enemy2.GetComponent<EnemyController>().den = true;

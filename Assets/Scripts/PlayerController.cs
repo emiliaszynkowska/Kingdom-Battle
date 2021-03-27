@@ -281,6 +281,7 @@ public class PlayerController : MonoBehaviour
             }
             yield return new WaitForSeconds(0.5f);
             // Stop Attacking
+            StopBounce();
             isAttacking = false;
         }
     }
@@ -317,6 +318,7 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             // Stop Attacking
             questManager.Event("Spin Attack", "Use", true);
+            StopBounce();
             isAttacking = false;
         }
     }
@@ -358,6 +360,7 @@ public class PlayerController : MonoBehaviour
             questManager.Event("Ground Pound", "Use", true);
             yield return new WaitForSeconds(1);
             shadow.SetActive(false);
+            StopBounce();
             isAttacking = false;
         }
     }
@@ -821,7 +824,6 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
-        
         else if (other.gameObject.CompareTag("Enemy") && other is CircleCollider2D && GetComponent<BoxCollider2D>().IsTouching(other))
         {
             // Take damage
@@ -832,8 +834,7 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(TakeDamage(enemyAttack));
             }
         }
-
-        else if (other.gameObject.name.Equals("Spikes") && GetComponent<BoxCollider2D>().IsTouching(other))
+        else if (other.gameObject.name.Equals("Spikes") && GetComponent<BoxCollider2D>().IsTouching(other) && other.gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime < 0.17f)
         {
             // Take damage
             if (!IsBouncing())
@@ -843,14 +844,22 @@ public class PlayerController : MonoBehaviour
             isBouncing = true;
             Invoke("StopBounce", 0.2f);
         }
-
+        else if (other.gameObject.name.Equals("Spikes") && GetComponent<BoxCollider2D>().IsTouching(other) && !other.gameObject.GetComponent<SpriteRenderer>().sprite.name.Equals("floor_spikes_anim_f0"))
+        {
+            // Take damage
+            if (!IsBouncing())
+                StartCoroutine(TakeDamage(1));
+            // Bounce off the spikes
+            body.AddForce(Vector2.up * 100);
+            isBouncing = true;
+            Invoke("StopBounce", 0.2f);
+        }
         else if (other.gameObject.CompareTag("Projectile") && GetComponent<BoxCollider2D>().IsTouching(other))
         {
             Destroy(other);
             // Take damage
             StartCoroutine(TakeDamage(1));
         }
-        
         else if (other.gameObject.CompareTag("Collider") && GetComponent<BoxCollider2D>().IsTouching(other))
         {
             ScoreManager.AddExploration(1);
@@ -941,6 +950,9 @@ public class PlayerController : MonoBehaviour
             attack = 1;
             playerDisciplines = new List<string>() {"Initial", null, null};
             playerTitles = new List<string>() {ScoreManager.TitleInitial(), null, null};
+            PlayerData.Kills = 0;
+            PlayerData.Hits = 0;
+            ScoreManager.Reset();
         }
     }
 

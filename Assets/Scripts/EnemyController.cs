@@ -148,6 +148,20 @@ public class EnemyController : MonoBehaviour
         spawnEnemies = false;
         healthText.enabled = false;
         GetComponent<Collider2D>().enabled = false;
+        // Level Quests
+        if (SceneManager.GetActiveScene().name.Equals("Main"))
+        {
+            questManager.Event($"Defeat 1 {name}                        0/1", 0, true);
+            questManager.Event(name, "Defeat", true);
+            if (questManager.Event("monster", "Defeat", false))
+                questManager.AddMainQuest("Return to Wigg");
+        }
+        // Tutorial Quests
+        else if (SceneManager.GetActiveScene().name.Equals("Tutorial"))
+        {
+            questManager.Event("Defeat the monster         0/1", 0, false);
+            questManager.Event("monster", "Defeat", false);
+        }
         // Add Aggressive Score
         PlayerData.Kills += 1;
         ScoreManager.AddAggressive(1);
@@ -181,18 +195,11 @@ public class EnemyController : MonoBehaviour
             if (dungeon != null && !den)
             {
                 yield return new WaitForSeconds(10);
-                dungeonManager.PlaceEnemy(dungeon, PlayerData.Difficulty);
+                dungeonManager.PlaceEnemy(dungeon, PlayerData.Difficulty, false);
             }
         }
         // Destroy Enemy
         Destroy(gameObject);
-        questManager.Event($"Defeat 1 {name}                        0/1", 0, true);
-        questManager.Event(name, "Defeat", true);
-        questManager.Event("Defeat the monster", 0, false);
-        if (name.Equals("Goblin"))
-            questManager.Event("Defeat the monsters", 0, false);
-        if (questManager.Event("monster", "Defeat", false))
-            questManager.AddMainQuest("Return to Wigg");
     }
 
     public IEnumerator TakeDamage(int playerAttack)
