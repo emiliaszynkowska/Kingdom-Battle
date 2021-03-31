@@ -4,9 +4,10 @@ using UnityEngine.Tilemaps;
 
 public class Projectile : MonoBehaviour
 {
-    public GameObject player;
+    private GameObject player;
     private Rigidbody2D body;
     private Vector2 target;
+    public int direction;
 
     void Start()
     {
@@ -14,15 +15,53 @@ public class Projectile : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         target = player.transform.position - transform.position;
     }
-
-    void FixedUpdate()
-    {
-        body.AddForce(target.normalized * (Time.deltaTime * 2), ForceMode2D.Impulse);
-    }
-
+    
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.collider is TilemapCollider2D)
             Destroy(this);
+    }
+
+    void FixedUpdate()
+    {
+        switch (direction)
+        {
+            // Target
+            case 0:
+                body.AddForce(target.normalized * (Time.deltaTime * 2), ForceMode2D.Impulse);
+                break;
+            // E
+            case 1:
+                body.AddForce(Vector2.right * (Time.deltaTime * 10), ForceMode2D.Impulse);
+                break;
+            // W
+            case 2:
+                body.AddForce(Vector2.left * (Time.deltaTime * 10), ForceMode2D.Impulse);
+                break;
+            // N
+            case 3:
+                body.AddForce(Vector2.up * (Time.deltaTime * 10), ForceMode2D.Impulse);
+                break;
+            // S
+            case 4:
+                body.AddForce(Vector2.down * (Time.deltaTime * 10), ForceMode2D.Impulse);
+                break;
+            // NE
+            case 5:
+                body.AddForce((Vector2.right + Vector2.up) * (Time.deltaTime * 10), ForceMode2D.Impulse);
+                break;
+            // NW
+            case 6:
+                body.AddForce((Vector2.left + Vector2.up) * (Time.deltaTime * 10), ForceMode2D.Impulse);
+                break;
+            // SE
+            case 7:
+                body.AddForce((Vector2.right + Vector2.down) * (Time.deltaTime * 10), ForceMode2D.Impulse);
+                break;
+            // SW
+            case 8:
+                body.AddForce((Vector2.left + Vector2.down) * (Time.deltaTime * 10), ForceMode2D.Impulse);
+                break;
+        }
     }
 }

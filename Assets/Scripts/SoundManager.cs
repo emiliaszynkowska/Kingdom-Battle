@@ -11,6 +11,7 @@ public class SoundManager : MonoBehaviour
     public AudioClip shopMusic;
     public AudioClip dungeonMusic;
     public AudioClip bossMusic;
+    public AudioClip battleMusic;
     public AudioClip victoryMusic;
     public AudioClip gameOverMusic;
     public AudioClip caveAmbience;
@@ -35,6 +36,7 @@ public class SoundManager : MonoBehaviour
     public AudioClip monsterDamage;
     public AudioClip monsterDie;
     public AudioClip portal;
+    public AudioClip spikes;
     public AudioClip win;
     public AudioClip jump;
     public AudioClip coin;

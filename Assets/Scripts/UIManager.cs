@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -48,6 +49,7 @@ public class UIManager : MonoBehaviour
     public Image difficulty;
     public Image equipment;
     public Image background;
+    public Image transition;
     public Image fade;
     // Variables
     public bool isPowerup;
@@ -73,6 +75,7 @@ public class UIManager : MonoBehaviour
     public Sprite kingsbane;
     public Sprite blueRobe;
     public Sprite redRobe;
+    public Sprite crown;
     public Sprite spriteAggressive;
     public Sprite spriteDefensive;
     public Sprite spriteExploration;
@@ -428,6 +431,9 @@ public class UIManager : MonoBehaviour
           case("Red Robe"):
               equipment.sprite = redRobe;
               break;
+          case("Crown"):
+              equipment.sprite = crown;
+              break;
           case("Shield"):
               equipment.sprite = spriteDefensive;
               break;
@@ -653,11 +659,9 @@ public class UIManager : MonoBehaviour
     public void Level(string s)
     {
         ResetCamera();
-        if (levelNum == 10)
-            StartCoroutine(ExitFade());
         PauseGame();
         Text text = level.transform.GetChild(1).GetComponent<Text>();
-        text.text = String.Format("Boss: {0}", s);
+        text.text = $"Boss: {s}";
         switch (s)
         {
             case "Elite Knight":
@@ -671,6 +675,9 @@ public class UIManager : MonoBehaviour
                 break;
             case "Golem":
                 text.color = new Color(0.85f, 0.45f, 0.25f, 1);
+                break;
+            case "King Eldar":
+                text.color = new Color(0.9f, 0, 0, 1);
                 break;
         }
         menu.SetActive(false);
@@ -686,10 +693,10 @@ public class UIManager : MonoBehaviour
         soundManager.PlaySound(soundManager.clickButton);
         if (bossFight)
             soundManager.PlayMusic(soundManager.bossMusic);
-        else
-        {
+        else if (SceneManager.GetActiveScene().name.Equals("Main"))
             soundManager.PlayMusic(soundManager.dungeonMusic);
-        }
+        else if (SceneManager.GetActiveScene().name.Equals("Battle"))
+            soundManager.PlayMusic(soundManager.castleMusic);
         level.SetActive(false);
         ResumeGame();
         fade.CrossFadeAlpha(0.8f, 0, true);
@@ -718,8 +725,17 @@ public class UIManager : MonoBehaviour
     {
         if (!SceneManager.GetActiveScene().name.Equals("Tutorial"))
             playerController.SaveData(true, false);
-        StartCoroutine(FadeIn());
-        SceneManager.LoadScene("Main");
+        if (PlayerData.Level != 10)
+        {
+            StartCoroutine(FadeIn());
+            SceneManager.LoadScene("Main");
+        }
+        else if (PlayerData.Level == 10)
+        {
+            playerController.SaveData(true, true);
+            StartCoroutine(TransitionIn());
+            SceneManager.LoadScene("Battle");
+        }
     }
 
     public void ResetCamera()
@@ -887,7 +903,7 @@ public class UIManager : MonoBehaviour
             else
                 playerController.SaveData(false, false);
         }
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().path);
     }
 
     public void Exit()
@@ -913,6 +929,18 @@ public class UIManager : MonoBehaviour
     {
         fade.CrossFadeAlpha(0.0f, 0.5f, true);
         yield return new WaitForSecondsRealtime(0.5f);
+    }
+
+    public IEnumerator TransitionIn()
+    {
+        transition.CrossFadeAlpha(0.75f, 5.0f, true);
+        yield return new WaitForSecondsRealtime(5.0f);
+    }
+    
+    public IEnumerator TransitionOut()
+    {
+        transition.CrossFadeAlpha(0.0f, 5.0f, true);
+        yield return new WaitForSecondsRealtime(5.0f);
     }
 
 }

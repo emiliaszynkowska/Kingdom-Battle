@@ -65,8 +65,8 @@ public class DifficultyManager : MonoBehaviour
                     (float) dungeonGenerator.GetDungeons().Count; // Rooms
         float totalScore = (3 * scores[0] + 2 * scores[1] + 2 * scores[2] + 2 * scores[3] + scores[4] + scores[5])/ 12;
         PlayerData.PreviousScore = totalScore;
-        Debug.Log($"Success: {scores[0]}, Damage: {scores[1]}, Previous: {scores[2]}, Quests: {scores[3]}, Health: {scores[4]}, Rooms: {scores[5]}");
-        Debug.Log($"Total: {totalScore}");
+        //Debug.Log($"Success: {scores[0]}, Damage: {scores[1]}, Previous: {scores[2]}, Quests: {scores[3]}, Health: {scores[4]}, Rooms: {scores[5]}");
+        //Debug.Log($"Total: {totalScore}");
         // Select Chromosome
         if (totalScore > 0.6f)
         {
@@ -105,7 +105,7 @@ public class DifficultyManager : MonoBehaviour
                 dungeonGenerator.difficulty = Mathf.Clamp(dungeonGenerator.difficulty, 0, 100);
                 uiManager.SetDifficulty(dungeonGenerator.difficulty);
                 PlayerData.Difficulty = dungeonGenerator.difficulty;
-                Debug.Log($"Difficulty {sign * 5}");
+                //Debug.Log($"Difficulty {sign * 5}");
                 break;
             // Enemy Speed
             case 1:
@@ -117,7 +117,7 @@ public class DifficultyManager : MonoBehaviour
                         c.speed += sign * learningRate; // mutation enemy speed +/- 1
                     c.speed = Mathf.Clamp(c.speed, 10, 30);
                 }
-                Debug.Log($"Enemy Speed {sign}");
+                //Debug.Log($"Enemy Speed {sign}");
                 break;
             // Enemy Attack Time
             case 2:
@@ -140,7 +140,7 @@ public class DifficultyManager : MonoBehaviour
                         c.groundPoundTime += sign * learningRate; // mutation ground pound time +/- 1
                     c.groundPoundTime = Mathf.Clamp(c.groundPoundTime, 1, 10);
                 }
-                Debug.Log($"Enemy Attack Time {sign}");
+                //Debug.Log($"Enemy Attack Time {sign}");
                 break;
             // Enemy Health
             case 3:
@@ -153,7 +153,7 @@ public class DifficultyManager : MonoBehaviour
                     var max = PlayerData.Difficulty >= 75 ? 20 : PlayerData.Difficulty >= 50 ? 10 : PlayerData.Difficulty >= 25 ? 5 : 3;
                     c.health = Mathf.Clamp(c.health, 1, max);
                 }
-                Debug.Log($"Enemy Health {sign}");
+                //Debug.Log($"Enemy Health {sign}");
                 break;    
             // NPCs
             case 4:
@@ -196,7 +196,7 @@ public class DifficultyManager : MonoBehaviour
                         }
                     }
                 }
-                Debug.Log($"NPCs {sign}");
+                //Debug.Log($"NPCs {sign}");
                 break;
             // Objects
             case 5:
@@ -238,7 +238,7 @@ public class DifficultyManager : MonoBehaviour
                         }
                     }
                 }
-                Debug.Log($"Objects {sign}");
+                //Debug.Log($"Objects {sign}");
                 break;
         }
     }

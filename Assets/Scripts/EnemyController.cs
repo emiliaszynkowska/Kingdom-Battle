@@ -14,6 +14,7 @@ public class EnemyController : MonoBehaviour
     private float DelayTime = 0.5f;
     private bool isMoving = true;
     private bool isHurt;
+    private bool isDead;
     private bool isPoisoned;
     public bool boss;
     public bool den;
@@ -35,7 +36,6 @@ public class EnemyController : MonoBehaviour
     private Vector2 target;
     public GameObject enemies;
     public Dungeon dungeon;
-    public Text text;
     public ParticleSystem particles;
     public Collider2D groundPoundCollider;
     private SpriteRenderer enemyRenderer;
@@ -137,6 +137,7 @@ public class EnemyController : MonoBehaviour
 
     IEnumerator Die()
     {
+        isDead = true;
         // Prepare for Respawn
         soundManager.PlaySound(soundManager.monsterDie);
         yield return new WaitForSeconds(0.5f);
@@ -148,20 +149,6 @@ public class EnemyController : MonoBehaviour
         spawnEnemies = false;
         healthText.enabled = false;
         GetComponent<Collider2D>().enabled = false;
-        // Level Quests
-        if (SceneManager.GetActiveScene().name.Equals("Main"))
-        {
-            questManager.Event($"Defeat 1 {name}                        0/1", 0, true);
-            questManager.Event(name, "Defeat", true);
-            if (questManager.Event("monster", "Defeat", false))
-                questManager.AddMainQuest("Return to Wigg");
-        }
-        // Tutorial Quests
-        else if (SceneManager.GetActiveScene().name.Equals("Tutorial"))
-        {
-            questManager.Event("Defeat the monster         0/1", 0, false);
-            questManager.Event("monster", "Defeat", false);
-        }
         // Add Aggressive Score
         PlayerData.Kills += 1;
         ScoreManager.AddAggressive(1);
@@ -200,6 +187,20 @@ public class EnemyController : MonoBehaviour
         }
         // Destroy Enemy
         Destroy(gameObject);
+        // Level Quests
+        if (SceneManager.GetActiveScene().name.Equals("Main"))
+        {
+            questManager.Event($"Defeat 1 {name}                        0/1", 0, true);
+            questManager.Event(name, "Defeat", true);
+            if (questManager.Event("monster", "Defeat", false))
+                questManager.AddMainQuest("Return to Wigg");
+        }
+        // Tutorial Quests
+        else if (SceneManager.GetActiveScene().name.Equals("Tutorial"))
+        {
+            questManager.Event("Defeat the monster         0/1", 0, false);
+            questManager.Event("monster", "Defeat", false);
+        }
     }
 
     public IEnumerator TakeDamage(int playerAttack)
@@ -211,7 +212,7 @@ public class EnemyController : MonoBehaviour
             soundManager.PlaySound(soundManager.monsterDamage);
             isHurt = true;
             health -= playerAttack;
-            if (health <= 0 && !name.Equals("Respawn"))
+            if (health <= 0 && !isDead)
                 StartCoroutine(Die());
             yield return new WaitForSeconds(0.5f);
             isHurt = false;
@@ -224,15 +225,15 @@ public class EnemyController : MonoBehaviour
         isPoisoned = true;
         yield return new WaitForSeconds(1);
         health -= 1;
-        if (health <= 0)
+        if (health <= 0 && !isDead)
             StartCoroutine(Die());
         yield return new WaitForSeconds(1);
         health -= 1;
-        if (health <= 0)
+        if (health <= 0 && !isDead)
             StartCoroutine(Die());
         yield return new WaitForSeconds(1);
         health -= 1;
-        if (health <= 0)
+        if (health <= 0 && !isDead)
             StartCoroutine(Die());
         isPoisoned = false;
     }

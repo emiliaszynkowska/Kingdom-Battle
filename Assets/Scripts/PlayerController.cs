@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -139,7 +140,7 @@ public class PlayerController : MonoBehaviour
         return isHurt;
     }
     
-    void StopBounce()
+    public void StopBounce()
     {
         isBouncing = false;
         body.velocity = new Vector2(0, 0);
@@ -272,10 +273,18 @@ public class PlayerController : MonoBehaviour
                     EnemyController enemy = col.gameObject.GetComponent<EnemyController>();
                     if (enemy != null)
                     {
-                        StartCoroutine("TakeKnockback", enemy.transform.position);
-                        enemy.StartCoroutine("TakeDamage", attack);
+                        StartCoroutine(TakeKnockback(enemy.transform.position));
+                        StartCoroutine(enemy.TakeDamage(attack));
                         if (IsOgreStrength())
-                            enemy.StartCoroutine("PoisonDamage");
+                            StartCoroutine(enemy.PoisonDamage());
+                    }
+                    KingController king = col.gameObject.GetComponent<KingController>();
+                    if (king != null)
+                    {
+                        StartCoroutine(TakeKnockback(king.transform.position));
+                        StartCoroutine(king.TakeDamage(attack));
+                        if (IsOgreStrength())
+                            StartCoroutine(king.PoisonDamage());
                     }
                 }
             }
@@ -308,10 +317,18 @@ public class PlayerController : MonoBehaviour
                     EnemyController enemy = col.gameObject.GetComponent<EnemyController>();
                     if (enemy != null)
                     {
-                        StartCoroutine("TakeKnockback", enemy.transform.position);
-                        enemy.StartCoroutine("TakeDamage", attack * 2);
+                        StartCoroutine(TakeKnockback(enemy.transform.position));
+                        StartCoroutine(enemy.TakeDamage(attack * 2));
                         if (IsOgreStrength())
-                            enemy.StartCoroutine("PoisonDamage");
+                            StartCoroutine(enemy.PoisonDamage());
+                    }
+                    KingController king = col.gameObject.GetComponent<KingController>();
+                    if (king != null)
+                    {
+                        StartCoroutine(TakeKnockback(king.transform.position));
+                        StartCoroutine(king.TakeDamage(attack * 2));
+                        if (IsOgreStrength())
+                            StartCoroutine(king.PoisonDamage());
                     }
                 }
             }
@@ -350,9 +367,16 @@ public class PlayerController : MonoBehaviour
                     EnemyController enemy = col.gameObject.GetComponent<EnemyController>();
                     if (enemy != null)
                     {
-                        enemy.StartCoroutine("TakeDamage", attack * 3);
+                        StartCoroutine(enemy.TakeDamage(attack * 3));
                         if (IsOgreStrength())
-                            enemy.StartCoroutine("PoisonDamage");
+                            StartCoroutine(enemy.PoisonDamage());
+                    }
+                    KingController king = col.gameObject.GetComponent<KingController>();
+                    if (king != null)
+                    {
+                        StartCoroutine(king.TakeDamage(attack * 3));
+                        if (IsOgreStrength())
+                            StartCoroutine(king.PoisonDamage());
                     }
                 }
             }
@@ -834,7 +858,17 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(TakeDamage(enemyAttack));
             }
         }
-        else if (other.gameObject.name.Equals("Spikes") && GetComponent<BoxCollider2D>().IsTouching(other) && other.gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime < 0.17f)
+        else if (other.gameObject.CompareTag("King") && GetComponent<BoxCollider2D>().IsTouching(other))
+        {
+            // Take damage
+            KingController kingController = other.gameObject.GetComponent<KingController>();
+            if (kingController != null && kingController.isActiveAndEnabled && kingController.health > 0)
+            {
+                int kingAttack = other.gameObject.GetComponent<KingController>().GetAttack();
+                StartCoroutine(TakeDamage(kingAttack));
+            }
+        }
+        else if (other.gameObject.name.Equals("Spikes") && GetComponent<BoxCollider2D>().IsTouching(other) && other.gameObject.GetComponent<Animator>() != null && other.gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime < 0.17f)
         {
             // Take damage
             if (!IsBouncing())
@@ -914,6 +948,13 @@ public class PlayerController : MonoBehaviour
     
     public void LoadData()
     {
+        // Set Battle Data
+        if (SceneManager.GetActiveScene().name.Equals("Battle"))
+        {
+            PlayerData.Boss = true;
+            PlayerData.Difficulty = 100;
+            PlayerData.Level = 11;
+        }
         // Check if save data exists
         if (PlayerData.Name != null)
         {

@@ -18,7 +18,7 @@ public class CastleManager : MonoBehaviour
     public GameObject dialog;
     public Text title;
     public Text message;
-    public Text text;
+    public Text prompt;
     
     public void Start()
     {
@@ -26,7 +26,7 @@ public class CastleManager : MonoBehaviour
         StartCoroutine(FadeText()); 
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    public void OnTriggerEnter2D(Collider2D other)
     {
         StartCoroutine(Dialog());
     }
@@ -74,9 +74,9 @@ public class CastleManager : MonoBehaviour
         yield return new WaitForSeconds(1);
         while (true)
         {
-            text.CrossFadeColor(new Color(1, 1, 1, 0), 1, true, true);
+            prompt.CrossFadeColor(new Color(1, 1, 1, 0), 1, true, true);
             yield return new WaitForSeconds(1);
-            text.CrossFadeColor(Color.white, 1, true, true);
+            prompt.CrossFadeColor(Color.white, 1, true, true);
             yield return new WaitForSeconds(1);
         }
     }

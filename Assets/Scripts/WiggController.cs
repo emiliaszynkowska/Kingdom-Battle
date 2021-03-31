@@ -75,6 +75,16 @@ public class WiggController : MonoBehaviour
                     yield return uiManager.Speak(npcName, "You must find all four potions and bring them to me.");
                     questManager.AddMainQuest("Collect all four potions");
                     break;
+                // Kingsbane
+                case 9:
+                    yield return uiManager.Speak(npcName, $"{playerController.playerName}, we meet again for the last time.");
+                    yield return uiManager.Speak(npcName, "The time has almost come for you to return to Asteron, and your journey will only become tougher.");
+                    yield return uiManager.Speak(npcName, "You need not prove your strength to me this time, I know you are ready.");
+                    yield return uiManager.Speak(npcName, "Before you go, I want you to have this gift. It is an ancient heirloom passed down through generations of wizards.");
+                    yield return uiManager.Speak(npcName, "Only this sword can vanqish the evil king. Take it with you and bring peace to all of Asteron.");
+                    yield return uiManager.Upgrade("Kingsbane");
+                    StartCoroutine(Disappear());
+                    break;
             }
             talking = false;
             active = true;

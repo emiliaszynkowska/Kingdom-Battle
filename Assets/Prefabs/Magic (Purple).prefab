@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6332271536476410019}
   - component: {fileID: -9170045516105876660}
   - component: {fileID: -7370446869604362749}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Magic (Purple)
   m_TagString: Projectile
   m_Icon: {fileID: 0}
@@ -49,6 +49,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -98,13 +99,13 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!58 &-9170045516105876660
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -133,4 +134,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62f6f663d954459cbeaa156f547cd83e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  direction: 0

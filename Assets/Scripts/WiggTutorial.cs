@@ -113,6 +113,7 @@ public class WiggTutorial : MonoBehaviour
         talking = false;
         yield return new WaitUntil(() => questManager.complete == 5);
         yield return new WaitForSecondsRealtime(2);
+        soundManager.PlaySound(soundManager.spikes);
         GameObject.Find("Objects").transform.GetChild(4).GetComponent<SpriteRenderer>().sprite = spikesDown;
         GameObject.Find("Objects").transform.GetChild(5).GetComponent<SpriteRenderer>().sprite = spikesDown;
         soundManager.PlaySound(soundManager.complete);

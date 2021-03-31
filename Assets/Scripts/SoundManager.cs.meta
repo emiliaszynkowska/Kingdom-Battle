@@ -8,13 +8,16 @@ MonoImporter:
   - startMusic: {fileID: 8300000, guid: 2082994f2761f2443b1e44c8aa457051, type: 3}
   - prologueMusic: {fileID: 8300000, guid: ee391810166a5814687ce05f9e9bf610, type: 3}
   - castleMusic: {fileID: 8300000, guid: d7fb3e8a4fa0b784c8c6797c4e31fa6b, type: 3}
+  - shopMusic: {fileID: 8300000, guid: 679e28c7aecac5e4d8f70622fddecf73, type: 3}
   - dungeonMusic: {fileID: 8300000, guid: 52c76aab2fb1b824da80da8b86867275, type: 3}
   - bossMusic: {fileID: 8300000, guid: d41ab948b1150254b957bfd915c50474, type: 3}
+  - finalBossMusic: {fileID: 8300000, guid: 5c86deeda39d4d3408a92f31b5168fcc, type: 3}
+  - victoryMusic: {fileID: 8300000, guid: 236a8205ad59ded44bc3deb337e95fed, type: 3}
+  - gameOverMusic: {fileID: 8300000, guid: 65ae4dcf6ed3dd54ab64f70d0b2c4fff, type: 3}
   - caveAmbience: {fileID: 8300000, guid: 82e48af09445e98478f8ad2366e7a33f, type: 3}
   - clickButton: {fileID: 8300000, guid: 3ed3a35b2047a854b9070ad3a231733a, type: 3}
   - changeItem: {fileID: 8300000, guid: fcac6581c32c8ad44afd41f8cc7193f0, type: 3}
   - buyItem: {fileID: 8300000, guid: 1ca8b35a081b3944f80689b9462a2380, type: 3}
-  - speech: {fileID: 8300000, guid: c1e7923dac34bb34bbaadf8340750729, type: 3}
   - error: {fileID: 8300000, guid: e38f990f046e76845a4d9b1d7ccc3f5d, type: 3}
   - play: {fileID: 8300000, guid: 1b22a47a4516c7a4c9f0725f8ccb86de, type: 3}
   - block: {fileID: 8300000, guid: 3c1429cc6fb4b9d44894e483b3c45947, type: 3}
@@ -28,9 +31,10 @@ MonoImporter:
   - lifeup: {fileID: 8300000, guid: a632e25ed6884c1408acd823e80633a7, type: 3}
   - elfDamage: {fileID: 8300000, guid: ed1cbf6e3d9464a43b73f959d3f5cfd9, type: 3}
   - elfDie: {fileID: 8300000, guid: 705f5a1ba9c66aa4c811891be9d92449, type: 3}
-  - monsterDamage: {fileID: 8300000, guid: 83392c480d848174c83d72c086bd532b, type: 3}
+  - monsterDamage: {fileID: 8300000, guid: ba1314e9bbe08fc4cab78ca7df39ec6a, type: 3}
   - monsterDie: {fileID: 8300000, guid: f69d624d89cad3746bdef0e326fa0fcb, type: 3}
-  - monsterGrowl: {fileID: 8300000, guid: ba1314e9bbe08fc4cab78ca7df39ec6a, type: 3}
+  - portal: {fileID: 8300000, guid: 3b19d596c27110f43b01465618887aed, type: 3}
+  - spikes: {fileID: 8300000, guid: 57cc2fd0cca441a4999004504a0c8058, type: 3}
   - win: {fileID: 8300000, guid: ba824f5229fbc0b419b8f04be12d63c0, type: 3}
   - jump: {fileID: 8300000, guid: 257067d3a2ad49145896dce385eb0a33, type: 3}
   - coin: {fileID: 8300000, guid: d7a07d6a81ca50c42b4ee805c6e7344c, type: 3}

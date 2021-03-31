@@ -16,6 +16,7 @@ TagManager:
   - Door
   - Weapon
   - Shield
+  - King
   layers:
   - Default
   - TransparentFX
@@ -28,7 +29,7 @@ TagManager:
   - Character
   - Wizard
   - Player
-  - UI
+  - 
   - Map
   - Shield
   - 

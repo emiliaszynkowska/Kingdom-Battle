@@ -32,7 +32,7 @@ public class QuestManager : MonoBehaviour
 
     public void Start()
     {
-        if (!PlayerData.Boss && !SceneManager.GetActiveScene().name.Equals("Tutorial"))
+        if (!PlayerData.Boss && !SceneManager.GetActiveScene().name.Equals("Tutorial") && !SceneManager.GetActiveScene().name.Equals("Battle"))
         {
             // Set max quests
             var difficulty = dungeonGenerator.difficulty;
@@ -45,7 +45,7 @@ public class QuestManager : MonoBehaviour
             else
                 maxQuests = 3;
             // Add static quests
-            if (PlayerData.Level == 3 | PlayerData.Level == 5 | PlayerData.Level == 6 | PlayerData.Level == 8)
+            if (PlayerData.Level == 3 | PlayerData.Level == 5 | PlayerData.Level == 6 | PlayerData.Level == 8 | PlayerData.Level == 10)
             {
                 listMainQuests.Add("Talk to Wigg");
                 dungeonManager.PlaceWigg(dungeonGenerator.RandomDungeon());
@@ -226,7 +226,7 @@ public class QuestManager : MonoBehaviour
                         if (n == 1) 
                             listMainQuests.Add($"Defeat 1 {enemy}                     0/1");
                         else
-                            listMainQuests.Add($"Defeat {n} {enemy}s                  0/{n}");
+                            listMainQuests.Add($"Defeat {n} {enemy}s                0/{n}");
                     }
                     break;
                 // Infiltrate den
