@@ -15,11 +15,11 @@ public class Projectile : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         target = player.transform.position - transform.position;
     }
-    
-    private void OnCollisionEnter2D(Collision2D other)
+
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.collider is TilemapCollider2D)
-            Destroy(this);
+        if (other is TilemapCollider2D)
+            Destroy(gameObject);
     }
 
     void FixedUpdate()

@@ -151,7 +151,7 @@ public class UIManager : MonoBehaviour
 
     public void SetCoins(int coins)
     {
-        info.transform.GetChild(1).GetComponentInChildren<Text>().text = coins.ToString();
+        info.transform.GetChild(4).GetComponentInChildren<Text>().text = coins.ToString();
     }
 
     void SetMoneyPosition(GameObject money, int y)

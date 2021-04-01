@@ -76,7 +76,7 @@ public class WiggController : MonoBehaviour
                     questManager.AddMainQuest("Collect all four potions");
                     break;
                 // Kingsbane
-                case 9:
+                case 10:
                     yield return uiManager.Speak(npcName, $"{playerController.playerName}, we meet again for the last time.");
                     yield return uiManager.Speak(npcName, "The time has almost come for you to return to Asteron, and your journey will only become tougher.");
                     yield return uiManager.Speak(npcName, "You need not prove your strength to me this time, I know you are ready.");

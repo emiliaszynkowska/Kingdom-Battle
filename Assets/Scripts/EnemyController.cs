@@ -94,7 +94,7 @@ public class EnemyController : MonoBehaviour
             isMoving = true;
             body.MovePosition(Vector2.MoveTowards(body.position, target, speed / 10 * Time.fixedDeltaTime));
         }
-        else if (Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 5)
+        else if (Mathf.Abs(player.transform.position.magnitude - transform.position.magnitude) < 10)
         {
             isMoving = true;
             body.MovePosition(Vector2.MoveTowards(body.position, target, speed / 10 * Time.fixedDeltaTime));
@@ -138,6 +138,23 @@ public class EnemyController : MonoBehaviour
     IEnumerator Die()
     {
         isDead = true;
+        // Level Quests
+        if (SceneManager.GetActiveScene().name.Equals("Main"))
+        {
+            questManager.Event($"Defeat 1 {name}                     0/1", 0, true);
+            questManager.Event(name, "Defeat", true);
+            if (questManager.Event("monster", "Defeat", false))
+                questManager.AddMainQuest("Return to Wigg");
+        }
+        // Tutorial Quests
+        else if (SceneManager.GetActiveScene().name.Equals("Tutorial"))
+        {
+            questManager.Event("Defeat the monster         0/1", 0, false);
+            questManager.Event("monster", "Defeat", false);
+        }
+        // Add Aggressive Score
+        PlayerData.Kills += 1;
+        ScoreManager.AddAggressive(1);
         // Prepare for Respawn
         soundManager.PlaySound(soundManager.monsterDie);
         yield return new WaitForSeconds(0.5f);
@@ -149,9 +166,6 @@ public class EnemyController : MonoBehaviour
         spawnEnemies = false;
         healthText.enabled = false;
         GetComponent<Collider2D>().enabled = false;
-        // Add Aggressive Score
-        PlayerData.Kills += 1;
-        ScoreManager.AddAggressive(1);
         if (boss)
         {
             soundManager.PauseMusic();
@@ -187,20 +201,6 @@ public class EnemyController : MonoBehaviour
         }
         // Destroy Enemy
         Destroy(gameObject);
-        // Level Quests
-        if (SceneManager.GetActiveScene().name.Equals("Main"))
-        {
-            questManager.Event($"Defeat 1 {name}                        0/1", 0, true);
-            questManager.Event(name, "Defeat", true);
-            if (questManager.Event("monster", "Defeat", false))
-                questManager.AddMainQuest("Return to Wigg");
-        }
-        // Tutorial Quests
-        else if (SceneManager.GetActiveScene().name.Equals("Tutorial"))
-        {
-            questManager.Event("Defeat the monster         0/1", 0, false);
-            questManager.Event("monster", "Defeat", false);
-        }
     }
 
     public IEnumerator TakeDamage(int playerAttack)

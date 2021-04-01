@@ -274,7 +274,7 @@ public class QuestManager : MonoBehaviour
 
     public void CheckQuests()
     {
-        if (complete == listMainQuests.Count + 1 && !specialDoor.GetComponent<DoorController>().opened)
+        if (complete == listMainQuests.Count && !specialDoor.GetComponent<DoorController>().opened)
         {
             soundManager.PlaySound(soundManager.open);
             StartCoroutine(uiManager.Speak("", "You heard a noise..."));
@@ -290,7 +290,8 @@ public class QuestManager : MonoBehaviour
         if (index != 0 && obj.transform.GetChild(index).GetComponent<Text>().color != new Color(0, 0.85f, 0))
         {
             var text = obj.transform.GetChild(index).GetComponent<Text>().text;
-            obj.transform.GetChild(index).GetComponent<Text>().text = text.Replace("0/1", "1/1");
+            text = text.Replace("0/1", "1/1");
+            obj.transform.GetChild(index).GetComponent<Text>().text = text;
             obj.transform.GetChild(index).GetComponent<Text>().color = new Color(0, 0.85f, 0);
             StartCoroutine(uiManager.Notification($"Quest Complete: {text}", new Color(0, 0.85f, 0)));
             soundManager.PlaySound(soundManager.complete);

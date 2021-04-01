@@ -18278,7 +18278,7 @@ MonoBehaviour:
   shopMusic: {fileID: 8300000, guid: 679e28c7aecac5e4d8f70622fddecf73, type: 3}
   dungeonMusic: {fileID: 8300000, guid: 52c76aab2fb1b824da80da8b86867275, type: 3}
   bossMusic: {fileID: 8300000, guid: d41ab948b1150254b957bfd915c50474, type: 3}
-  finalBossMusic: {fileID: 0}
+  battleMusic: {fileID: 0}
   victoryMusic: {fileID: 8300000, guid: 236a8205ad59ded44bc3deb337e95fed, type: 3}
   gameOverMusic: {fileID: 8300000, guid: 65ae4dcf6ed3dd54ab64f70d0b2c4fff, type: 3}
   caveAmbience: {fileID: 8300000, guid: 82e48af09445e98478f8ad2366e7a33f, type: 3}
@@ -18327,7 +18327,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2094278898
 RectTransform:
   m_ObjectHideFlags: 0
