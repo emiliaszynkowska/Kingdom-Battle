@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,6 +9,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     // Objects
+    public DifficultyManager difficultyManager;
     public PlayerController playerController;
     public PlayerTutorial playerTutorial;
     public SoundManager soundManager;
@@ -32,6 +32,7 @@ public class UIManager : MonoBehaviour
     public Text npcName;
     public Text message;
     public Text prompt;
+    public TMP_Text toggle;
     public GameObject nameInput;
     public InputField inputField;
     public GameObject menu;
@@ -102,6 +103,7 @@ public class UIManager : MonoBehaviour
         }
         ResetCamera();
         StartCoroutine(FadeText());
+        ToggleDifficulty(PlayerData.Toggle);
     }
 
     // Player Information
@@ -244,6 +246,20 @@ public class UIManager : MonoBehaviour
     public void SetDifficulty(float d)
     {
         difficulty.fillAmount = d/100;
+    }
+
+    public void ToggleDifficulty()
+    {
+        Debug.Log(!PlayerData.Toggle);
+        soundManager.PlaySound(soundManager.clickButton);
+        PlayerData.Toggle = !PlayerData.Toggle;
+        toggle.text = PlayerData.Toggle ? "On" : "Off";
+    }
+    
+    public void ToggleDifficulty(bool t)
+    {
+        PlayerData.Toggle = t;
+        toggle.text = t ? "On" : "Off";
     }
 
     // Inventory
@@ -884,6 +900,17 @@ public class UIManager : MonoBehaviour
     public void ResumeGame()
     {
         Time.timeScale = 1;
+    }
+
+    public void Skip()
+    {
+        StartCoroutine(SkipTutorial());
+    }
+
+    public IEnumerator SkipTutorial()
+    {
+        yield return FadeIn();
+        SceneManager.LoadScene("Main");
     }
 
     public void Next()

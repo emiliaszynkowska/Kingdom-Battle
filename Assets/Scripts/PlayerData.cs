@@ -20,4 +20,5 @@ public static class PlayerData
     public static int Hits;
     public static float PreviousScore = 0.5f;
     public static int Difficulty;
+    public static bool Toggle = true;
 }

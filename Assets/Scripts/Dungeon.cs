@@ -8,7 +8,7 @@ public class Dungeon
     {
         public Dungeon left;
         public Dungeon right;
-        public Rect room = new Rect(-1, -1, 0, 0);
+        public Rect room;
         public List<Rect> corridors = new List<Rect>();
         private DungeonGenerator generator;
 

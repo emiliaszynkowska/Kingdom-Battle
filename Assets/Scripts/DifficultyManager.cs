@@ -74,8 +74,9 @@ public class DifficultyManager : MonoBehaviour
             for (int i = 0; i < 6; i++)
             {
                 if (Random.Range(0.0f, 1.0f) < myDist / totalDist)
-                {
-                   Adjust(i,1); 
+                { 
+                    if (PlayerData.Toggle) 
+                        Adjust(i,1); 
                 }
             }
         }
@@ -85,8 +86,9 @@ public class DifficultyManager : MonoBehaviour
            for (int i = 0; i < 6; i++)
            {
                if (Random.Range(0.0f, 1.0f) < 1 - myDist / totalDist)
-               {
-                    Adjust(i,-1);
+               { 
+                   if (PlayerData.Toggle) 
+                       Adjust(i,-1);
                }
            }
         }

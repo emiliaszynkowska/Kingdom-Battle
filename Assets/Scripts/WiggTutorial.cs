@@ -11,6 +11,7 @@ public class WiggTutorial : MonoBehaviour
     public QuestManager questManager;
     public SoundManager soundManager;
     public UIManager uiManager;
+    public GameObject skipButton;
     public Sprite spikesDown;
     public string npcName = "Wigg";
     public bool talking;
@@ -43,9 +44,12 @@ public class WiggTutorial : MonoBehaviour
                 uiManager.SetName(playerTutorial.playerName);
                 yield return uiManager.Speak(npcName,
                     "You can use the player information on the top right to view your status.");
+                skipButton.transform.localPosition = new Vector3(-765, 300);
                 uiManager.difficulty.transform.parent.gameObject.SetActive(true);
                 yield return uiManager.Speak(npcName,
                     "The difficulty bar to the left shows how many monsters are nearby. I think we're safe for now.");
+                yield return uiManager.Speak(npcName,
+                    "You can toggle difficulty adjustment using the little red button.");
                 uiManager.lives.SetActive(true);
                 yield return uiManager.Speak(npcName, "And remember to keep an eye on your health too.");
                 yield return uiManager.Speak(npcName, "Now, where is your weapon?");

@@ -4904,7 +4904,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 3
-  m_BackGroundColor: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -24872,6 +24872,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6c093728c50e894a81c4b37b71cad6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  difficultyManager: {fileID: 0}
   playerController: {fileID: 697414272}
   playerTutorial: {fileID: 0}
   soundManager: {fileID: 606689632}
@@ -24894,6 +24895,7 @@ MonoBehaviour:
   npcName: {fileID: 155820561}
   message: {fileID: 1511432812}
   prompt: {fileID: 1840497914}
+  toggle: {fileID: 0}
   nameInput: {fileID: 0}
   inputField: {fileID: 0}
   menu: {fileID: 167683966}

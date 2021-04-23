@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
 {
     // Movement
     private Vector2 movement;
-    public float speed = 0.1f;
+    private float speed = 0.1f;
     // Combat
     public int attack;
     public int health;
